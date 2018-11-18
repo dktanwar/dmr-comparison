@@ -1,0 +1,101 @@
+---
+title: "MethPipe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Setting directories and path to MethPipe:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dataDir <- "data"
+dir.create(file.path(dataDir))
+resDir <- "results"
+dir.create(file.path(resDir))
+methPipe.path <- "methpipe-3.4.3/bin"
+```
+
+#### Negative control
+Preparing the data in required format (see MethPipe documentation, page 6-7).
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+data <- read.table(paste(dataDir, "/data_neg_control_all.txt", sep=""), header=TRUE, sep="\t")
+chr <- data$chr
+pos <- data$pos
+strand <- rep('+', length(chr))  #we don't care about the strand, but methpipe requires it
+context <- rep('CpG', length(chr)) #all data are from CpGs
+for(i in 1:6){
+  methCounts <- data[,2+2*i-1]
+  cov <- data[,2+2*i]
+  methProp <- methCounts/cov
+  data.i <- data.frame(chr=chr, pos=pos, strand=strand, context=context,
+                       methProportion=methProp, coverage=cov)
+  name <- paste(dataDir, "/data_neg_control_methpipe_", i, ".meth", sep="")
+  write.table(data.i, file=name, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+```
+
+MethPipe analysis: First merging results from the replicates:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/merge-methcounts ", dataDir, "/data_neg_control_methpipe_1.meth ", dataDir, "/data_neg_control_methpipe_3.meth ", dataDir, "/data_neg_control_methpipe_5.meth ", "-o ", dataDir, "/data_neg_control_methpipe_grp1.meth", sep="")
+system(cmd)
+
+cmd <- paste("./", methPipe.path, "/merge-methcounts ", dataDir, "/data_neg_control_methpipe_2.meth ", dataDir, "/data_neg_control_methpipe_4.meth ", dataDir, "/data_neg_control_methpipe_6.meth ", "-o ", dataDir, "/data_neg_control_methpipe_grp1.meth", sep="")
+system(cmd)
+```
+
+Calculating the differential methylation score of each CpG site:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/methdiff ", "-o ", resDir, "/neg_control_methpipe.methdiff ", dataDir, "/data_neg_control_methpipe_grp1.meth ", dataDir, "/data_neg_control_methpipe_grp2.meth", sep="")
+system(cmd)
+```
+
+Identifying hypo- and hypermethylated regions (HMRs):
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/hmr ", "-o ", resDir, "/neg_control_grp1.hmr ", dataDir, "/data_neg_control_methpipe_grp1.meth", sep="")
+system(cmd)
+
+cmd <- paste("./", methPipe.path, "/hmr ", "-o ", resDir, "/neg_control_grp2.hmr ", dataDir, "/data_neg_control_methpipe_grp2.meth", sep="")
+system(cmd)
+```
+
+Computing DMRs:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/dmr ", resDir, "/neg_control_methpipe.methdiff ", resDir, "/neg_control_grp1.hmr ", resDir, "/neg_control_grp2.hmr ", resDir, "/neg_control_methpipe_dmrs_grp1 ", resDir, "/neg_control_meth_dmrs_grp2", sep="")
+system(cmd)
+```
+
+Filtering only DMRs with at least 10 CpGs, from that at least 5 significant (as suggested by the documentation):
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("awk -F '[:\t]' '$5 >= 10 && $6 >= 5 {print $0}' ", resDir, "/neg_control_methpipe_dmrs_grp1 > ", resDir, "/neg_control_methpipe_dmrs_grp1.filtered", sep="")
+system(cmd)
+
+cmd <- paste("awk -F '[:\t]' '$5 >= 10 && $6 >= 5 {print $0}' ", resDir, "/neg_control_methpipe_dmrs_grp2 > ", resDir, "/neg_control_methpipe_dmrs_grp2
+             .filtered", sep="")
+system(cmd)
+```
+
+####Simulated data
+Preparation of data:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+M <- read.table(paste(dataDir, "/sim_data.M", sep=""), header=TRUE, sep="\t")
+cov <- read.table(paste(dataDir, "/sim_data.cov", sep=""), header=TRUE, sep="\t")
+chr <- M$chr
+pos <- M$pos
+strand <- rep('+', length(chr))  #we don't care about the strand, but methpipe requires it
+context <- rep('CpG', length(chr)) #all data are from CpGs
+for(i in 1:6){
+  methCounts <- M[,2+i]
+  covs <- cov[,2+i]
+  methProp <- methCounts/covs
+  data.i <- data.frame(chr=chr, pos=pos, strand=strand, context=context,
+                       methProportion=methProp, coverage=covs)
+  name <- paste(dataDir, "/sim_data_methpipe_", i, ".meth", sep="")
+  write.table(data.i, file=name, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+```
+
+MethPipe analysis:
+```{r}
+
+```
