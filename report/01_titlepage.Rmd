@@ -1,0 +1,41 @@
+---
+output: pdf_document
+---
+
+\begin{centering}
+
+\vspace{2 cm}
+
+\Large
+
+{\bf Title}
+
+\vspace{1 cm}
+
+\large
+Authors\\
+Affiliation
+
+\vspace{1.5 cm}
+
+\begin{figure}[H] 
+\begin{center}
+\includegraphics[height=2in,width=2in]{./figures/ethz_uzh.jpeg}
+\end{center}
+\end{figure}
+
+\vspace{1 cm}
+
+\large
+December, 2018
+
+\vspace{1.5 cm}
+\large
+A report submitted to Prof. Mark Robinson in partial fulfillment of the requirements of the course STA426
+
+\vspace{2 cm}
+
+\normalsize
+\textcopyright Authors, 2018
+
+\end{centering}
