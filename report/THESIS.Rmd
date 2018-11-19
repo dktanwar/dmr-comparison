@@ -1,0 +1,176 @@
+---
+bibliography: library.bib
+csl: methods-in-ecology-and-evolution.csl
+fontsize: 12pt
+geometry: left=1in,right=1in,top=1.3in,bottom=1.3in
+header-includes:
+- \usepackage{placeins}
+- \usepackage{graphics}
+- \usepackage{fancyhdr}
+- \usepackage{setspace}
+- \usepackage{chngcntr}
+- \usepackage{microtype}
+- \usepackage{float}
+- \usepackage{rotating}
+- \onehalfspacing
+- \counterwithin{figure}{section}
+- \counterwithin{table}{section}
+- \usepackage[T1]{fontenc}
+- \usepackage{lmodern}
+- \usepackage{mathptmx}
+- \usepackage{cite}
+- \usepackage[font=small,labelfont=bf]{caption}
+- \usepackage[english]{babel}
+- \usepackage{graphicx}
+- \usepackage[fontsize=12pt]{scrextend}
+linkcolor: black
+output:
+  pdf_document:
+    fig_caption: yes
+    number_sections: yes
+  word_document:
+    fig_caption: true
+    toc: yes
+    fig_width: 5
+    fig_height: 5
+urlcolor: black
+citecolor: black
+---
+
+---
+nocite: | 
+  @2018
+...
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.path = 'figures/',
+                      echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+\pagenumbering{gobble}
+
+```{r child = '01_titlepage.Rmd'}
+```
+
+
+\newpage
+
+\pagestyle{fancy}
+
+\fancyhead[LE,RO]{}
+\fancyhead[LO,RE]{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+
+
+
+\pagenumbering{roman}
+
+\fancyhead[CO,CE]{Abstract}
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+\onehalfspacing
+
+```{r child = '02_abstract.Rmd'}
+```
+
+
+\newpage
+
+\fancyhead[CO,CE]{Acknowledgements}
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+\onehalfspacing
+
+```{r child = '03_acknowledgements.Rmd'}
+```
+
+\newpage
+\fancyhead[CO,CE]{Table of Contents}
+\setcounter{tocdepth}{10}
+\tableofcontents
+
+\newpage
+\fancyhead[CO,CE]{List of Figures}
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+
+\newpage
+\fancyhead[CO,CE]{List of Tables}
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
+
+
+
+\newpage
+
+\fancyhead[CO,CE]{Abbreviations}
+\section*{Abbreviations}
+\addcontentsline{toc}{section}{Abbreviations}
+\onehalfspacing
+
+```{r child = '04_abbreviations.Rmd'}
+```
+
+\newpage
+
+\pagenumbering{arabic}
+
+\newpage
+\fancyhead[CO,CE]{Introduction}
+\onehalfspacing
+
+```{r child = '05_introduction.Rmd'}
+```
+
+
+\FloatBarrier
+\newpage
+\fancyhead[CO,CE]{Methods}
+\onehalfspacing
+
+```{r child = '06_methods.Rmd'}
+```
+
+\FloatBarrier
+\newpage
+\fancyhead[CO,CE]{Results}
+\onehalfspacing
+
+```{r child = '07_results.Rmd'}
+```
+
+\FloatBarrier
+\newpage
+\fancyhead[CO,CE]{Conclusion}
+\onehalfspacing
+
+```{r child = '08_conclusion.Rmd'}
+```
+
+\newpage
+
+\appendix
+\setcounter{secnumdepth}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\renewcommand{\thetable}{A.\arabic{table}}
+
+\fancyhead[CO,CE]{Appendix A: }
+\section*{Appendix A: }
+\addcontentsline{toc}{section}{Appendix A: }
+\onehalfspacing
+
+```{r child = '09_appendix1.Rmd'}
+```
+
+
+\newpage
+
+\fancyhead[CO,CE]{References}
+\addcontentsline{toc}{section}{References}
+\onehalfspacing
+```{r child = '10_references.Rmd'}
+```
