@@ -1,4 +1,3 @@
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -13,3 +12,6 @@ STA426 project - comparison of new methods for detection of differentially methy
 
 # report
 Report from data analysis.
+=======
+# STA426-project
+STA426 project - comparison of new methods for detection of differentially methylated regions
