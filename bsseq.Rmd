@@ -33,4 +33,8 @@ bs <- BSseq(chr=chr, pos=pos, M=M, Cov = cov, sampleNames=sampleNames)
 - smoothing:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 bs.smoothed <- BSmooth(bs, verbose=TRUE)
+
+saveRDS(bs.smoothed, "analysis.RData", compress = T)
+
+load("analysis.RData")
 ```
