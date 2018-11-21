@@ -3,7 +3,9 @@
 
 
 - [STA426-project](#sta426-project)
-- [report](#report)
+    - [Title](#title)
+    - [Methods to be compared](#methods-to-be-compared)
+    - [Data:](#data)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

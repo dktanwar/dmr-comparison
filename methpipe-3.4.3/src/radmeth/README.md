@@ -1,3 +1,16 @@
+<a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [RADMeth: Regression Analysis of Differential Methylation](#radmeth-regression-analysis-of-differential-methylation)
+  - [Contact Information](#contact-information)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 RADMeth: Regression Analysis of Differential Methylation
 ========================================================
 

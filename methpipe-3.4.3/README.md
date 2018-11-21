@@ -1,3 +1,15 @@
+<a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Building and Installing](#building-and-installing)
+- [Usage](#usage)
+- [Contacts and bug reports](#contacts-and-bug-reports)
+- [Copyright and License Information](#copyright-and-license-information)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 The MethPipe software package is a computational pipeline for
 analyzing bisulfite sequencing data (WGBS and RRBS). MethPipe
 provides tools for mapping bisulfite sequencing read and estimating
