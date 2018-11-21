@@ -17,12 +17,12 @@ Comparison of new methods for detection of differentially methylated regions
 
 ### Methods to be compared
 
-- [dmrseq](https://academic.oup.com/biostatistics/advance-article/doi/10.1093/biostatistics/kxy007/4899074)
-- [MethGO](https://methgo.readthedocs.io/en/latest/)
-- [MethPipe](http://smithlabresearch.org/software/methpipe/)
-- [RADMeth](http://smithlabresearch.org/software/radmeth/)
-- [methylKit](https://www.bioconductor.org/packages/devel/bioc/vignettes/methylKit/inst/doc/methylKit.html)
-- [bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq.html)
+- [dmrseq](https://academic.oup.com/biostatistics/advance-article/doi/10.1093/biostatistics/kxy007/4899074) : R
+- [MethGO](https://methgo.readthedocs.io/en/latest/) : Python
+- [MethPipe](http://smithlabresearch.org/software/methpipe/) : C
+- [RADMeth](http://smithlabresearch.org/software/radmeth/) : C
+- [methylKit](https://www.bioconductor.org/packages/devel/bioc/vignettes/methylKit/inst/doc/methylKit.html) : R
+- [bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq.html) : R
 
 
 ### Data:
