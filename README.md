@@ -20,7 +20,7 @@ Comparison of new methods for detection of differentially methylated regions
 - [dmrseq](https://academic.oup.com/biostatistics/advance-article/doi/10.1093/biostatistics/kxy007/4899074) : R
 - [MethGO](https://methgo.readthedocs.io/en/latest/) : Python
 - [MethPipe](http://smithlabresearch.org/software/methpipe/) : C
-- [RADMeth](http://smithlabresearch.org/software/radmeth/) : C
+- [CGmapTools](https://cgmaptools.github.io/) : Python + C
 - [methylKit](https://www.bioconductor.org/packages/devel/bioc/vignettes/methylKit/inst/doc/methylKit.html) : R
 - [bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq.html) : R
 
