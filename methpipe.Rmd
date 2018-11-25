@@ -13,7 +13,7 @@ dataDir <- "data"
 dir.create(file.path(dataDir))
 resDir <- "results"
 dir.create(file.path(resDir))
-methPipe.path <- "methpipe-3.4.3/bin"
+methPipe.path <- "../methpipe-3.4.3/bin"
 ```
 
 #### Negative control

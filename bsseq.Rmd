@@ -42,7 +42,7 @@ grp2 <- c(2,4,6)
 - smoothing:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 bs.smoothed <- BSmooth(bs, verbose=TRUE)
-# load("bsseq_neg_control_smoothed.RData")
+# load(paste(resDir,"bsseq_neg_control_smoothed.RData",sep="/"))
 ```
 
 - we keep only loci with at least two samples in each group with coverage at least two:
