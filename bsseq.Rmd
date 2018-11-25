@@ -21,6 +21,7 @@ dir.create(file.path(resDir))
 - read in data:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 library("bsseq")
+library(SummarizedExperiment)
 M <- read.table(paste(dataDir, "data_neg_control.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
 cov <- read.table(paste(dataDir, "data_neg_control.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
 chr <- M$chr
@@ -41,7 +42,7 @@ grp2 <- c(2,4,6)
 ```
 - smoothing:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
-bs.smoothed <- BSmooth(bs, verbose=TRUE)
+bs.smoothed <- BSmooth(bs, verbose=TRUE, mc.cores = 16)
 # load(paste(resDir,"bsseq_neg_control_smoothed.RData",sep="/"))
 ```
 
@@ -104,7 +105,7 @@ grp1 <- c(1,2,3)
 grp2 <- c(4,5,6)
 
 # smoothing
-bs.smoothed <- BSmooth(bs, verbose=TRUE)
+bs.smoothed <- BSmooth(bs, verbose=TRUE, mc.cores = 16)
 
 # filtering regions with high enough coverage
 bs.cov <- getCoverage(bs.smoothed)
@@ -136,4 +137,16 @@ pdf(file = paste(resDir, "sim_data_bsseq_dmrs.pdf", sep="/"), width = 10, height
 plotManyRegions(bs.smoothed, dmrs.filtered, extend = 5000, 
                 addRegions = dmrs.filtered)
 dev.off()
+```
+
+
+# Save Image
+```{r}
+save.image(file = "20181125_bsseq.RData", compress = T)
+```
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
 ```
