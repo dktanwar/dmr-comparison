@@ -11,7 +11,7 @@ Setting directories and path to MethPipe:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 dataDir <- "data"
 dir.create(file.path(dataDir))
-resDir <- "results"
+resDir <- "results/methpipe"
 dir.create(file.path(resDir))
 methPipe.path <- "../methpipe-3.4.3/bin"
 ```

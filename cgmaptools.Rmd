@@ -1,0 +1,124 @@
+---
+title: "CGmapTools"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Setting directories:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dataDir <- "data"
+dir.create(file.path(dataDir))
+resDir <- "results/cgmaptools"
+dir.create(file.path(resDir))
+```
+CGmapTools must be installed and the directory added to `PATH`.
+
+#### Negative control
+- preparing data in the required format:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+data <- read.table(paste(dataDir, "/data_neg_control_all.txt.gz", sep=""), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- data$chr
+pos <- data$pos
+context <- rep('CpG', length(chr)) #all data are from CpGs
+Cs <- rep('C', length(chr)) #column of C's is part of the format
+grp1 <- c(1,3,5)
+meth.1 <- rep(0, length(chr))
+cov.1 <- rep(0, length(chr))
+grp2 <- c(2,4,6)
+meth.2 <- rep(0, length(chr))
+cov.2 <- rep(0, length(chr))
+for(i in grp1){
+  methCounts <- data[,2+2*i-1]
+  cov <- data[,2+2*i]
+  meth.1 <- meth.1 + methCounts
+  cov.1 <- cov.1 + cov
+}
+prop.1 <- meth.1/cov.1
+for(i in grp2){
+  methCounts <- data[,2+2*i-1]
+  cov <- data[,2+2*i]
+  meth.2 <- meth.2 + methCounts
+  cov.2 <- cov.2 + cov
+}
+prop.2 <- meth.2/cov.2
+
+new.data <- data.frame(chr=chr,
+                       C=Cs,
+                       pos=pos,
+                       context1=context,
+                       context2=context,
+                       prop.1=prop.1,
+                       meth.1=meth.1,
+                       cov.1=cov.1,
+                       prop.2=prop.2,
+                       meth.2=meth.2,
+                       cov.2=cov.2)
+gz1 <- gzfile(paste(dataDir,"data_neg_control_cgmaptools.txt.gz", sep="/"), "w")
+write.table(new.data, file=gz1, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+close(gz1)
+```
+
+- run CGmapTools:
+cgmaptools dmr -i data/data_neg_control_cgmaptools.txt.gz -n 10 -o results/cgmaptools/neg_control_dmrs.txt
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("cgmaptools dmr -i ", dataDir, "/data_neg_control_cgmaptools.txt.gz -n 10 -o ", resDir, "/neg_control_cgmaptools_dmrs.txt",sep="")
+cmd
+system(cmd)
+```
+
+#### Simulated data
+- preparing data in the required format:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+M <- read.table(paste(dataDir, "/sim_data.M.gz", sep=""), header=TRUE, sep="\t", stringsAsFactors = F)
+cov <- read.table(paste(dataDir, "/sim_data.cov.gz", sep=""), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- M$chr
+pos <- M$pos
+context <- rep('CpG', length(chr)) #all data are from CpGs
+Cs <- rep('C', length(chr)) #column of C's is part of the format
+grp1 <- c(1,2,3)
+meth.1 <- rep(0, length(chr))
+cov.1 <- rep(0, length(chr))
+grp2 <- c(4,5,6)
+meth.2 <- rep(0, length(chr))
+cov.2 <- rep(0, length(chr))
+for(i in grp1){
+  methCounts <- M[,2+i]
+  covs <- cov[,2+i]
+  meth.1 <- meth.1 + methCounts
+  cov.1 <- cov.1 + covs
+}
+prop.1 <- meth.1/cov.1
+for(i in grp2){
+  methCounts <- M[,2+i]
+  covs <- cov[,2+i]
+  meth.2 <- meth.2 + methCounts
+  cov.2 <- cov.2 + covs
+}
+prop.2 <- meth.2/cov.2
+
+new.data <- data.frame(chr=chr,
+                       C=Cs,
+                       pos=pos,
+                       context1=context,
+                       context2=context,
+                       prop.1=prop.1,
+                       meth.1=meth.1,
+                       cov.1=cov.1,
+                       prop.2=prop.2,
+                       meth.2=meth.2,
+                       cov.2=cov.2)
+gz1 <- gzfile(paste(dataDir,"sim_data_cgmaptools.txt.gz", sep="/"), "w")
+write.table(new.data, file=gz1, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+close(gz1)
+```
+
+- run CGmapTools:
+cgmaptools dmr -i data/data_neg_control_cgmaptools.txt.gz -n 10 -o results/cgmaptools/neg_control_dmrs.txt
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("cgmaptools dmr -i ", dataDir, "/sim_data_cgmaptools.txt.gz -n 10 -o ", resDir, "/sim_data_cgmaptools_dmrs.txt",sep="")
+cmd
+system(cmd)
+```
