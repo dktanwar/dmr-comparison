@@ -49,10 +49,11 @@ bs.smoothed <- BSmooth(bs, verbose=TRUE, mc.cores = 16)
 - we keep only loci with at least two samples in each group with coverage at least two:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 bs.cov <- getCoverage(bs.smoothed)
-keepLoci.ex <- which(rowSums(bs.cov[, grp1] >= 2) >= 2 &
-                     rowSums(bs.cov[, grp2] >= 2) >= 2)
+keepLoci.ex <- which(rowSums(bs.cov[, grp1] >= 5) >= 2 &
+                     rowSums(bs.cov[, grp2] >= 5) >= 2)
 length(keepLoci.ex)
 bs.smoothed <- bs.smoothed[keepLoci.ex]
+save(bs.smoothed, file=paste(resDir, "bsseq_neg_control_smoothed.RData",sep="/"))
 ```
 
 - computing t-statistics:
@@ -80,7 +81,7 @@ pData <- pData(bs.smoothed)
 pData$col <- c("red", "blue", "red", "blue","red", "blue")
 pData(bs.smoothed) <- pData
 pdf(file = paste(resDir, "neg_control_bsseq_dmrs.pdf", sep="/"), width = 10, height = 5)
-plotManyRegions(bs.smoothed, dmrs.filtered, extend = 5000, 
+plotManyRegions(bs.smoothed, dmrs.filtered[1:6,], extend = 5000, 
                 addRegions = dmrs.filtered)
 dev.off()
 ```
@@ -109,10 +110,11 @@ bs.smoothed <- BSmooth(bs, verbose=TRUE, mc.cores = 16)
 
 # filtering regions with high enough coverage
 bs.cov <- getCoverage(bs.smoothed)
-keepLoci.ex <- which(rowSums(bs.cov[, grp1] >= 2) >= 2 &
-                     rowSums(bs.cov[, grp2] >= 2) >= 2)
+keepLoci.ex <- which(rowSums(bs.cov[, grp1] >= 5) >= 2 &
+                     rowSums(bs.cov[, grp2] >= 5) >= 2)
 length(keepLoci.ex)
 bs.smoothed <- bs.smoothed[keepLoci.ex]
+save(bs.smoothed, file=paste(resDir, "bsseq_sim_data_smoothed.RData",sep="/"))
 
 # computing t-test
 bs.tstat <- BSmooth.tstat(bs.smoothed, 
@@ -134,7 +136,7 @@ pData <- pData(bs.smoothed)
 pData$col <- rep(c("red", "blue"), each=3)
 pData(bs.smoothed) <- pData
 pdf(file = paste(resDir, "sim_data_bsseq_dmrs.pdf", sep="/"), width = 10, height = 5)
-plotManyRegions(bs.smoothed, dmrs.filtered, extend = 5000, 
+plotManyRegions(bs.smoothed, dmrs.filtered[1:6,], extend = 5000, 
                 addRegions = dmrs.filtered)
 dev.off()
 ```
