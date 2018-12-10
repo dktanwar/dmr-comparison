@@ -1,0 +1,11 @@
+---
+output: pdf_document
+---
+
+\begin{tabular}{ll}
+
+A & Adenine \\
+
+API & Application Programming Interface \\
+
+\end{tabular}
