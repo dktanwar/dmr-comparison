@@ -7,6 +7,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#### Method description
+Differential methylation scores are first computed at individual CpG sites in a way similar to one-directional version of Fisher’s test. HMRs (hypo- and hyper-methylated regions) are detected using Hidden Markov Model individually in each sample (group). Non-overlapping intervals of HMRs are then checked if they contain sufficient number of DMLs.
+
+
+# Analysis
 Setting directories and path to MethPipe:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 dataDir <- "data"
