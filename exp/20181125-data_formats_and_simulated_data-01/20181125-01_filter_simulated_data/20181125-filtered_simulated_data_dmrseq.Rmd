@@ -1,0 +1,174 @@
+---
+title: "Filer Negative controls & generate simulated data"
+author: "Deepak Tanwar & Hana Parizkova"
+date: "<b>Created on:</b> 2018-11-25 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Packages required
+```{r, message=F, warning=F}
+library(dmrseq)
+library(data.table)
+library(tidyverse)
+library(dplyr)
+```
+
+
+# Negative control
+```{r}
+# Files from 6 replicates
+files <- list.files(path = "./input", pattern = "rep", full.names = T)
+anno <- read.table("./input/phenoData.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+# Read data
+read.files <- lapply(files, function(x) {
+  a <- fread(
+    input = x, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+    col.names = c("chr", "pos", "M", "cov")
+  )
+  colnames(a)[3:4] <- paste(strsplit(x, "\\.|/")[[1]][4], colnames(a)[3:4], sep = ".")
+  return(a)
+})
+
+# Make one dataframe fromlist of files
+tab <- Reduce(function(x, y) {
+  merge(x, y, by = c("chr", "pos"))
+}, read.files)
+```
+
+
+# BSseq object
+
+## BSseq object creation and filtering
+```{r}
+# Generate BSseq object
+bs <- BSseq(
+  chr = tab$chr, pos = tab$pos,
+  M = tab[, grep(pattern = ".M", x = colnames(tab))],
+  Cov = tab[, grep(pattern = ".cov", x = colnames(tab))],
+  pData = anno, sampleNames = anno$names
+)
+
+
+# Keeping loci with with coverage at least 5 in at least two samples in each group
+loci.idx <- which(rowSums(getCoverage(bs[, pData(bs)$Group == "Group1"], type = "Cov") >= 5) >= 2 &
+  rowSums(getCoverage(bs[, pData(bs)$Group == "Group2"], type = "Cov") >= 5) >= 2)
+
+bs <- bs[loci.idx, ]
+
+save(bs, file = "./output/bsseq_neg_control.RData", compress = T)
+```
+
+
+## Saving filtered data
+```{r}
+# Extract information from the object
+chr.nc <- as.character(seqnames(bs))
+pos.nc <- start(bs)
+cov.nc <- data.frame(getCoverage(bs, type = "Cov"))
+M.nc <- data.frame(getCoverage(bs, type = "M"))
+
+for (i in 1:ncol(cov.nc)) {
+  n <- paste0("./output/NC_rep", i, ".bed")
+  df <- data.frame(chr.nc, pos.nc, M.nc[, i], cov.nc[, i])
+  fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F)
+}
+```
+
+
+
+# Simulated data
+- 100 simulated DMRs added to negative control data
+- simulated data created by `simDMRs` function from `dmrseq` package
+
+```{r}
+# reorder samples to create a null comparison
+bs.null <- bs[, c(1, 3, 5, 2, 4, 6)]
+
+
+# Set seeds to maintain reproducibility
+set.seed(100)
+
+# add 100 DMRs
+bs.sim <- simDMRs(bs = bs.null, num.dmrs = 100)
+
+save(bs.sim, file = "./output/bsseq_sim_100.RData", compress = T)
+```
+
+## Simulated DMRs
+```{r}
+dmr.ranges <- data.frame(bs.sim$gr.dmrs, stringsAsFactors = F)
+sim.dmr <- data.frame(dmr.ranges, mean.cov = bs.sim$dmr.mncov, effect.size = bs.sim$delta, stringsAsFactors = F)
+write.table(sim.dmr,
+  file = gzfile("./output/simulated_DMRS.txt.gz", compression = 3),
+  sep = "\t", quote = FALSE, row.names = FALSE
+)
+```
+
+
+## Saving data in same format as of Negatie Control
+```{r}
+# Re-arrange the data
+sim <- bs.sim$bs[, c(1, 4, 2, 5, 3, 6)]
+
+# Extract information from the object
+chr.sim <- as.character(seqnames(sim))
+pos.sim <- start(sim)
+cov.sim <- data.frame(getCoverage(sim, type = "Cov"))
+M.sim <- data.frame(getCoverage(sim, type = "M"))
+
+for (i in 1:ncol(cov.sim)) {
+  n <- paste0("./output/sim_rep", i, ".bed")
+  df <- data.frame(chr.sim, pos.sim, M.sim[, i], cov.sim[, i])
+  fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F)
+}
+```
+
+
+# phenoData tables
+
+## Negative control
+```{r}
+anno.nc <- anno[, 3:4]
+
+write.table(anno.nc, "./output/anno_neg_control.txt", sep = "\t", quote = F)
+```
+
+## Simulated DMRs
+```{r}
+anno.sim <- anno.nc %>%
+  mutate_all(funs(str_replace(., "NC", "sim")))
+rownames(anno.sim) <- anno.sim$names
+
+write.table(anno.sim, "./output/anno_sim_data.txt", sep = "\t", quote = F)
+```
+
+
+# Compress all text outputs in output
+```{r}
+system("pigz -11 -p 16 ./output/*.txt")
+system("pigz -11 -p 16 ./output/*.bed")
+```
+
+
+# SessionInfo
+```{r}
+devtools::session_info()
+```
