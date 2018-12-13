@@ -9,6 +9,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 According to https://bioconductor.org/packages/release/bioc/vignettes/DMRcaller/inst/doc/DMRcaller.pdf.
 
+#### Method description
+DMRcaller offers three different methods of preprocessing data: 
+Neighbourhood method: Each cytosine is considered independently, differentially methylated cytosines are called.
+Bins method: The genome is split into tilling bins of given size, all reads in each bin are pooled and differentially methylated bins are called.
+Noise filter: A smoothing kernel is applied on the data before calling differentially methylated loci. Four kernels are available: uniform, triangular, Gaussian, and Epanechnicov. 
+For each cytosine (in case of neighbourhood and noise filter methods) or bin (in case of bins method) a statistical test (Fisher’s exact or Score test) is performed. All statistically significant positions with at least given difference in methylation proportion and given number of reads per cytosine are called differentially methylated. Adjacent DMLs/bins are then merged. 
+
+Unlike the rest of the methods, DMRcaller allows to call DMRs also in non-CpG context, making it suitable e.g. for analysis of plant genomes.
+
+# Analysis
 Dependencies:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 library("dmrseq")
@@ -25,7 +35,7 @@ bssseqDataDir <- "results/bsseq"
 
 ncores=2
 
-annoTrack <- getAnnot("hg19")
+#annoTrack <- getAnnot("hg19")
 ```
 
 #### Negative control
@@ -48,7 +58,7 @@ M <- M[keepLoci.ex,]
 chr <- chr[keepLoci.ex]
 pos <- pos[keepLoci.ex]
 context <- rep('CG', length(chr)) #all data are from CpGs
-tricontext <- rep('HCG', length(chr)) #trinucleotide context (won't be used, but is required)
+tricontext <- rep('XCG', length(chr)) #trinucleotide context (won't be used, but is required)
 strand <- rep('+', length(chr))
 for(i in 1:6){
   meth.i <- M[,i]
@@ -87,12 +97,12 @@ mDataGrp2 <- poolMethylationDatasets(methylationDataList[grp2])
 ```
 
 - DMRs calling
-  - `noise_filter` method with `triangular` kernel, Fisher test
+  - `noise_filter` method with `triangular` kernel, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 DMRsNoiseFilterTriangular <- computeDMRs(mDataGrp1, mDataGrp2,
   method = "noise_filter",
   kernelFunction = "triangular",
-  test = "fisher",
+  test = "score",
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
@@ -107,7 +117,7 @@ DMRsNoiseFilterTriangularMerged <- mergeDMRsIteratively(DMRsNoiseFilterTriangula
   mDataGrp2,
   minProportionDifference = 0.1,
   pValueThreshold = 0.05,
-  test="fisher",
+  test="score",
   cores=ncores)
 
 print(DMRsNoiseFilterTriangularMerged)
@@ -115,11 +125,11 @@ print(DMRsNoiseFilterTriangularMerged)
 save(DMRsNoiseFilterTriangularMerged, file = paste(resDir,"neg_control_noiseFilter_triangular.RData", sep="/"), compress = T)
 ```
 
-  - `neighbourhood` method, Fisher test
+  - `neighbourhood` method, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 DMRsNeighbourhood <- computeDMRs(mDataGrp1, mDataGrp2,
   method = "neighbourhood",
-  test = "fisher",
+  test = "score",
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
@@ -134,7 +144,7 @@ DMRsNeighbourhoodMerged <- mergeDMRsIteratively(DMRsNeighbourhood,
   mDataGrp2,
   minProportionDifference = 0.1,
   pValueThreshold = 0.05,
-  test="fisher",
+  test="score",
   cores=ncores)
 
 print(DMRsNeighbourhoodMerged)
@@ -142,11 +152,11 @@ print(DMRsNeighbourhoodMerged)
 save(DMRsNeighbourhoodMerged, file = paste(resDir,"neg_control_neighbourhood.RData", sep="/"), compress = T)
 ```
 
-  - `bins` method, Fisher test
+  - `bins` method, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 DMRsBins <- computeDMRs(mDataGrp1, mDataGrp2,
   method = "bins",
-  test = "fisher",
+  test = "score",
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
@@ -161,7 +171,7 @@ DMRsBinsMerged <- mergeDMRsIteratively(DMRsBins,
   mDataGrp2,
   minProportionDifference = 0.1,
   pValueThreshold = 0.05,
-  test="fisher",
+  test="score",
   cores=ncores)
 
 print(DMRsBinsMerged)
@@ -191,12 +201,12 @@ plotDMRs(bs.smoothed, regions=DMRsNoiseFilterTriangularMerged[1:6,],
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 M <- read.table(paste(dataDir, "sim_data.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
 cov <- read.table(paste(dataDir, "sim_data.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
-chr <- M$chr
-pos <- M$pos
-M$chr <- NULL
-M$pos <- NULL
-cov$chr <- NULL
-cov$pos <- NULL
+chr <- M$chr.sim
+pos <- M$pos.sim
+M$chr.sim <- NULL
+M$pos.sim <- NULL
+cov$chr.sim <- NULL
+cov$pos.sim <- NULL
 # required coverage: at least 5 in at least 2 samples in each group
 keepLoci.ex <- which(rowSums(cov[, grp1] >= 5) >= 2 &
                      rowSums(cov[, grp2] >= 5) >= 2)
@@ -206,7 +216,7 @@ M <- M[keepLoci.ex,]
 chr <- chr[keepLoci.ex]
 pos <- pos[keepLoci.ex]
 context <- rep('CG', length(chr)) #all data are from CpGs
-tricontext <- rep('HCG', length(chr)) #trinucleotide context (won't be used, but is required)
+tricontext <- rep('XCG', length(chr)) #trinucleotide context (won't be used, but is required)
 strand <- rep('+', length(chr))
 for(i in 1:6){
   meth.i <- M[,i]
@@ -245,12 +255,12 @@ mDataGrp2 <- poolMethylationDatasets(methylationDataList[grp2])
 ```
 
 - DMRs calling
-  - `noise_filter` method with `triangular` kernel, Fisher test
+  - `noise_filter` method with `triangular` kernel, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 DMRsNoiseFilterTriangular <- computeDMRs(mDataGrp1, mDataGrp2,
   method = "noise_filter",
   kernelFunction = "triangular",
-  test = "fisher",
+  test = "score",
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
@@ -265,7 +275,7 @@ DMRsNoiseFilterTriangularMerged <- mergeDMRsIteratively(DMRsNoiseFilterTriangula
   mDataGrp2,
   minProportionDifference = 0.1,
   pValueThreshold = 0.05,
-  test="fisher",
+  test="score",
   cores=ncores)
 
 print(DMRsNoiseFilterTriangularMerged)
@@ -273,15 +283,15 @@ print(DMRsNoiseFilterTriangularMerged)
 save(DMRsNoiseFilterTriangularMerged, file = paste(resDir,"sim_data_noiseFilter_triangular.RData", sep="/"), compress = T)
 ```
 
-  - `neighbourhood` method, Fisher test
+  - `neighbourhood` method, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 DMRsNeighbourhood <- computeDMRs(mDataGrp1, mDataGrp2,
   method = "neighbourhood",
-  test = "fisher",
+  test = "score",
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
-  cores=ncores)
+  cores=1)
 
 print(DMRsNeighbourhood)
 
@@ -292,7 +302,7 @@ DMRsNeighbourhoodMerged <- mergeDMRsIteratively(DMRsNeighbourhood,
   mDataGrp2,
   minProportionDifference = 0.1,
   pValueThreshold = 0.05,
-  test="fisher",
+  test="score",
   cores=ncores)
 
 print(DMRsNeighbourhoodMerged)
@@ -300,11 +310,11 @@ print(DMRsNeighbourhoodMerged)
 save(DMRsNeighbourhoodMerged, file = paste(resDir,"sim_data_neighbourhood.RData", sep="/"), compress = T)
 ```
 
-  - `bins` method, Fisher test
+  - `bins` method, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 DMRsBins <- computeDMRs(mDataGrp1, mDataGrp2,
   method = "bins",
-  test = "fisher",
+  test = "score",
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
@@ -319,7 +329,7 @@ DMRsBinsMerged <- mergeDMRsIteratively(DMRsBins,
   mDataGrp2,
   minProportionDifference = 0.1,
   pValueThreshold = 0.05,
-  test="fisher",
+  test="score",
   cores=ncores)
 
 print(DMRsBinsMerged)

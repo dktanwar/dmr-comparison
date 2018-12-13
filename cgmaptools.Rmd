@@ -7,6 +7,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#### Method description
+CGmapTools uses ‘dynamic-fragment finding method’. First, background fragments are defined using several criteria (contain a minimum number of CpGs, at most maximal distance between two adjacent CpGs, etc.). An unpaired t-test is then carried out to compare the methylation levels of CpG sites shared between fragments in the two groups. DMRs are then selected from these background fragments by P-values. 
+
+#Analysis
+
 Setting directories:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 dataDir <- "data"
