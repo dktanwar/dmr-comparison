@@ -291,7 +291,7 @@ DMRsNeighbourhood <- computeDMRs(mDataGrp1, mDataGrp2,
   pValueThreshold = 0.05,
   minCytosinesCount = 10,
   minProportionDifference = 0.1,
-  cores=1)
+  cores=ncores)
 
 print(DMRsNeighbourhood)
 
