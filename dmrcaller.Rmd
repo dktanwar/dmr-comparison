@@ -297,6 +297,7 @@ save(DMRsNoiseFilterTriangularMerged, file = paste(resDir,"sim_data_noiseFilter_
 
   - `neighbourhood` method, score test
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
+
 for(fdr in seq(0.01,0.1,by=0.01)){
   print(fdr)
   DMRsNeighbourhood <- computeDMRs(mDataGrp1, mDataGrp2,
@@ -305,7 +306,7 @@ for(fdr in seq(0.01,0.1,by=0.01)){
     pValueThreshold = fdr,
     minCytosinesCount = 10,
     minProportionDifference = 0.1,
-    cores=1)
+    cores=ncores)
   
   print(DMRsNeighbourhood)
   
@@ -334,6 +335,7 @@ for(fdr in seq(0.01,0.1,by=0.01)){
   plotManyRegions(bs.smoothed, ranges, extend = 5000, addRegions = ranges)
   dev.off()
 }
+
 ```
 
   - `bins` method, score test
@@ -363,3 +365,23 @@ print(DMRsBinsMerged)
 save(DMRsBinsMerged, file = paste(resDir,"sim_data_bins.RData", sep="/"), compress = T)
 ```
 
+<<<<<<< HEAD
+=======
+- plotting:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+### TODO: not finished
+
+if(FALSE){
+# we need to load the bsseq smoothed data
+load(paste(bssseqDataDir,"bsseq_sim_data_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$group <- rep(c("group1", "group2"), each=3))
+pData(bs.smoothed) <- pData
+
+#plotting
+# noise filter, triangular kernel
+plotDMRs(bs.smoothed, regions=DMRsNoiseFilterTriangularMerged[1:6,],
+         testCovariate="group",annoTrack=annoTrack)
+}
+```
+>>>>>>> 7c213c474c28bc1d75266aa64ce1ab28aa94f08a
