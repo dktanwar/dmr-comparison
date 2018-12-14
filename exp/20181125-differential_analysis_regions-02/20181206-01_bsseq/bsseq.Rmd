@@ -36,8 +36,10 @@ library(DT)
 pheno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
 
 files.nc <- list.files("./input", pattern = "NC_rep", full.names = T)
-bs.nc <- read.bismark(files = files.nc, sampleNames = pheno.nc$names, strandCollapse = F, 
-                        mc.cores = detectCores() - 1)
+bs.nc <- read.bismark(
+  files = files.nc, sampleNames = pheno.nc$names, strandCollapse = F,
+  mc.cores = detectCores() - 1
+)
 
 pData(bs.nc) <- pheno.nc
 ```
@@ -47,8 +49,10 @@ pData(bs.nc) <- pheno.nc
 pheno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
 
 files.sim <- list.files("./input", pattern = "sim_rep", full.names = T)
-bs.sim <- read.bismark(files = files.sim, sampleNames = pheno.sim$names, strandCollapse = F, 
-                        mc.cores = detectCores() - 1)
+bs.sim <- read.bismark(
+  files = files.sim, sampleNames = pheno.sim$names, strandCollapse = F,
+  mc.cores = detectCores() - 1
+)
 
 pData(bs.sim) <- pheno.sim
 ```
@@ -56,31 +60,35 @@ pData(bs.sim) <- pheno.sim
 
 # Smoothing
 ```{r}
-bs.smoothed.nc <- BSmooth(BSseq = bs.nc, mc.cores = detectCores()-1)
-bs.smoothed.sim <- BSmooth(BSseq = bs.sim, mc.cores = detectCores()-1)
+bs.smoothed.nc <- BSmooth(BSseq = bs.nc, mc.cores = detectCores() - 1)
+bs.smoothed.sim <- BSmooth(BSseq = bs.sim, mc.cores = detectCores() - 1)
 ```
 
 
 # Computing t-statistics
 
 ```{r}
-bs.tstat.nc <- BSmooth.tstat(bs.smoothed.nc, mc.cores = detectCores() -1, estimate.var = "same",
-                             group1 = pheno.nc$names[pheno.nc$Group == "Group1"],
-                             group2 = pheno.nc$names[pheno.nc$Group == "Group2"],
-                             local.correct = TRUE,
-                             verbose = TRUE)
+bs.tstat.nc <- BSmooth.tstat(bs.smoothed.nc,
+  mc.cores = detectCores() - 1, estimate.var = "same",
+  group1 = pheno.nc$names[pheno.nc$Group == "Group1"],
+  group2 = pheno.nc$names[pheno.nc$Group == "Group2"],
+  local.correct = TRUE,
+  verbose = TRUE
+)
 
-bs.tstat.sim <- BSmooth.tstat(bs.smoothed.sim, mc.cores = detectCores() -1, estimate.var = "same",
-                             group1 = pheno.sim$names[pheno.sim$Group == "Group1"],
-                             group2 = pheno.sim$names[pheno.sim$Group == "Group2"],
-                             local.correct = TRUE,
-                             verbose = TRUE)
+bs.tstat.sim <- BSmooth.tstat(bs.smoothed.sim,
+  mc.cores = detectCores() - 1, estimate.var = "same",
+  group1 = pheno.sim$names[pheno.sim$Group == "Group1"],
+  group2 = pheno.sim$names[pheno.sim$Group == "Group2"],
+  local.correct = TRUE,
+  verbose = TRUE
+)
 ```
 
 
 ## Marginal distribution of the `t-statistic`
 ```{r, fig.align='center', fig.width=11, fig.height=8.5, fig.cap="Distribution of `t-statistic`."}
-par(mfrow = c(1,2), pty = "s")
+par(mfrow = c(1, 2), pty = "s")
 plot(bs.tstat.nc)
 title("Negative control")
 
@@ -93,17 +101,24 @@ title("Simulated data")
 ```{r}
 # Negative control
 dmr.nc <- dmrFinder(bs.tstat.nc)
-dmr.nc$pValue <- pt(abs(dmr.nc$areaStat), 4, lower.tail = FALSE)
+# dmr.nc$pValue <- pt(abs(dmr.nc$areaStat), 4, lower.tail = FALSE)
+dmr.nc$pValue <- 2 * pt(abs(dmr.nc$areaStat), 4, lower = F)
 dmr.nc$qValue.BH <- p.adjust(p = dmr.nc$pValue, method = "BH")
 dmr.nc <- subset(dmr.nc, n >= 10 & abs(meanDiff) >= 0.1)
-write.table(dmr.nc, file = gzfile("bsseq_dmr_neg_control.txt.gz"), quote = F, row.names = F)
+write.table(dmr.nc,
+  file = gzfile("./output/bsseq_dmr_neg_control.txt.gz"), sep = "\t",
+  quote = F, row.names = F
+)
 
 # Simulated data
 dmr.sim <- dmrFinder(bs.tstat.sim)
-dmr.sim$pValue <- pt(abs(dmr.sim$areaStat), 4, lower.tail = FALSE)
+dmr.sim$pValue <- 2 * pt(abs(dmr.sim$areaStat), 4, lower = F)
 dmr.sim$qValue.BH <- p.adjust(p = dmr.sim$pValue, method = "BH")
 dmr.sim <- subset(dmr.sim, n >= 10 & abs(meanDiff) >= 0.1)
-write.table(dmr.sim, file = gzfile("bsseq_dmr_simulated_data.txt.gz"), quote = F, row.names = F)
+write.table(dmr.sim,
+  file = gzfile("./output/bsseq_dmr_simulated_data.txt.gz"), sep = "\t",
+  quote = F, row.names = F
+)
 ```
 
 # DMR Tables
