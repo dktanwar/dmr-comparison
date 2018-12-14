@@ -68,7 +68,8 @@ bismark.nc <- lapply(read.nc, function(x){
   a <- x
   a$percent <- (a$M/a$cov) * 100
   a$Un <- a$cov - a$M
-  return(a[, c("chr", "pos", "percent", "M", "Un")])
+  a$pos1 <- a$pos
+  return(a[, c("chr", "pos", "pos1", "percent", "M", "Un")])
 })
 
 
@@ -76,7 +77,8 @@ bismark.sim <- lapply(read.sim, function(x){
   a <- x
   a$percent <- (a$M/a$cov) * 100
   a$Un <- a$cov - a$M
-  return(a[, c("chr", "pos", "percent", "M", "Un")])
+  a$pos1 <- a$pos
+  return(a[, c("chr", "pos", "pos1", "percent", "M", "Un")])
 })
 ```
 
