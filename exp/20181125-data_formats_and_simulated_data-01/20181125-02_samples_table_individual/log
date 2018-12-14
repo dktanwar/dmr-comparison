@@ -1,0 +1,94 @@
+
+
+processing file: 20181125-generate_input_datasets.Rmd
+pigz: ./output/bismark is a directory -- skipping
+pigz: ./output/cgmaptools is a directory -- skipping
+pigz: ./output/dmrcaller is a directory -- skipping
+pigz: ./output/methpipe is a directory -- skipping
+output file: 20181125-generate_input_datasets.knit.md
+
+
+Output created: 20181125-generate_input_datasets.html
+Warning messages:
+1: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+2: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+3: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+4: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+5: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+6: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+                       |.............                                                    |  20%
+label: unnamed-chunk-3
+  |                                                                         |...............                                                  |  23%
+  ordinary text without R code
+
+  |                                                                         |.................                                                |  27%
+label: unnamed-chunk-4
+  |                                                                         |....................                                             |  30%
+  ordinary text without R code
+
+  |                                                                         |......................                                           |  33%
+label: unnamed-chunk-5
+  |                                                                         |........................                                         |  37%
+  ordinary text without R code
+
+  |                                                                         |..........................                                       |  40%
+label: unnamed-chunk-6
+  |                                                                         |............................                                     |  43%
+  ordinary text without R code
+
+  |                                                                         |..............................                                   |  47%
+label: unnamed-chunk-7
+  |                                                                         |................................                                 |  50%
+  ordinary text without R code
+
+  |                                                                         |...................................                              |  53%
+label: unnamed-chunk-8
+  |                                                                         |.....................................                            |  57%
+  ordinary text without R code
+
+  |                                                                         |.......................................                          |  60%
+label: unnamed-chunk-9
+  |                                                                         |.........................................                        |  63%
+  ordinary text without R code
+
+  |                                                                         |...........................................                      |  67%
+label: unnamed-chunk-10
+  |                                                                         |..............................................                   |  70%
+  ordinary text without R code
+
+  |                                                                         |................................................                 |  73%
+label: unnamed-chunk-11
+  |                                                                         |..................................................               |  77%
+  ordinary text without R code
+
+  |                                                                         |....................................................             |  80%
+label: unnamed-chunk-12 (with options) 
+List of 1
+ $ warning: symbol F
+
+  |                                                                         |......................................................           |  83%
+  ordinary text without R code
+
+  |                                                                         |........................................................         |  87%
+label: unnamed-chunk-13 (with options) 
+List of 1
+ $ warning: symbol F
+
+  |                                                                         |..........................................................       |  90%
+  ordinary text without R code
+
+  |                                                                         |.............................................................    |  93%
+label: unnamed-chunk-14
+  |                                                                         |...............................................................  |  97%
+  ordinary text without R code
+
+  |                                                                         |.................................................................| 100%
+label: unnamed-chunk-15
+
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS 20181125-generate_input_datasets.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output 20181125-generate_input_datasets.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpwDf33j/rmarkdown-str1c363870ca7.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
