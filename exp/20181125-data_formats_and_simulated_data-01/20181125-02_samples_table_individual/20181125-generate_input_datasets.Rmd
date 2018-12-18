@@ -101,7 +101,7 @@ methpipe.nc <- lapply(read.nc, function(x){
   a <- x
   a$strand <- "*"
   a$CG <- "CpG"
-  a$percent <- (a$M/a$cov) * 100
+  a$percent <- (a$M/a$cov)
   return(a[, c("chr", "pos", "strand", "CG", "percent", "cov")])
 })
 
@@ -110,7 +110,7 @@ methpipe.sim <- lapply(read.sim, function(x){
   a <- x
   a$strand <- "*"
   a$CG <- "CpG"
-  a$percent <- (a$M/a$cov) * 100
+  a$percent <- (a$M/a$cov)
   return(a[, c("chr", "pos", "strand", "CG", "percent", "cov")])
 })
 ```
