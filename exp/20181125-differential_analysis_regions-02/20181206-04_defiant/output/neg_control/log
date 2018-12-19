@@ -1,0 +1,53 @@
+[1] "en_US.utf8"
+
+    ____  ___________________    _   ________
+   / __ \/ ____/ ____/  _/   |  / | / /_  __/
+  / / / / __/ / /_   / // /| | /  |/ / / /   
+ / /_/ / /___/ __/ _/ // ___ |/ /|  / / /    
+/_____/_____/_/   /___/_/  |_/_/ |_/ /_/
+
+Differential methylation: Easy, Fast, Identification and ANnoTation
+
+ by David E. Condon, University of Pennsylvania, 2015-2018.
+
+
+The minimum coverage used will be 1
+You specified the '-f' option, so figures will be made for each and every DMR.
+You specified the '-v' option, so a p-value & an adjusted p-value using BH's method will be printed for each DMR.
+There are 2 sets to be read
+There will be 1 runs.
+Run information will be in defiant_run_info.txt
+
+***WARNING***
+There is/are 0 label(s), yet 2 sets, just a warning that you may not have correctly labeled data.
+***WARNING***
+
+Now reading file /dev/fd/63 into memory...
+there were 1 chromosomes detected in set 1 replicate 1
+Now reading file /dev/fd/62 into memory...
+there were 1 chromosomes detected in set 1 replicate 2
+Now reading file /dev/fd/61 into memory...
+there were 1 chromosomes detected in set 1 replicate 3
+Now reading file /dev/fd/60 into memory...
+there were 1 chromosomes detected in set 2 replicate 1
+Now reading file /dev/fd/59 into memory...
+there were 1 chromosomes detected in set 2 replicate 2
+Now reading file /dev/fd/58 into memory...
+there were 1 chromosomes detected in set 2 replicate 3
+Details of the data have been written to defiant_run_info.txt.
+There will be 1 runs split among 1 workers.
+
+------
+Beginning analysis.
+
+
+
+Worker 1/1 is analyzing run 1/1:	sets 1 vs. 2	with cutoffs	c = 1	CpN = 10	d = 1	p = 0.05	P = 10.000000	S = 0
+Now analyzing chromosome 18, at iteration loop 1/1
+
+
+No_DMR_was_found_with_current_parameters
+
+Answers written to set1_vs_set2_c1_CpN10_d1_p0.05_P10.tsv
+	516092/516095 = 100.0% of nucleotides met minimum coverage and were present with minimum coverage = 1 in every sample.
+Finished analysis.
