@@ -2982,7 +2982,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Input data for various software</h1>
 <h4 class="author"><em>Deepak Tanwar &amp; Hana Parizkova</em></h4>
-<h4 class="date"><em><b>Created on:</b> 2018-11-25 <br> <b>Updated on:</b> 2018-12-18</em></h4>
+<h4 class="date"><em><b>Created on:</b> 2018-11-25 <br> <b>Updated on:</b> 2018-12-20</em></h4>
 
 </div>
 
@@ -3117,7 +3117,7 @@ div.tocify {
 <h2><span class="header-section-number">3.4</span> DMRcaller inputs</h2>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">dmrcaller.nc &lt;-<span class="st"> </span><span class="kw">lapply</span>(read.nc, <span class="cf">function</span>(x){</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">  a &lt;-<span class="st"> </span>x</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">  a<span class="op">$</span>strand &lt;-<span class="st"> &quot;*&quot;</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">  a<span class="op">$</span>strand &lt;-<span class="st"> &quot;+&quot;</span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">  a<span class="op">$</span>cont &lt;-<span class="st"> &quot;CG&quot;</span></a>
 <a class="sourceLine" id="cb10-5" data-line-number="5">  a<span class="op">$</span>dinuc &lt;-<span class="st"> &quot;XCG&quot;</span></a>
 <a class="sourceLine" id="cb10-6" data-line-number="6">  a<span class="op">$</span>Un &lt;-<span class="st"> </span>a<span class="op">$</span>cov <span class="op">-</span><span class="st"> </span>a<span class="op">$</span>M</a>
@@ -3127,7 +3127,7 @@ div.tocify {
 <a class="sourceLine" id="cb10-10" data-line-number="10"></a>
 <a class="sourceLine" id="cb10-11" data-line-number="11">dmrcaller.sim &lt;-<span class="st"> </span><span class="kw">lapply</span>(read.sim, <span class="cf">function</span>(x){</a>
 <a class="sourceLine" id="cb10-12" data-line-number="12">  a &lt;-<span class="st"> </span>x</a>
-<a class="sourceLine" id="cb10-13" data-line-number="13">  a<span class="op">$</span>strand &lt;-<span class="st"> &quot;*&quot;</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">  a<span class="op">$</span>strand &lt;-<span class="st"> &quot;+&quot;</span></a>
 <a class="sourceLine" id="cb10-14" data-line-number="14">  a<span class="op">$</span>cont &lt;-<span class="st"> &quot;CG&quot;</span></a>
 <a class="sourceLine" id="cb10-15" data-line-number="15">  a<span class="op">$</span>dinuc &lt;-<span class="st"> &quot;XCG&quot;</span></a>
 <a class="sourceLine" id="cb10-16" data-line-number="16">  a<span class="op">$</span>Un &lt;-<span class="st"> </span>a<span class="op">$</span>cov <span class="op">-</span><span class="st"> </span>a<span class="op">$</span>M</a>
@@ -3204,7 +3204,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Europe/Zurich               
-##  date     2018-12-18                  
+##  date     2018-12-20                  
 ## 
 ## ─ Packages ──────────────────────────────────────────────────────────────
 ##  package     * version date       lib source        

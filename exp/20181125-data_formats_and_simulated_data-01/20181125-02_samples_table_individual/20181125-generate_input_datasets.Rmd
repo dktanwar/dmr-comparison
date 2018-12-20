@@ -168,7 +168,7 @@ for(i in 1:length(read.nc)){
 ```{r}
 dmrcaller.nc <- lapply(read.nc, function(x){
   a <- x
-  a$strand <- "*"
+  a$strand <- "+"
   a$cont <- "CG"
   a$dinuc <- "XCG"
   a$Un <- a$cov - a$M
@@ -178,7 +178,7 @@ dmrcaller.nc <- lapply(read.nc, function(x){
 
 dmrcaller.sim <- lapply(read.sim, function(x){
   a <- x
-  a$strand <- "*"
+  a$strand <- "+"
   a$cont <- "CG"
   a$dinuc <- "XCG"
   a$Un <- a$cov - a$M
