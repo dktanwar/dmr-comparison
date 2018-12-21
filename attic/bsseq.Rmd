@@ -9,6 +9,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 According to https://www.bioconductor.org/packages/devel/bioc/vignettes/bsseq/inst/doc/bsseq_analysis.html.
 
+#### Method description
+In BSmooth, the genome is partitioned into windows and the methylation proportions in each window are approximated by a second degree polynomial. To find DMRs, signal-to-noise statistc on the smoothed data, similar to t-test, is computed. 
+
+#Analysis
+
 Setting directories:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 dataDir <- "data"

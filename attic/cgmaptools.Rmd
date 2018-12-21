@@ -7,6 +7,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#### Method description
+CGmapTools uses ‘dynamic-fragment finding method’. First, background fragments are defined using several criteria (contain a minimum number of CpGs, at most maximal distance between two adjacent CpGs, etc.). An unpaired t-test is then carried out to compare the methylation levels of CpG sites shared between fragments in the two groups. DMRs are then selected from these background fragments by P-values. 
+
+#Analysis
+
 Setting directories:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 dataDir <- "data"
@@ -74,46 +79,47 @@ gz1 <- gzfile(paste(dataDir,"data_neg_control_cgmaptools.txt.gz", sep="/"), "w")
 write.table(new.data, file=gz1, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
 close(gz1)
 ```
-
-- run CGmapTools:
-cgmaptools dmr -i data/data_neg_control_cgmaptools.txt.gz -n 10 -o results/cgmaptools/neg_control_dmrs.txt
-```{r warning=FALSE, message=FALSE, eval=FALSE}
-cmd <- paste("cgmaptools dmr -i ", dataDir, "/data_neg_control_cgmaptools.txt.gz -n 10 -o ", resDir, "/neg_control_cgmaptools_dmrs.txt",sep="")
-cmd
-system(cmd)
-```
-
-- filtering by Benjamini-Hochberg, for FDR<=0.05:
-```{r warning=FALSE, message=FALSE, eval=FALSE}
-dmrs <- read.table(paste(resDir, "/neg_control_cgmaptools_dmrs.txt",sep=""), header=F, sep="\t", stringsAsFactors = F)
-p.values <- dmrs[,5]
-p.values.adj <- p.adjust(p.values, method="BH")
-
-dmrs.filtered <- dmrs[p.values.adj<=0.05,]
-dmrs.filtered[,1] <- gsub("b", "", dmrs.filtered[,1])
-write.table(dmrs.filtered, file=paste(resDir, "neg_control_cgmaptools_dmrs.filtered", sep="/"), sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
-```
-
-- plotting:
+- needed for plotting:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 # we need to load the bsseq smoothed data
 load(paste(bssseqDataDir,"bsseq_neg_control_smoothed.RData",sep="/"))
 pData <- pData(bs.smoothed)
 pData$col <- rep(c("red", "blue"), nrep=3)
 pData(bs.smoothed) <- pData
-
-# load DMRs data
-dmrs <- read.table(paste(resDir,"neg_control_cgmaptools_dmrs.filtered",sep="/"), header=FALSE, stringsAsFactors = FALSE, sep="\t")
-#sorting with respect to p-value
-dmrs.sorted <- dmrs[order(dmrs[,5]),]
-dmrs <- dmrs.sorted[,c(1,2,3)]
-colnames(dmrs) <- c("chr", "start", "end")
-
-# plotting
-pdf(file = paste(resDir, "neg_control_cgmaptools_dmrs.pdf", sep="/"), width = 10, height = 5)
-plotManyRegions(bs.smoothed, dmrs[1:6,], extend = 5000, addRegions = dmrs)
-dev.off()
 ```
+
+
+- run CGmapTools:
+cgmaptools dmr -i data/data_neg_control_cgmaptools.txt.gz -n 10 -o results/cgmaptools/neg_control_dmrs.txt
+```{r }
+cmd <- paste("cgmaptools dmr -i ", dataDir, "/data_neg_control_cgmaptools.txt.gz -n 10 -o ", resDir, "/neg_control_cgmaptools_dmrs.txt",sep="")
+cmd
+system(cmd)
+```
+
+- filtering by Benjamini-Hochberg, for different values of FDR:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dmrs <- read.table(paste(resDir, "/neg_control_cgmaptools_dmrs.txt",sep=""), header=F, sep="\t", stringsAsFactors = F)
+p.values <- dmrs[,5]
+p.values.adj <- p.adjust(p.values, method="BH")
+for(fdr in seq(0.01,0.1,by=0.01)){
+  dmrs.filtered <- dmrs[p.values.adj<=fdr,]
+  dmrs.filtered[,1] <- gsub("b", "", dmrs.filtered[,1])
+  write.table(dmrs.filtered, file=paste(resDir, "/neg_control_cgmaptools_dmrs_", fdr, ".filtered", sep=""), sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+    
+  #sorting with respect to p-value
+  dmrs.filtered.sorted <- dmrs.filtered[order(dmrs.filtered[,5]),]
+  dmrs.filtered.sorted <- dmrs.filtered.sorted[,c(1,2,3)]
+  colnames(dmrs.filtered.sorted) <- c("chr", "start", "end")
+  
+  # plotting
+  n = min(6,nrow(dmrs.filtered.sorted))
+  pdf(file = paste(resDir, "/neg_control_cgmaptools_dmrs_", fdr, ".pdf", sep=""), width = 10, height = 5)
+  plotManyRegions(bs.smoothed, dmrs.filtered.sorted[1:n,], extend = 5000, addRegions = dmrs.filtered.sorted)
+  dev.off()
+}
+```
+
 
 #### Simulated data
 - preparing data in the required format:
@@ -173,6 +179,15 @@ write.table(new.data, file=gz1, sep="\t", quote=FALSE, col.names=FALSE, row.name
 close(gz1)
 ```
 
+- needed for plotting:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+# we need to load the bsseq smoothed data
+load(paste(bssseqDataDir,"bsseq_sim_data_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$col <- rep(c("red", "blue"), each=3)
+pData(bs.smoothed) <- pData
+```
+
 - run CGmapTools:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 cmd <- paste("cgmaptools dmr -i ", dataDir, "/sim_data_cgmaptools.txt.gz -n 10 -o ", resDir, "/sim_data_cgmaptools_dmrs.txt",sep="")
@@ -180,34 +195,26 @@ cmd
 system(cmd)
 ```
 
-- filter:
+- filter and plot:
 ```{r warning=FALSE, message=FALSE, eval=FALSE}
 dmrs <- read.table(paste(resDir, "/sim_data_cgmaptools_dmrs.txt",sep=""), header=F, sep="\t", stringsAsFactors = F)
 p.values <- dmrs[,5]
 p.values.adj <- p.adjust(p.values, method="BH")
-
-dmrs.filtered <- dmrs[p.values.adj<=0.05,]
-dmrs.filtered[,1] <- gsub("b", "", dmrs.filtered[,1])
-write.table(dmrs.filtered, file=paste(resDir, "sim_data_cgmaptools_dmrs.filtered", sep="/"), sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
-```
-
-- plotting:
-```{r warning=FALSE, message=FALSE, eval=FALSE}
-# we need to load the bsseq smoothed data
-load(paste(bssseqDataDir,"bsseq_sim_data_smoothed.RData",sep="/"))
-pData <- pData(bs.smoothed)
-pData$col <- rep(c("red", "blue"), each=3)
-pData(bs.smoothed) <- pData
-
-# load DMRs data
-dmrs <- read.table(paste(resDir,"sim_data_cgmaptools_dmrs.filtered",sep="/"), header=FALSE, stringsAsFactors = FALSE, sep="\t")
-#sorting with respect to p-value
-dmrs.sorted <- dmrs[order(dmrs[,5]),]
-dmrs <- dmrs.sorted[,c(1,2,3)]
-colnames(dmrs) <- c("chr", "start", "end")
-
-# plotting
-pdf(file = paste(resDir, "sim_data_cgmaptools_dmrs.pdf", sep="/"), width = 10, height = 5)
-plotManyRegions(bs.smoothed, dmrs[1:6,], extend = 5000, addRegions = dmrs)
-dev.off()
+for(fdr in seq(0.01,0.1,by=0.01)){
+  dmrs.filtered <- dmrs[p.values.adj<=fdr,]
+  dmrs.filtered[,1] <- gsub("b", "", dmrs.filtered[,1])
+  print(nrow(dmrs.filtered))
+  write.table(dmrs.filtered, file=paste(resDir, "/sim_data_cgmaptools_dmrs_", fdr, ".filtered", sep=""), sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+    
+  #sorting with respect to p-value
+  dmrs.filtered.sorted <- dmrs.filtered[order(dmrs.filtered[,5]),]
+  dmrs.filtered.sorted <- dmrs.filtered.sorted[,c(1,2,3)]
+  colnames(dmrs.filtered.sorted) <- c("chr", "start", "end")
+  
+  # plotting
+  n = min(6,nrow(dmrs.filtered.sorted))
+  pdf(file = paste(resDir, "/sim_data_cgmaptools_dmrs_", fdr, ".pdf", sep=""), width = 10, height = 5)
+  plotManyRegions(bs.smoothed, dmrs.filtered.sorted[1:n,], extend = 5000, addRegions = dmrs.filtered.sorted)
+  dev.off()
+}
 ```
