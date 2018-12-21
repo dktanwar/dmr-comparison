@@ -1,0 +1,27 @@
+
+
+processing file: project_report.Rmd
+output file: project_report.knit.md
+
+[WARNING] This document format requires a nonempty <title> element.
+  Please specify either 'title' or 'pagetitle' in the metadata.
+  Falling back to 'project_report.utf8'
+
+Output created: project_report.html
+                                                |  25%
+   inline R code fragments
+
+  |                                                                         |................................                                 |  50%
+label: unnamed-chunk-1 (with options) 
+List of 3
+ $ warning: symbol F
+ $ message: logi FALSE
+ $ echo   : logi FALSE
+
+  |                                                                         |.................................................                |  75%
+  ordinary text without R code
+
+  |                                                                         |.................................................................| 100%
+label: unnamed-chunk-2
+
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS project_report.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output project_report.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --variable 'theme:spacelab' --include-in-header /tmp/RtmpIFPVfw/rmarkdown-str63f7df53cb0.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
