@@ -37,7 +37,7 @@ mkdir -p ./output/neg_control && cd ./output/neg_control
 
 DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
 
-$DEFIANT -c 1 -f -v -CpN 10 -i <(zcat ../../input/NC_rep1.bed.gz),<(zcat ../../input/NC_rep3.bed.gz),<(zcat ../../input/NC_rep5.bed.gz) <(zcat ../../input/NC_rep2.bed.gz),<(zcat ../../input/NC_rep4.bed.gz),<(zcat ../../input/NC_rep6.bed.gz) 2> log >> log
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/NC_rep1.bed.gz),<(zcat ../../input/NC_rep3.bed.gz),<(zcat ../../input/NC_rep5.bed.gz) <(zcat ../../input/NC_rep2.bed.gz),<(zcat ../../input/NC_rep4.bed.gz),<(zcat ../../input/NC_rep6.bed.gz) 2> log >> log
 
 cd ../../
 ```
@@ -48,7 +48,7 @@ mkdir -p ./output/sim_data && cd ./output/sim_data
 
 DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
 
-$DEFIANT -c 1 -f -v -CpN 10 -i <(zcat ../../input/sim_rep1.bed.gz),<(zcat ../../input/sim_rep3.bed.gz),<(zcat ../../input/sim_rep5.bed.gz) <(zcat ../../input/sim_rep2.bed.gz),<(zcat ../../input/sim_rep4.bed.gz),<(zcat ../../input/sim_rep6.bed.gz) 2> log >> log
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/sim_rep1.bed.gz),<(zcat ../../input/sim_rep3.bed.gz),<(zcat ../../input/sim_rep5.bed.gz) <(zcat ../../input/sim_rep2.bed.gz),<(zcat ../../input/sim_rep4.bed.gz),<(zcat ../../input/sim_rep6.bed.gz) 2> log >> log
 
 cd ../../
 ```
@@ -59,12 +59,17 @@ cd ../../
 ## Negative control
 
 ```{r}
-dmr.nc <- read.delim("./output/neg_control/set1_vs_set2_c1_CpN10_d1_p0.05_P10.tsv",
+dmr.nc <- read.delim("./output/neg_control/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.tsv",
   header = T, sep = "\t", stringsAsFactors = F, check.names = F
 )
+
+colnames(dmr.nc)[10] <- "qval"
+
+write.table(dmr.nc, file = gzfile("./output/defiant_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
 ```{r}
+c1 <- dmr.nc$qval[dmr.nc$qval <= 0.05]
 datatable(
   dmr.nc,
   rownames = F,
@@ -74,25 +79,29 @@ datatable(
     colReorder = list(realtime = FALSE),
     dom = "fltBip"
   )
-)
+)%>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c1, rep("#66C2A5", length(c1)))
+  )
 ```
 
 
 
 ## Simulated data
 ```{r}
-dmr.sim <- read.delim("./output/sim_data/set1_vs_set2_c1_CpN10_d1_p0.05_P10_q.tsv",
+dmr.sim <- read.delim("./output/sim_data/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.tsv",
   header = T, sep = "\t", stringsAsFactors = F, check.names = F
 )
 
-colnames(dmr.sim)[9:10] <- c("pVal", "qval.BH")
+colnames(dmr.sim)[10] <- "qval"
 
 write.table(dmr.sim, file = gzfile("./output/defiant_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
 
 ```{r}
-c2 <- dmr.sim$qval.BH[dmr.sim$qval.BH <= 0.05]
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
 datatable(
   dmr.sim,
   rownames = F,
@@ -104,7 +113,7 @@ datatable(
   )
 ) %>%
   formatStyle(
-    "qval.BH",
+    "qval",
     backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
   )
 ```

@@ -16,21 +16,21 @@ running: bash  -c 'mkdir -p ./output/neg_control && cd ./output/neg_control
 
 DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
 
-$DEFIANT -c 1 -f -v -CpN 10 -i <(zcat ../../input/NC_rep1.bed.gz),<(zcat ../../input/NC_rep3.bed.gz),<(zcat ../../input/NC_rep5.bed.gz) <(zcat ../../input/NC_rep2.bed.gz),<(zcat ../../input/NC_rep4.bed.gz),<(zcat ../../input/NC_rep6.bed.gz) 2> log >> log
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/NC_rep1.bed.gz),<(zcat ../../input/NC_rep3.bed.gz),<(zcat ../../input/NC_rep5.bed.gz) <(zcat ../../input/NC_rep2.bed.gz),<(zcat ../../input/NC_rep4.bed.gz),<(zcat ../../input/NC_rep6.bed.gz) 2> log >> log
 
 cd ../../'
 running: bash  -c 'mkdir -p ./output/sim_data && cd ./output/sim_data
 
 DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
 
-$DEFIANT -c 1 -f -v -CpN 10 -i <(zcat ../../input/sim_rep1.bed.gz),<(zcat ../../input/sim_rep3.bed.gz),<(zcat ../../input/sim_rep5.bed.gz) <(zcat ../../input/sim_rep2.bed.gz),<(zcat ../../input/sim_rep4.bed.gz),<(zcat ../../input/sim_rep6.bed.gz) 2> log >> log
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/sim_rep1.bed.gz),<(zcat ../../input/sim_rep3.bed.gz),<(zcat ../../input/sim_rep5.bed.gz) <(zcat ../../input/sim_rep2.bed.gz),<(zcat ../../input/sim_rep4.bed.gz),<(zcat ../../input/sim_rep6.bed.gz) 2> log >> log
 
 cd ../../'
 output file: defiant.knit.md
 
 
 Output created: defiant.html
-.................                                             |  31%
+...                                             |  31%
   ordinary text without R code
 
   |                                                                         |........................                                         |  38%
@@ -64,4 +64,4 @@ label: unnamed-chunk-7
   |                                                                         |.................................................................| 100%
 label: unnamed-chunk-8
 
-/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS defiant.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output defiant.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpF6f98u/rmarkdown-str69c54bbd0e59.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS defiant.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output defiant.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpjIzAsh/rmarkdown-str55485efbb1cf.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 

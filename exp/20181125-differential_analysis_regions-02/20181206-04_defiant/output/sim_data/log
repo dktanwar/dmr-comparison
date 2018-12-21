@@ -29,6 +29,42 @@ null device
           1 
 null device 
           1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
+null device 
+          1 
 
     ____  ___________________    _   ________
    / __ \/ ____/ ____/  _/   |  / | / /_  __/
@@ -72,10 +108,10 @@ Beginning analysis.
 
 
 
-Worker 1/1 is analyzing run 1/1:	sets 1 vs. 2	with cutoffs	c = 1	CpN = 10	d = 1	p = 0.05	P = 10.000000	S = 0
+Worker 1/1 is analyzing run 1/1:	sets 1 vs. 2	with cutoffs	c = 1	CpN = 10	d = 1	p = 0.90	P = 10.000000	S = 0
 Now analyzing chromosome 18, at iteration loop 1/1
-Answers written to set1_vs_set2_c1_CpN10_d1_p0.05_P10.tsv
-set1_vs_set2_c1_CpN10_d1_p0.05_P10_q.tsv
-Writing answers to set1_vs_set2_c1_CpN10_d1_p0.05_P10_q.tsv
-	516067/516095 = 100.0% of nucleotides met minimum coverage and were present with minimum coverage = 1 in every sample.
+Answers written to set1_vs_set2_c1_CpN10_d1_p0.90_P10.tsv
+set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.tsv
+Writing answers to set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.tsv
+	575478/575485 = 100.0% of nucleotides met minimum coverage and were present with minimum coverage = 1 in every sample.
 Finished analysis.

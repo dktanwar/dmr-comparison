@@ -1,4 +1,4 @@
-The command line:  /home/ubuntu/softwares/downloads/defiant/defiant -c 1 -f -v -CpN 10 -i /dev/fd/63,/dev/fd/62,/dev/fd/61 /dev/fd/60,/dev/fd/59,/dev/fd/58
+The command line:  /home/ubuntu/softwares/downloads/defiant/defiant -c 1 -f -v -CpN 10 -p 0.9 -i /dev/fd/63,/dev/fd/62,/dev/fd/61 /dev/fd/60,/dev/fd/59,/dev/fd/58
 These files are considered set 1: /dev/fd/63,/dev/fd/62,/dev/fd/61
 
 /dev/fd/63: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
