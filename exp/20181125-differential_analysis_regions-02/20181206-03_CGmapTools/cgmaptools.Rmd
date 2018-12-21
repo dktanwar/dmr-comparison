@@ -95,16 +95,16 @@ cgmaptools dmr -i <(zcat ./output/02_intersect_grp1_grp2/sim_data.intersect.gz) 
 ```{r}
 dmr.nc <- read.table("./output/03_dmr/neg_control.dmr.gz",
   header = F, sep = "\t", stringsAsFactors = F,
-  col.names = c("chr", "start", "end", "t", "pVal", "mGrp1", "mGrp2", "N_site")
+  col.names = c("chr", "start", "end", "stat", "pVal", "mGrp1", "mGrp2", "N_site")
 )
 
-dmr.nc$qval.BH <- p.adjust(p = dmr.nc$pVal, method = "BH")
-dmr.nc <- dmr.nc[order(dmr.nc$qval.BH), ]
+dmr.nc$qval <- p.adjust(p = dmr.nc$pVal, method = "BH")
+dmr.nc <- dmr.nc[order(dmr.nc$qval), ]
 write.table(dmr.nc, file = gzfile("./output/cgmaptools_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
 ```{r}
-c1 <- dmr.nc$qval.BH[dmr.nc$qval.BH <= 0.05]
+c1 <- dmr.nc$qval[dmr.nc$qval <= 0.05]
 datatable(
   dmr.nc,
   rownames = F,
@@ -116,7 +116,7 @@ datatable(
   )
 ) %>%
   formatStyle(
-    "qval.BH",
+    "qval",
     backgroundColor = styleEqual(c1, rep("#66C2A5", length(c1)))
   )
 ```
@@ -130,15 +130,15 @@ dmr.sim <- read.table("./output/03_dmr/sim_data.dmr.gz",
   col.names = c("chr", "start", "end", "t", "pVal", "mGrp1", "mGrp2", "N_site")
 )
 
-dmr.sim$qval.BH <- p.adjust(p = dmr.sim$pVal, method = "BH")
-dmr.sim <- dmr.sim[order(dmr.sim$qval.BH), ]
+dmr.sim$qval <- p.adjust(p = dmr.sim$pVal, method = "BH")
+dmr.sim <- dmr.sim[order(dmr.sim$qval), ]
 
 write.table(dmr.sim, file = gzfile("./output/cgmaptools_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
 
 ```{r}
-c2 <- dmr.sim$qval.BH[dmr.sim$qval.BH <= 0.05]
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
 datatable(
   dmr.sim,
   rownames = F,
@@ -150,7 +150,7 @@ datatable(
   )
 ) %>%
   formatStyle(
-    "qval.BH",
+    "qval",
     backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
   )
 ```
