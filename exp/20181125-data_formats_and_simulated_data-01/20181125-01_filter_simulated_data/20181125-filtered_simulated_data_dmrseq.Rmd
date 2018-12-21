@@ -71,19 +71,19 @@ bs <- BSseq(
 loci.idx <- which(rowSums(getCoverage(bs[, pData(bs)$Group == "Group1"], type = "Cov") >= 5) >= 2 &
   rowSums(getCoverage(bs[, pData(bs)$Group == "Group2"], type = "Cov") >= 5) >= 2)
 
-bs <- bs[loci.idx, ]
+bs.nc <- bs[loci.idx, ]
 
-save(bs, file = "./output/bsseq_neg_control.RData", compress = T)
+save(bs.nc, file = "./output/bsseq_neg_control.RData", compress = T)
 ```
 
 
 ## Saving filtered data
 ```{r}
 # Extract information from the object
-chr.nc <- as.character(seqnames(bs))
-pos.nc <- start(bs)
-cov.nc <- data.frame(getCoverage(bs, type = "Cov"))
-M.nc <- data.frame(getCoverage(bs, type = "M"))
+chr.nc <- as.character(seqnames(bs.nc))
+pos.nc <- start(bs.nc)
+cov.nc <- data.frame(getCoverage(bs.nc, type = "Cov"))
+M.nc <- data.frame(getCoverage(bs.nc, type = "M"))
 
 for (i in 1:ncol(cov.nc)) {
   n <- paste0("./output/NC_rep", i, ".bed")
@@ -108,7 +108,9 @@ set.seed(100)
 
 # add 100 DMRs
 bs.sim <- simDMRs(bs = bs.null, num.dmrs = 100)
+bs.sim$bs <- bs.sim$bs[, c(1, 4, 2, 5, 3, 6)]
 
+colnames(bs.sim$bs) <- str_replace(colnames(bs.nc) , "NC", "sim")
 save(bs.sim, file = "./output/bsseq_sim_100.RData", compress = T)
 ```
 
@@ -126,7 +128,7 @@ write.table(sim.dmr,
 ## Saving data in same format as of Negatie Control
 ```{r}
 # Re-arrange the data
-sim <- bs.sim$bs[, c(1, 4, 2, 5, 3, 6)]
+sim <- bs.sim$bs
 
 # Extract information from the object
 chr.sim <- as.character(seqnames(sim))

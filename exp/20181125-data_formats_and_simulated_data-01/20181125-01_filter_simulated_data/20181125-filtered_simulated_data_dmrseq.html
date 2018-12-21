@@ -2982,7 +2982,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Filer Negative controls &amp; generate simulated data</h1>
 <h4 class="author"><em>Deepak Tanwar &amp; Hana Parizkova</em></h4>
-<h4 class="date"><em><b>Created on:</b> 2018-11-25 <br> <b>Updated on:</b> 2018-12-11</em></h4>
+<h4 class="date"><em><b>Created on:</b> 2018-11-25 <br> <b>Updated on:</b> 2018-12-21</em></h4>
 
 </div>
 
@@ -3032,17 +3032,17 @@ div.tocify {
 <a class="sourceLine" id="cb3-11" data-line-number="11">loci.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">rowSums</span>(<span class="kw">getCoverage</span>(bs[, <span class="kw">pData</span>(bs)<span class="op">$</span>Group <span class="op">==</span><span class="st"> &quot;Group1&quot;</span>], <span class="dt">type =</span> <span class="st">&quot;Cov&quot;</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">5</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="st">  </span><span class="kw">rowSums</span>(<span class="kw">getCoverage</span>(bs[, <span class="kw">pData</span>(bs)<span class="op">$</span>Group <span class="op">==</span><span class="st"> &quot;Group2&quot;</span>], <span class="dt">type =</span> <span class="st">&quot;Cov&quot;</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">5</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14">bs &lt;-<span class="st"> </span>bs[loci.idx, ]</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">bs.nc &lt;-<span class="st"> </span>bs[loci.idx, ]</a>
 <a class="sourceLine" id="cb3-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw">save</span>(bs, <span class="dt">file =</span> <span class="st">&quot;./output/bsseq_neg_control.RData&quot;</span>, <span class="dt">compress =</span> T)</a></code></pre></div>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw">save</span>(bs.nc, <span class="dt">file =</span> <span class="st">&quot;./output/bsseq_neg_control.RData&quot;</span>, <span class="dt">compress =</span> T)</a></code></pre></div>
 </div>
 <div id="saving-filtered-data" class="section level2">
 <h2><span class="header-section-number">3.2</span> Saving filtered data</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Extract information from the object</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">chr.nc &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">seqnames</span>(bs))</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">pos.nc &lt;-<span class="st"> </span><span class="kw">start</span>(bs)</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">cov.nc &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">getCoverage</span>(bs, <span class="dt">type =</span> <span class="st">&quot;Cov&quot;</span>))</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">M.nc &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">getCoverage</span>(bs, <span class="dt">type =</span> <span class="st">&quot;M&quot;</span>))</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">chr.nc &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">seqnames</span>(bs.nc))</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">pos.nc &lt;-<span class="st"> </span><span class="kw">start</span>(bs.nc)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">cov.nc &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">getCoverage</span>(bs.nc, <span class="dt">type =</span> <span class="st">&quot;Cov&quot;</span>))</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">M.nc &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">getCoverage</span>(bs.nc, <span class="dt">type =</span> <span class="st">&quot;M&quot;</span>))</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb4-7" data-line-number="7"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(cov.nc)) {</a>
 <a class="sourceLine" id="cb4-8" data-line-number="8">  n &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;./output/NC_rep&quot;</span>, i, <span class="st">&quot;.bed&quot;</span>)</a>
@@ -3067,7 +3067,10 @@ div.tocify {
 <a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co"># add 100 DMRs</span></a>
 <a class="sourceLine" id="cb5-9" data-line-number="9">bs.sim &lt;-<span class="st"> </span><span class="kw">simDMRs</span>(<span class="dt">bs =</span> bs.null, <span class="dt">num.dmrs =</span> <span class="dv">100</span>)</a></code></pre></div>
 <pre><code>## Simulating DMRs for 3 vs 3 comparison</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">save</span>(bs.sim, <span class="dt">file =</span> <span class="st">&quot;./output/bsseq_sim_100.RData&quot;</span>, <span class="dt">compress =</span> T)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">bs.sim<span class="op">$</span>bs &lt;-<span class="st"> </span>bs.sim<span class="op">$</span>bs[, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">6</span>)]</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">colnames</span>(bs.sim<span class="op">$</span>bs) &lt;-<span class="st"> </span><span class="kw">str_replace</span>(<span class="kw">colnames</span>(bs.nc) , <span class="st">&quot;NC&quot;</span>, <span class="st">&quot;sim&quot;</span>)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">save</span>(bs.sim, <span class="dt">file =</span> <span class="st">&quot;./output/bsseq_sim_100.RData&quot;</span>, <span class="dt">compress =</span> T)</a></code></pre></div>
 <div id="simulated-dmrs" class="section level2">
 <h2><span class="header-section-number">4.1</span> Simulated DMRs</h2>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">dmr.ranges &lt;-<span class="st"> </span><span class="kw">data.frame</span>(bs.sim<span class="op">$</span>gr.dmrs, <span class="dt">stringsAsFactors =</span> F)</a>
@@ -3080,7 +3083,7 @@ div.tocify {
 <div id="saving-data-in-same-format-as-of-negatie-control" class="section level2">
 <h2><span class="header-section-number">4.2</span> Saving data in same format as of Negatie Control</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># Re-arrange the data</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">sim &lt;-<span class="st"> </span>bs.sim<span class="op">$</span>bs[, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">6</span>)]</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">sim &lt;-<span class="st"> </span>bs.sim<span class="op">$</span>bs</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co"># Extract information from the object</span></a>
 <a class="sourceLine" id="cb9-5" data-line-number="5">chr.sim &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">seqnames</span>(sim))</a>
@@ -3130,7 +3133,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Europe/Zurich               
-##  date     2018-12-11                  
+##  date     2018-12-21                  
 ## 
 ## ─ Packages ──────────────────────────────────────────────────────────────
 ##  package                * version   date       lib source        
@@ -3138,7 +3141,7 @@ div.tocify {
 ##  AnnotationHub            2.12.1    2018-09-05 [1] Bioconductor  
 ##  annotatr                 1.6.0     2018-10-04 [1] Bioconductor  
 ##  assertthat               0.2.0     2017-04-11 [1] CRAN (R 3.5.1)
-##  backports                1.1.2     2017-12-13 [1] CRAN (R 3.5.1)
+##  backports                1.1.3     2018-12-14 [1] CRAN (R 3.5.1)
 ##  bibtex                   0.4.2     2017-06-30 [1] CRAN (R 3.5.1)
 ##  bindr                    0.1.1     2018-03-13 [1] CRAN (R 3.5.1)
 ##  bindrcpp               * 0.2.2     2018-03-29 [1] CRAN (R 3.5.1)
@@ -3190,7 +3193,7 @@ div.tocify {
 ##  HDF5Array                1.8.1     2018-06-21 [1] Bioconductor  
 ##  hms                      0.4.2     2018-03-10 [1] CRAN (R 3.5.1)
 ##  htmltools                0.3.6     2017-04-28 [1] CRAN (R 3.5.1)
-##  httpuv                   1.4.5     2018-07-19 [1] CRAN (R 3.5.1)
+##  httpuv                   1.4.5.1   2018-12-18 [1] CRAN (R 3.5.1)
 ##  httr                     1.4.0     2018-12-11 [1] CRAN (R 3.5.1)
 ##  interactiveDisplayBase   1.18.0    2018-10-04 [1] Bioconductor  
 ##  IRanges                * 2.14.12   2018-09-20 [1] Bioconductor  
@@ -3213,7 +3216,7 @@ div.tocify {
 ##  nlme                     3.1-137   2018-04-07 [1] CRAN (R 3.5.1)
 ##  outliers                 0.14      2011-01-24 [1] CRAN (R 3.5.1)
 ##  permute                  0.9-4     2016-09-09 [1] CRAN (R 3.5.1)
-##  pillar                   1.3.0     2018-07-14 [1] CRAN (R 3.5.1)
+##  pillar                   1.3.1     2018-12-15 [1] CRAN (R 3.5.1)
 ##  pkgbuild                 1.0.2     2018-10-16 [1] CRAN (R 3.5.1)
 ##  pkgconfig                2.0.2     2018-08-16 [1] CRAN (R 3.5.1)
 ##  pkgload                  1.0.2     2018-10-29 [1] CRAN (R 3.5.1)
