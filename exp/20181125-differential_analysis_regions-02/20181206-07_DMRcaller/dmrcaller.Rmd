@@ -1,0 +1,290 @@
+---
+title: "DMRs: DMRcaller"
+author: "Hana Parizkova & Deepak Tanwar"
+date: "<b>Created on:</b> 2018-12-19 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Packages required
+```{r, warning=F, message=FALSE}
+library(DT)
+library(dplyr)
+library(data.table)
+library(DMRcaller)
+```
+
+According to https://bioconductor.org/packages/release/bioc/vignettes/DMRcaller/inst/doc/DMRcaller.pdf.
+
+# Method description
+
+**DMRcaller offers three different methods of preprocessing data:**
+
+1. **Neighbourhood method:** Each cytosine is considered independently, differentially methylated cytosines are called.
+Bins method: The genome is split into tilling bins of given size, all reads in each bin are pooled and differentially methylated bins are called.
+
+2. **Noise filter:** A smoothing kernel is applied on the data before calling differentially methylated loci. Four kernels are available: uniform, triangular, Gaussian, and Epanechnicov.
+
+3. **Bin:** For each cytosine (in case of neighbourhood and noise filter methods) or bin (in case of bins method) a statistical test (Fisher’s exact or Score test) is performed. All statistically significant positions with at least given difference in methylation proportion and given number of reads per cytosine are called differentially methylated. Adjacent DMLs/bins are then merged.
+
+Unlike the rest of the methods, DMRcaller allows to call DMRs also in non-CpG context, making it suitable e.g. for analysis of plant genomes.
+
+
+# Input data
+
+## Negative control
+```{r}
+anno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+files.nc <- list.files("./input", pattern = "NC", full.names = T)
+read.nc <- GRangesList(lapply(files.nc, function(x) readBismark(x)))
+names(read.nc) <- anno.nc$names
+
+mData.grp1.nc <- poolMethylationDatasets(read.nc[anno.nc$names[anno.nc$Group == "Group1"]])
+mData.grp2.nc <- poolMethylationDatasets(read.nc[anno.nc$names[anno.nc$Group == "Group2"]])
+```
+
+
+## Simulated data
+```{r}
+anno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+files.sim <- list.files("./input", pattern = "sim_r", full.names = T)
+read.sim <- GRangesList(lapply(files.sim, function(x) readBismark(x)))
+names(read.sim) <- anno.sim$names
+
+mData.grp1.sim <- poolMethylationDatasets(read.sim[anno.sim$names[anno.sim$Group == "Group1"]])
+mData.grp2.sim <- poolMethylationDatasets(read.sim[anno.sim$names[anno.sim$Group == "Group2"]])
+```
+
+
+# DMRs analysis
+
+## Function to perform analysis
+```{r}
+dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyword) {
+
+  # Methods
+  m <- NULL
+  if (methods == "all") {
+    m <- c("noise_filter", "neighbourhood", "bins")
+  } else {
+    m <- methods
+  }
+
+  # Kernals
+  k <- NULL
+  if (methods == "noise_filter" | methods == "all") {
+    k <- c("uniform", "triangular", "gaussian", "epanechnicov")
+  } else {
+    k <- kernals
+  }
+
+  # DMRs
+  dmr.list.nf <- list()
+  dmr.list.ot <- list()
+
+  for (i in 1:length(m)) {
+    if (m[i] == "noise_filter") {
+      for (j in 1:length(k)) {
+        dmr.list.nf[[j]] <- computeDMRs(
+          methylationData1 = grp1,
+          methylationData2 = grp2,
+          method = m[i],
+          kernelFunction = k[j],
+          test = "score",
+          pValueThreshold = 0.1,
+          minCytosinesCount = 10,
+          minProportionDifference = 0.1,
+          cores = detectCores() - 1
+        )
+        names(dmr.list.nf)[j] <- paste(m[i], k[j], sep = "_")
+      }
+    } else {
+      dmr.list.ot[[i]] <- computeDMRs(
+        methylationData1 = grp1,
+        methylationData2 = grp2,
+        method = m[i],
+        test = "score",
+        pValueThreshold = 0.1,
+        minCytosinesCount = 10,
+        minProportionDifference = 0.1,
+        cores = detectCores() - 1
+      )
+      names(dmr.list.ot)[i] <- m[i]
+    }
+  }
+
+  dmr.list <- c(dmr.list.nf, dmr.list.ot)
+  dmr.list <- dmr.list[!is.na(names(dmr.list))]
+
+  dmr.list.merge <- lapply(dmr.list, function(x) mergeDMRsIteratively(
+      DMRs = x,
+      methylationData1 = grp1,
+      methylationData2 = grp2,
+      minGap = 200,
+      respectSigns = TRUE,
+      minProportionDifference = 0.1,
+      pValueThreshold = 0.1,
+      test = "score",
+      cores = detectCores() - 1
+    ))
+
+  # Save data
+  
+  for(i in 1:length(dmr.list.merge)){
+    tmp <- data.frame(dmr.list.merge[[i]])
+    if(nrow(tmp)!= 0){
+    n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
+    write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
+    }
+  }
+  
+  return(dmr.list.merge)
+}
+```
+
+
+## Negative control
+
+```{r}
+dmr.ls.nc <- dmrcaller_analysis(grp1 = mData.grp1.nc, grp2 = mData.grp2.nc, 
+                                methods = "all", kernals = "all",
+                                keyword = "neg_control")
+```
+
+
+## Simulated data
+
+```{r}
+dmr.ls.sim <- dmrcaller_analysis(grp1 = mData.grp1.sim, grp2 = mData.grp2.sim, 
+                                methods = "all", kernals = "all",
+                                keyword = "sim_data")
+```
+
+
+# DMR tables
+
+## Function
+
+```{r}
+display_table <- function(df, fdr.col){
+c <- df[, fdr.col][df[, fdr.col] <= 0.05]
+
+if(length(c) == 0){
+datatable(
+  df,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)  
+} else{
+datatable(
+  df,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    fdr.col,
+    backgroundColor = styleEqual(c, rep("#66C2A5", length(c)))
+  )
+}
+}
+```
+
+## Negative control
+
+
+```{r}
+t <- htmltools::tagList(
+  lapply(dmr.ls.sim, function(x){
+    df <- data.frame(x)
+    fdr.col <- "pValue"
+    
+    c <- df[, fdr.col][df[, fdr.col] <= 0.05]
+
+if(length(c) == 0){
+datatable(
+  df,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)  
+} else{
+datatable(
+  df,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    fdr.col,
+    backgroundColor = styleEqual(c, rep("#66C2A5", length(c)))
+  )
+  }
+}
+))
+
+t
+
+# print to HTML
+cat("# Results \n \n ")
+for(i in seq_along(names(t))){
+    name <- names(car_list)[i]
+    cat("\n \n")
+    cat(sprintf("## Gears: %s {.tabset .tabset-pills} \n \n", name))
+    cat("### Table \n \n")
+    print(htmltools::tagList(datatable(car_list[[i]][["data"]])))
+    cat("\n \n")
+    cat("### Venn \n \n")
+    grid.draw(car_list[[i]][["venn"]])
+    cat("\n \n")
+# }
+```
+
+
+
+# Compress output
+```{r}
+system("pigz -11 -p 16 ./output/*.txt")
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```
