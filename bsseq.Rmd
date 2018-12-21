@@ -1,0 +1,159 @@
+---
+title: "bsseq"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+According to https://www.bioconductor.org/packages/devel/bioc/vignettes/bsseq/inst/doc/bsseq_analysis.html.
+
+#### Method description
+In BSmooth, the genome is partitioned into windows and the methylation proportions in each window are approximated by a second degree polynomial. To find DMRs, signal-to-noise statistc on the smoothed data, similar to t-test, is computed. 
+
+#Analysis
+
+Setting directories:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dataDir <- "data"
+dir.create(file.path(dataDir))
+resDir <- "results/bsseq"
+dir.create(file.path(resDir))
+```
+
+#### Negative control
+- read in data:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+library("bsseq")
+library(SummarizedExperiment)
+M <- read.table(paste(dataDir, "data_neg_control.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+cov <- read.table(paste(dataDir, "data_neg_control.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- M$chr
+pos <- M$pos
+M$chr <- NULL
+M$pos <- NULL
+cov$chr <- NULL
+cov$pos <- NULL
+M <- data.matrix(M)
+cov <- data.matrix(cov)
+sampleNames <- gsub(".M", "", colnames(M))
+colnames(M) <- sampleNames
+colnames(cov) <- sampleNames
+
+bs <- BSseq(chr=chr, pos=pos, M=M, Cov = cov, sampleNames=sampleNames)
+grp1 <- c(1,3,5)
+grp2 <- c(2,4,6)
+```
+- smoothing:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+bs.smoothed <- BSmooth(bs, verbose=TRUE, mc.cores = 16)
+# load(paste(resDir,"bsseq_neg_control_smoothed.RData",sep="/"))
+```
+
+- we keep only loci with at least two samples in each group with coverage at least two:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+bs.cov <- getCoverage(bs.smoothed)
+keepLoci.ex <- which(rowSums(bs.cov[, grp1] >= 5) >= 2 &
+                     rowSums(bs.cov[, grp2] >= 5) >= 2)
+length(keepLoci.ex)
+bs.smoothed <- bs.smoothed[keepLoci.ex]
+save(bs.smoothed, file=paste(resDir, "bsseq_neg_control_smoothed.RData",sep="/"))
+```
+
+- computing t-statistics:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+bs.tstat <- BSmooth.tstat(bs.smoothed, 
+                                    group1 = grp1,
+                                    group2 = grp2, 
+                                    estimate.var = "same",
+                                    local.correct = TRUE,
+                                    verbose = TRUE)
+plot(bs.tstat)
+```
+
+- DMRs identification and filtering (DMRs should have at least 10 CpGs and the mean difference should be at least 0.1; the first value is taken so as to be consistent with MethPipe; the mean difference is taken from the bsseq documentation):
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dmrs <- dmrFinder(bs.tstat)
+dmrs.filtered <- subset(dmrs, n >= 10 & abs(meanDiff) >= 0.1)
+nrow(dmrs.filtered)
+write.table(dmrs.filtered, file=paste(resDir,"neg_control_bsseq_dmrs.filtered",sep="/"), quote=FALSE, sep="\t", col.names=FALSE)
+```
+
+- plotting:
+```{r}
+pData <- pData(bs.smoothed)
+pData$col <- c("red", "blue", "red", "blue","red", "blue")
+pData(bs.smoothed) <- pData
+pdf(file = paste(resDir, "neg_control_bsseq_dmrs.pdf", sep="/"), width = 10, height = 5)
+plotManyRegions(bs.smoothed, dmrs.filtered[1:6,], extend = 5000, 
+                addRegions = dmrs.filtered)
+dev.off()
+```
+
+
+#### Simulated data
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+# read in data
+M <- read.table(paste(dataDir, "sim_data.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+cov <- read.table(paste(dataDir, "sim_data.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- M$chr.sim
+pos <- M$pos.sim
+M$chr.sim <- NULL
+M$pos.sim <- NULL
+cov$chr.sim <- NULL
+cov$pos.sim <- NULL
+M <- data.matrix(M)
+cov <- data.matrix(cov)
+sampleNames <- colnames(M)
+bs <- BSseq(chr=chr, pos=pos, M=M, Cov = cov, sampleNames=sampleNames)
+grp1 <- c(1,2,3)
+grp2 <- c(4,5,6)
+
+# smoothing
+bs.smoothed <- BSmooth(bs, verbose=TRUE, mc.cores = 16)
+
+# filtering regions with high enough coverage
+bs.cov <- getCoverage(bs.smoothed)
+keepLoci.ex <- which(rowSums(bs.cov[, grp1] >= 5) >= 2 &
+                     rowSums(bs.cov[, grp2] >= 5) >= 2)
+length(keepLoci.ex)
+bs.smoothed <- bs.smoothed[keepLoci.ex]
+save(bs.smoothed, file=paste(resDir, "bsseq_sim_data_smoothed.RData",sep="/"))
+
+# computing t-test
+bs.tstat <- BSmooth.tstat(bs.smoothed, 
+                                    group1 = grp1,
+                                    group2 = grp2, 
+                                    estimate.var = "same",
+                                    local.correct = TRUE,
+                                    verbose = TRUE)
+plot(bs.tstat)
+
+# identifying and filtering DMRs
+dmrs <- dmrFinder(bs.tstat)
+dmrs.filtered <- subset(dmrs, n >= 10 & abs(meanDiff) >= 0.1)
+nrow(dmrs.filtered)
+write.table(dmrs.filtered, file=paste(resDir,"sim_data_bsseq_dmrs.filtered",sep="/"), quote=FALSE, sep="\t", col.names=FALSE)
+
+# plotting
+pData <- pData(bs.smoothed)
+pData$col <- rep(c("red", "blue"), each=3)
+pData(bs.smoothed) <- pData
+pdf(file = paste(resDir, "sim_data_bsseq_dmrs.pdf", sep="/"), width = 10, height = 5)
+plotManyRegions(bs.smoothed, dmrs.filtered[1:6,], extend = 5000, 
+                addRegions = dmrs.filtered)
+dev.off()
+```
+
+
+# Save Image
+```{r}
+save.image(file = "20181125_bsseq.RData", compress = T)
+```
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```

@@ -12,7 +12,7 @@
 # STA426-project
 
 ### Title
-Comparison of new methods for detection of differentially methylated regions
+Comparison of new methods for detection of differentially methylated regions.
 
 
 ### Methods to be compared

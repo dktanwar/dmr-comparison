@@ -1,0 +1,387 @@
+---
+title: "DMRcaller"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+According to https://bioconductor.org/packages/release/bioc/vignettes/DMRcaller/inst/doc/DMRcaller.pdf.
+
+#### Method description
+DMRcaller offers three different methods of preprocessing data: 
+Neighbourhood method: Each cytosine is considered independently, differentially methylated cytosines are called.
+Bins method: The genome is split into tilling bins of given size, all reads in each bin are pooled and differentially methylated bins are called.
+Noise filter: A smoothing kernel is applied on the data before calling differentially methylated loci. Four kernels are available: uniform, triangular, Gaussian, and Epanechnicov. 
+For each cytosine (in case of neighbourhood and noise filter methods) or bin (in case of bins method) a statistical test (Fisher’s exact or Score test) is performed. All statistically significant positions with at least given difference in methylation proportion and given number of reads per cytosine are called differentially methylated. Adjacent DMLs/bins are then merged. 
+
+Unlike the rest of the methods, DMRcaller allows to call DMRs also in non-CpG context, making it suitable e.g. for analysis of plant genomes.
+
+# Analysis
+Dependencies:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+library("dmrseq")
+library("DMRcaller")
+```
+
+Setting directories:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dataDir <- "data"
+dir.create(file.path(dataDir))
+resDir <- "results/dmrcaller"
+dir.create(file.path(resDir))
+bssseqDataDir <- "results/bsseq"
+
+ncores=2
+
+annoTrack <- getAnnot("hg19")
+```
+
+#### Negative control
+- prepare the data in required format:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+M <- read.table(paste(dataDir, "data_neg_control.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+cov <- read.table(paste(dataDir, "data_neg_control.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- M$chr
+pos <- M$pos
+M$chr <- NULL
+M$pos <- NULL
+cov$chr <- NULL
+cov$pos <- NULL
+# required coverage: at least 5 in at least 2 samples in each group
+keepLoci.ex <- which(rowSums(cov[, grp1] >= 5) >= 2 &
+                     rowSums(cov[, grp2] >= 5) >= 2)
+length(keepLoci.ex)
+cov <- cov[keepLoci.ex,]
+M <- M[keepLoci.ex,]
+chr <- chr[keepLoci.ex]
+pos <- pos[keepLoci.ex]
+context <- rep('CG', length(chr)) #all data are from CpGs
+tricontext <- rep('XCG', length(chr)) #trinucleotide context (won't be used, but is required)
+strand <- rep('+', length(chr))
+for(i in 1:6){
+  meth.i <- M[,i]
+  cov.i <- cov[,i]
+  nmeth.i <- cov.i-meth.i
+  new.data <- data.frame(chr=chr,
+                       pos=pos,
+                       strand=strand,
+                       meth=meth.i,
+                       nmeth=nmeth.i,
+                       context=context,
+                       tricontext=tricontext)
+  filename <- paste(dataDir,"/data_neg_control_dmrcaller_", i, ".CX_report", sep="")
+  write.table(new.data, file=filename, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+```
+
+- read in data
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+mData1 <- readBismark(paste(dataDir,"/data_neg_control_dmrcaller_1.CX_report", sep=""))
+mData2 <- readBismark(paste(dataDir,"/data_neg_control_dmrcaller_2.CX_report", sep=""))
+mData3 <- readBismark(paste(dataDir,"/data_neg_control_dmrcaller_3.CX_report", sep=""))
+mData4 <- readBismark(paste(dataDir,"/data_neg_control_dmrcaller_4.CX_report", sep=""))
+mData5 <- readBismark(paste(dataDir,"/data_neg_control_dmrcaller_5.CX_report", sep=""))
+mData6 <- readBismark(paste(dataDir,"/data_neg_control_dmrcaller_6.CX_report", sep=""))
+methylationDataList <- GRangesList("rep1" = mData1,
+              "rep2" = mData2,
+              "rep3" = mData3,
+              "rep4" = mData4,
+              "rep5" = mData5,
+              "rep6" = mData6)
+grp1 <- c(1,3,5)
+grp2 <- c(2,4,6)
+mDataGrp1 <- poolMethylationDatasets(methylationDataList[grp1])
+mDataGrp2 <- poolMethylationDatasets(methylationDataList[grp2])
+```
+
+- DMRs calling
+  - `noise_filter` method with `triangular` kernel, score test
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+DMRsNoiseFilterTriangular <- computeDMRs(mDataGrp1, mDataGrp2,
+  method = "noise_filter",
+  kernelFunction = "triangular",
+  test = "score",
+  pValueThreshold = 0.05,
+  minCytosinesCount = 10,
+  minProportionDifference = 0.1,
+  cores=ncores)
+
+print(DMRsNoiseFilterTriangular)
+
+DMRsNoiseFilterTriangularMerged <- mergeDMRsIteratively(DMRsNoiseFilterTriangular,
+  minGap = 200,
+  respectSigns = TRUE,
+  mDataGrp1,
+  mDataGrp2,
+  minProportionDifference = 0.1,
+  pValueThreshold = 0.05,
+  test="score",
+  cores=ncores)
+
+print(DMRsNoiseFilterTriangularMerged)
+
+save(DMRsNoiseFilterTriangularMerged, file = paste(resDir,"neg_control_noiseFilter_triangular.RData", sep="/"), compress = T)
+```
+
+  - `neighbourhood` method, score test
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+DMRsNeighbourhood <- computeDMRs(mDataGrp1, mDataGrp2,
+  method = "neighbourhood",
+  test = "score",
+  pValueThreshold = 0.05,
+  minCytosinesCount = 10,
+  minProportionDifference = 0.1,
+  cores=ncores)
+
+print(DMRsNeighbourhood)
+
+DMRsNeighbourhoodMerged <- mergeDMRsIteratively(DMRsNeighbourhood,
+  minGap = 200,
+  respectSigns = TRUE,
+  mDataGrp1,
+  mDataGrp2,
+  minProportionDifference = 0.1,
+  pValueThreshold = 0.05,
+  test="score",
+  cores=ncores)
+
+print(DMRsNeighbourhoodMerged)
+
+save(DMRsNeighbourhoodMerged, file = paste(resDir,"neg_control_neighbourhood.RData", sep="/"), compress = T)
+```
+
+  - `bins` method, score test
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+DMRsBins <- computeDMRs(mDataGrp1, mDataGrp2,
+  method = "bins",
+  test = "score",
+  pValueThreshold = 0.05,
+  minCytosinesCount = 10,
+  minProportionDifference = 0.1,
+  cores=ncores)
+
+print(DMRsBins)
+
+DMRsBinsMerged <- mergeDMRsIteratively(DMRsBins,
+  minGap = 200,
+  respectSigns = TRUE,
+  mDataGrp1,
+  mDataGrp2,
+  minProportionDifference = 0.1,
+  pValueThreshold = 0.05,
+  test="score",
+  cores=ncores)
+
+print(DMRsBinsMerged)
+
+save(DMRsBinsMerged, file = paste(resDir,"neg_control_bins.RData", sep="/"), compress = T)
+```
+
+- plotting:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+### TODO: not finished
+
+if(FALSE){
+# we need to load the bsseq smoothed data
+load(paste(bssseqDataDir,"bsseq_neg_control_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$group <- rep(c("group1", "group2"), 3))
+pData(bs.smoothed) <- pData
+
+#plotting
+# noise filter, triangular kernel
+plotDMRs(bs.smoothed, regions=DMRsNoiseFilterTriangularMerged[1:6,],
+         testCovariate="group",annoTrack=annoTrack)
+}
+```
+#### Simulated data
+- prepare the data in required format:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+M <- read.table(paste(dataDir, "sim_data.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+cov <- read.table(paste(dataDir, "sim_data.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- M$chr.sim
+pos <- M$pos.sim
+M$chr.sim <- NULL
+M$pos.sim <- NULL
+cov$chr.sim <- NULL
+cov$pos.sim <- NULL
+# required coverage: at least 5 in at least 2 samples in each group
+keepLoci.ex <- which(rowSums(cov[, grp1] >= 5) >= 2 &
+                     rowSums(cov[, grp2] >= 5) >= 2)
+length(keepLoci.ex)
+cov <- cov[keepLoci.ex,]
+M <- M[keepLoci.ex,]
+chr <- chr[keepLoci.ex]
+pos <- pos[keepLoci.ex]
+context <- rep('CG', length(chr)) #all data are from CpGs
+tricontext <- rep('XCG', length(chr)) #trinucleotide context (won't be used, but is required)
+strand <- rep('+', length(chr))
+for(i in 1:6){
+  meth.i <- M[,i]
+  cov.i <- cov[,i]
+  nmeth.i <- cov.i-meth.i
+  new.data <- data.frame(chr=chr,
+                       pos=pos,
+                       strand=strand,
+                       meth=meth.i,
+                       nmeth=nmeth.i,
+                       context=context,
+                       tricontext=tricontext)
+  filename <- paste(dataDir,"/sim_data_dmrcaller_", i, ".CX_report", sep="")
+  write.table(new.data, file=filename, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+```
+
+- read in data
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+mData1 <- readBismark(paste(dataDir,"/sim_data_dmrcaller_1.CX_report", sep=""))
+mData2 <- readBismark(paste(dataDir,"/sim_data_dmrcaller_2.CX_report", sep=""))
+mData3 <- readBismark(paste(dataDir,"/sim_data_dmrcaller_3.CX_report", sep=""))
+mData4 <- readBismark(paste(dataDir,"/sim_data_dmrcaller_4.CX_report", sep=""))
+mData5 <- readBismark(paste(dataDir,"/sim_data_dmrcaller_5.CX_report", sep=""))
+mData6 <- readBismark(paste(dataDir,"/sim_data_dmrcaller_6.CX_report", sep=""))
+methylationDataList <- GRangesList("rep1" = mData1,
+              "rep2" = mData2,
+              "rep3" = mData3,
+              "rep4" = mData4,
+              "rep5" = mData5,
+              "rep6" = mData6)
+grp1 <- c(1,2,3)
+grp2 <- c(4,5,6)
+mDataGrp1 <- poolMethylationDatasets(methylationDataList[grp1])
+mDataGrp2 <- poolMethylationDatasets(methylationDataList[grp2])
+```
+
+- for plotting:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+### TODO: not finished
+
+# we need to load the bsseq smoothed data
+load(paste(bssseqDataDir,"bsseq_sim_data_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$group <- rep(c("group1", "group2"), each=3)
+pData(bs.smoothed) <- pData
+
+```
+
+- DMRs calling
+  - `noise_filter` method with `triangular` kernel, score test
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+DMRsNoiseFilterTriangular <- computeDMRs(mDataGrp1, mDataGrp2,
+  method = "noise_filter",
+  kernelFunction = "triangular",
+  test = "score",
+  pValueThreshold = 0.05,
+  minCytosinesCount = 10,
+  minProportionDifference = 0.1,
+  cores=ncores)
+
+print(DMRsNoiseFilterTriangular)
+
+DMRsNoiseFilterTriangularMerged <- mergeDMRsIteratively(DMRsNoiseFilterTriangular,
+  minGap = 200,
+  respectSigns = TRUE,
+  mDataGrp1,
+  mDataGrp2,
+  minProportionDifference = 0.1,
+  pValueThreshold = 0.05,
+  test="score",
+  cores=ncores)
+
+print(DMRsNoiseFilterTriangularMerged)
+
+save(DMRsNoiseFilterTriangularMerged, file = paste(resDir,"sim_data_noiseFilter_triangular.RData", sep="/"), compress = T)
+```
+
+  - `neighbourhood` method, score test
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+
+for(fdr in seq(0.01,0.1,by=0.01)){
+  print(fdr)
+  DMRsNeighbourhood <- computeDMRs(mDataGrp1, mDataGrp2,
+    method = "neighbourhood",
+    test = "score",
+    pValueThreshold = fdr,
+    minCytosinesCount = 10,
+    minProportionDifference = 0.1,
+    cores=ncores)
+  
+  print(DMRsNeighbourhood)
+  
+  DMRsNeighbourhoodMerged <- mergeDMRsIteratively(DMRsNeighbourhood,
+    minGap = 200,
+    respectSigns = TRUE,
+    mDataGrp1,
+    mDataGrp2,
+    minProportionDifference = 0.1,
+    pValueThreshold = fdr,
+    test="score",
+    cores=ncores)
+  
+  print(DMRsNeighbourhoodMerged)
+  
+  save(DMRsNeighbourhoodMerged, file = paste(resDir,"/sim_data_neighbourhood_",fdr,".RData", sep=""), compress = T)
+  
+  
+  ranges <- as.data.frame(ranges(DMRsNeighbourhoodMerged))
+  ranges$chr <- rep("chr18", nrow(ranges))
+  ranges$qval <- DMRsNeighbourhoodMerged$pValue
+  
+  #plotting
+  # neighbourhood
+  pdf(file = paste(resDir, "/sim_data_dmrcaller_neighbourhood_", fdr, ".pdf", sep=""), width = 10, height = 5)
+  plotManyRegions(bs.smoothed, ranges, extend = 5000, addRegions = ranges)
+  dev.off()
+}
+
+```
+
+  - `bins` method, score test
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+DMRsBins <- computeDMRs(mDataGrp1, mDataGrp2,
+  method = "bins",
+  test = "score",
+  pValueThreshold = 0.05,
+  minCytosinesCount = 10,
+  minProportionDifference = 0.1,
+  cores=ncores)
+
+print(DMRsBins)
+
+DMRsBinsMerged <- mergeDMRsIteratively(DMRsBins,
+  minGap = 200,
+  respectSigns = TRUE,
+  mDataGrp1,
+  mDataGrp2,
+  minProportionDifference = 0.1,
+  pValueThreshold = 0.05,
+  test="score",
+  cores=ncores)
+
+print(DMRsBinsMerged)
+
+save(DMRsBinsMerged, file = paste(resDir,"sim_data_bins.RData", sep="/"), compress = T)
+```
+
+<<<<<<< HEAD
+=======
+- plotting:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+### TODO: not finished
+
+if(FALSE){
+# we need to load the bsseq smoothed data
+load(paste(bssseqDataDir,"bsseq_sim_data_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$group <- rep(c("group1", "group2"), each=3))
+pData(bs.smoothed) <- pData
+
+#plotting
+# noise filter, triangular kernel
+plotDMRs(bs.smoothed, regions=DMRsNoiseFilterTriangularMerged[1:6,],
+         testCovariate="group",annoTrack=annoTrack)
+}
+```
+>>>>>>> 7c213c474c28bc1d75266aa64ce1ab28aa94f08a
