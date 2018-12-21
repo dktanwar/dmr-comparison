@@ -1,0 +1,21 @@
+The command line:  /home/ubuntu/softwares/downloads/defiant/defiant -c 1 -f -v -CpN 10 -p 0.9 -i /dev/fd/63,/dev/fd/62,/dev/fd/61 /dev/fd/60,/dev/fd/59,/dev/fd/58
+These files are considered set 1: /dev/fd/63,/dev/fd/62,/dev/fd/61
+
+/dev/fd/63: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
+Global methylation percent = 45.1; 516094 CpN, sum(5mC) = 4734499, sum(coverage) = 10488486
+/dev/fd/62: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
+Global methylation percent = 44.9; 516094 CpN, sum(5mC) = 4075515, sum(coverage) = 9082753
+/dev/fd/61: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
+Global methylation percent = 44.8; 516094 CpN, sum(5mC) = 4103795, sum(coverage) = 9168096
+These files are considered set 2: /dev/fd/60,/dev/fd/59,/dev/fd/58
+
+/dev/fd/60: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
+Global methylation percent = 45.4; 516094 CpN, sum(5mC) = 4656811, sum(coverage) = 10249511
+/dev/fd/59: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
+Global methylation percent = 45.0; 516094 CpN, sum(5mC) = 4114210, sum(coverage) = 9148646
+/dev/fd/58: 0 nucleotides failed coverage, and 1032190 nucleotides passed coverage = 100.0% passing minimum coverage.
+Global methylation percent = 45.0; 516094 CpN, sum(5mC) = 4365585, sum(coverage) = 9694443
+
+Set 1 vs set 2 global methylation:	p-value = 0.225535	Percent Change = 0.220193%
+
+There will be 1 runs split among 1 workers.

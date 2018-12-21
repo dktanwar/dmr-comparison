@@ -1,0 +1,107 @@
+---
+title: "Data download and filtering"
+author: "Deepak Tanwar & Hana Parizkova"
+date: "<b>Created on:</b> 2018-11-25 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Check if files already exists
+```{r, message=FALSE}
+file <- list.files("raw", pattern = "chr18")
+
+if (length(file) == 6) {
+  message(xtermStyle::style("\n\nError: Data existis in `raw` folder!\n\n",
+    fg = "red", font = "bold", bg = "green"
+  ))
+  stop()
+}
+```
+
+
+# Packages required
+```{r, message=F, warning=F}
+library(GEOquery)
+```
+
+
+# Data
+
+For comparison, we are using the same data-set that was used in [`dmrseq` paper](http://dx.doi.org/10.1093/biostatistics/kxy007) from [Pacis _et. al._, 2015](https://genome.cshlp.org/content/25/12/1801). For our analysis, we are using only controls (n = 6). Sequenced data was submitted to Gene Expression Omnibus (GEO) as supplemental information and contains coverage and methylated counts for CpGs [GSE64177](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177). To be consistent with `dmrseq` paper, we also selected **Chr18** data for our analysis in this project.
+
+# Data download from GEO
+```{r}
+sfiles <- getGEOSuppFiles("GSE64177", makeDirectory = F)
+```
+
+
+# Extracting data
+
+## Controls (Not Infected)
+```{r}
+# Extract the "Not Infected (NI)" files from `tar` and remove the `tar` file
+system("tar -xvf GSE64177_RAW.tar  --wildcards --no-anchored '*NI*' && rm -rf GSE64177_RAW.tar")
+```
+
+
+## Control data at Chr18
+```{r}
+files <- list.files(path = ".", pattern = ".gz", full.names = T)
+
+tmp <- lapply(files, function(x) {
+  n <- paste0(strsplit(basename(x), "\\.")[[1]][1], ".chr18.txt.gz")
+  system(paste(
+    "zcat", x, "| grep chr18 | pigz -11 -p 16 >", n,
+    "&& rm -rf", x,
+    "&& mkdir -p raw && mv *.chr18* ./raw/"
+  ))
+})
+```
+
+
+# PhenoData table
+```{r}
+raw.files <- list.files(path = "./raw", pattern = ".gz", full.names = T)
+pData <- data.frame(files = basename(raw.files), 
+                    files_sl = paste0("NC_rep", 1:length(raw.files), ".bed.gz"),
+                    names = paste0("NC_rep", 1:length(raw.files)),
+                    Group = rep(c("Group1", "Group2"), (length(raw.files)/2)),
+                    stringsAsFactors = F)
+
+rownames(pData) <- pData$names
+
+write.table(pData, gzfile("phenoData.txt.gz"), quote = F, sep = "\t")
+```
+
+
+# Soft links of data
+```{r}
+system("mkdir -p soft_links")
+for(i in 1:nrow(pData)){
+  f <- paste0("./raw/", pData$files[i])
+  l <- paste0("./soft_links/", pData$files_sl[i])
+  system(paste("ln -sr", f, l))
+}
+```
+
+
+# SessionInfo
+```{r}
+devtools::session_info()
+```

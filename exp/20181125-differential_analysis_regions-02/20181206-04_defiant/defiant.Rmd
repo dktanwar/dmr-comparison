@@ -1,0 +1,126 @@
+---
+title: "DMRs: Defiant"
+author: "Deepak Tanwar & Hana Parizkova"
+date: "<b>Created on:</b> 2018-12-19 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Packages required
+```{r, warning=F, message=FALSE}
+library(DT)
+library(dplyr)
+```
+
+
+# DMRs analysis
+
+## Negative Control
+```{r, engine='bash'}
+mkdir -p ./output/neg_control && cd ./output/neg_control
+
+DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
+
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/NC_rep1.bed.gz),<(zcat ../../input/NC_rep3.bed.gz),<(zcat ../../input/NC_rep5.bed.gz) <(zcat ../../input/NC_rep2.bed.gz),<(zcat ../../input/NC_rep4.bed.gz),<(zcat ../../input/NC_rep6.bed.gz) 2> log >> log
+
+cd ../../
+```
+
+## Simulated data
+```{r, engine='bash'}
+mkdir -p ./output/sim_data && cd ./output/sim_data
+
+DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
+
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/sim_rep1.bed.gz),<(zcat ../../input/sim_rep3.bed.gz),<(zcat ../../input/sim_rep5.bed.gz) <(zcat ../../input/sim_rep2.bed.gz),<(zcat ../../input/sim_rep4.bed.gz),<(zcat ../../input/sim_rep6.bed.gz) 2> log >> log
+
+cd ../../
+```
+
+
+# DMR Tables
+
+## Negative control
+
+```{r}
+dmr.nc <- read.delim("./output/neg_control/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.tsv",
+  header = T, sep = "\t", stringsAsFactors = F, check.names = F
+)
+
+colnames(dmr.nc)[10] <- "qval"
+
+write.table(dmr.nc, file = gzfile("./output/defiant_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
+```
+
+```{r}
+c1 <- dmr.nc$qval[dmr.nc$qval <= 0.05]
+datatable(
+  dmr.nc,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)%>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c1, rep("#66C2A5", length(c1)))
+  )
+```
+
+
+
+## Simulated data
+```{r}
+dmr.sim <- read.delim("./output/sim_data/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.tsv",
+  header = T, sep = "\t", stringsAsFactors = F, check.names = F
+)
+
+colnames(dmr.sim)[10] <- "qval"
+
+write.table(dmr.sim, file = gzfile("./output/defiant_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
+```
+
+
+```{r}
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
+  )
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```

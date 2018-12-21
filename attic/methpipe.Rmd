@@ -1,0 +1,223 @@
+---
+title: "MethPipe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Setting directories and path to MethPipe:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+dataDir <- "data"
+dir.create(file.path(dataDir))
+resDir <- "results/methpipe"
+dir.create(file.path(resDir))
+methPipe.path <- "../methpipe-3.4.3/bin"
+bssseqDataDir <- "results/bsseq"
+```
+
+#### Negative control
+Preparing the data in required format (see MethPipe documentation, page 6-7).
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+M <- read.table(paste(dataDir, "data_neg_control.M.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+cov <- read.table(paste(dataDir, "data_neg_control.cov.gz", sep="/"), header=TRUE, sep="\t", stringsAsFactors = F)
+chr <- M$chr
+pos <- M$pos
+M$chr <- NULL
+M$pos <- NULL
+cov$chr <- NULL
+cov$pos <- NULL
+grp1 <- c(1,3,5)
+grp2 <- c(2,4,6)
+
+# required coverage: at least 5 in at least 2 samples in each group
+keepLoci.ex <- which(rowSums(cov[, grp1] >= 5) >= 2 &
+                     rowSums(cov[, grp2] >= 5) >= 2)
+length(keepLoci.ex)
+cov <- cov[keepLoci.ex,]
+M <- M[keepLoci.ex,]
+chr <- chr[keepLoci.ex]
+pos <- pos[keepLoci.ex]
+
+strand <- rep('+', length(chr))  #we don't care about the strand, but methpipe requires it
+context <- rep('CpG', length(chr)) #all data are from CpGs
+for(i in 1:6){
+  methCounts <- M[,i]
+  covs <- cov[,i]
+  methProp <- methCounts/covs
+  data.i <- data.frame(chr=chr, pos=pos, strand=strand, context=context,
+                       methProportion=methProp, coverage=covs)
+  name <- paste(dataDir, "/data_neg_control_methpipe_", i, ".meth", sep="")
+  write.table(data.i, file=name, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+```
+
+MethPipe analysis: First merging results from the replicates:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/merge-methcounts ", dataDir, "/data_neg_control_methpipe_1.meth ", dataDir, "/data_neg_control_methpipe_3.meth ", dataDir, "/data_neg_control_methpipe_5.meth ", "-o ", dataDir, "/data_neg_control_methpipe_grp1.meth", sep="")
+cmd
+system(cmd)
+
+cmd <- paste("./", methPipe.path, "/merge-methcounts ", dataDir, "/data_neg_control_methpipe_2.meth ", dataDir, "/data_neg_control_methpipe_4.meth ", dataDir, "/data_neg_control_methpipe_6.meth ", "-o ", dataDir, "/data_neg_control_methpipe_grp2.meth", sep="")
+cmd
+system(cmd)
+```
+
+Calculating the differential methylation score of each CpG site:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/methdiff ", "-o ", resDir, "/neg_control_methpipe.methdiff ", dataDir, "/data_neg_control_methpipe_grp1.meth ", dataDir, "/data_neg_control_methpipe_grp2.meth", sep="")
+cmd
+system(cmd)
+```
+
+Identifying hypo- and hypermethylated regions (HMRs):
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/hmr ", "-o ", resDir, "/neg_control_grp1.hmr ", dataDir, "/data_neg_control_methpipe_grp1.meth", sep="")
+cmd
+system(cmd)
+
+cmd <- paste("./", methPipe.path, "/hmr ", "-o ", resDir, "/neg_control_grp2.hmr ", dataDir, "/data_neg_control_methpipe_grp2.meth", sep="")
+cmd
+system(cmd)
+```
+
+Computing DMRs:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("./", methPipe.path, "/dmr ", resDir, "/neg_control_methpipe.methdiff ", resDir, "/neg_control_grp1.hmr ", resDir, "/neg_control_grp2.hmr ", resDir, "/neg_control_methpipe_dmrs_grp1 ", resDir, "/neg_control_methpipe_dmrs_grp2", sep="")
+cmd
+system(cmd)
+```
+
+Filtering only DMRs with at least 10 CpGs, from that at least 5 loci significant (as suggested by the documentation):
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+cmd <- paste("awk -F '[:\t]' '$5 >= 10 && $6>=5 {print $0}' ", resDir, "/neg_control_methpipe_dmrs_grp1 > ", resDir, "/neg_control_methpipe_dmrs_grp1.filtered", sep="")
+cmd
+system(cmd)
+
+cmd <- paste("awk -F '[:\t]' '$5 >= 10 && $6>=5 {print $0}' ", resDir, "/neg_control_methpipe_dmrs_grp2 > ", resDir, "/neg_control_methpipe_dmrs_grp2.filtered", sep="")
+cmd
+system(cmd)
+```
+
+Plotting using `bsseq` function `plotManyRegions`:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+# we need to load the bsseq smoothed data
+load(paste(bssseqDataDir,"bsseq_neg_control_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$col <- rep(c("red", "blue"), nrep=3)
+pData(bs.smoothed) <- pData
+
+# load DMRs data
+dmrs1 <- read.table(paste(resDir,"neg_control_methpipe_dmrs_grp1.filtered",sep="/"), header=FALSE, stringsAsFactors = FALSE, sep="\t")
+dmrs1 <- dmrs1[,c(1,2,3)]
+colnames(dmrs1) <- c("chr", "start", "end")
+
+dmrs2 <- read.table(paste(resDir,"neg_control_methpipe_dmrs_grp2.filtered",sep="/"), header=FALSE, stringsAsFactors = FALSE, sep="\t")
+dmrs2 <- dmrs2[,c(1,2,3)]
+colnames(dmrs2) <- c("chr", "start", "end")
+
+dmrs <- rbind(dmrs1, dmrs2)
+
+# plotting
+pdf(file = paste(resDir, "neg_control_methpipe_dmrs.pdf", sep="/"), width = 10, height = 5)
+plotManyRegions(bs.smoothed, dmrs, extend = 5000, addRegions = dmrs)
+dev.off()
+```
+
+####Simulated data
+Preparation of data:
+```{r warning=FALSE, message=FALSE, eval=FALSE}
+M <- read.table(paste(dataDir, "/sim_data.M.gz", sep=""), header=TRUE, sep="\t", stringsAsFactors=F)
+cov <- read.table(paste(dataDir, "/sim_data.cov.gz", sep=""), header=TRUE, sep="\t", stringsAsFactors=F)
+chr <- M$chr.sim
+pos <- M$pos.sim
+M$chr.sim <- NULL
+M$pos.sim <- NULL
+cov$chr.sim <- NULL
+cov$pos.sim <- NULL
+# the groups are the same as in negative control, only the columns were shuffled during simulation
+grp1 <- c(1,2,3)
+grp2 <- c(4,5,6)
+
+# required coverage: at least 5 in at least 2 samples in each group
+keepLoci.ex <- which(rowSums(cov[, grp1] >= 5) >= 2 &
+                     rowSums(cov[, grp2] >= 5) >= 2)
+length(keepLoci.ex)
+cov <- cov[keepLoci.ex,]
+M <- M[keepLoci.ex,]
+chr <- chr[keepLoci.ex]
+pos <- pos[keepLoci.ex]
+
+strand <- rep('+', length(chr))  #we don't care about the strand, but methpipe requires it
+context <- rep('CpG', length(chr)) #all data are from CpGs
+for(i in 1:6){
+  methCounts <- M[,i]
+  covs <- cov[,i]
+  methProp <- methCounts/covs
+  data.i <- data.frame(chr=chr, pos=pos, strand=strand, context=context,
+                       methProportion=methProp, coverage=covs)
+  name <- paste(dataDir, "/sim_data_methpipe_", i, ".meth", sep="")
+  write.table(data.i, file=name, sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+```
+
+MethPipe analysis:
+```{r}
+# merging data
+cmd <- paste("./", methPipe.path, "/merge-methcounts ", dataDir, "/sim_data_methpipe_1.meth ", dataDir, "/sim_data_methpipe_2.meth ", dataDir, "/sim_data_methpipe_3.meth ", "-o ", dataDir, "/sim_data_methpipe_grp1.meth", sep="")
+cmd
+system(cmd)
+
+cmd <- paste("./", methPipe.path, "/merge-methcounts ", dataDir, "/sim_data_methpipe_4.meth ", dataDir, "/sim_data_methpipe_5.meth ", dataDir, "/sim_data_methpipe_6.meth ", "-o ", dataDir, "/sim_data_methpipe_grp2.meth", sep="")
+cmd
+system(cmd)
+
+# computing differential methylation score for each CpG
+cmd <- paste("./", methPipe.path, "/methdiff ", "-o ", resDir, "/sim_data_methpipe.methdiff ", dataDir, "/sim_data_methpipe_grp1.meth ", dataDir, "/sim_data_methpipe_grp2.meth", sep="")
+cmd
+system(cmd)
+
+# identifying HMRs
+cmd <- paste("./", methPipe.path, "/hmr ", "-o ", resDir, "/sim_data_grp1.hmr ", dataDir, "/sim_data_methpipe_grp1.meth", sep="")
+cmd
+system(cmd)
+
+cmd <- paste("./", methPipe.path, "/hmr ", "-o ", resDir, "/sim_data_grp2.hmr ", dataDir, "/sim_data_methpipe_grp2.meth", sep="")
+cmd
+system(cmd)
+
+# identifying DMRs
+cmd <- paste("./", methPipe.path, "/dmr ", resDir, "/sim_data_methpipe.methdiff ", resDir, "/sim_data_grp1.hmr ", resDir, "/sim_data_grp2.hmr ", resDir, "/sim_data_methpipe_dmrs_grp1 ", resDir, "/sim_data_methpipe_dmrs_grp2", sep="")
+cmd
+system(cmd)
+
+# filtering DMRs
+cmd <- paste("awk -F '[:\t]' '$5 >= 10 && $6 >= 5 {print $0}' ", resDir, "/sim_data_methpipe_dmrs_grp1 > ", resDir, "/sim_data_methpipe_dmrs_grp1.filtered", sep="")
+cmd
+system(cmd)
+
+cmd <- paste("awk -F '[:\t]' '$5 >= 10 && $6 >= 5 {print $0}' ", resDir, "/sim_data_methpipe_dmrs_grp2 > ", resDir, "/sim_data_methpipe_dmrs_grp2.filtered", sep="")
+cmd
+system(cmd)
+
+# plotting
+load(paste(bssseqDataDir,"bsseq_sim_data_smoothed.RData",sep="/"))
+pData <- pData(bs.smoothed)
+pData$col <- rep(c("red", "blue"), each=3)
+pData(bs.smoothed) <- pData
+
+dmrs1 <- read.table(paste(resDir,"sim_data_methpipe_dmrs_grp1.filtered",sep="/"), header=FALSE, stringsAsFactors = FALSE, sep="\t")
+dmrs1 <- dmrs1[,c(1,2,3)]
+colnames(dmrs1) <- c("chr", "start", "end")
+
+dmrs2 <- read.table(paste(resDir,"sim_data_methpipe_dmrs_grp2.filtered",sep="/"), header=FALSE, stringsAsFactors = FALSE, sep="\t")
+dmrs2 <- dmrs2[,c(1,2,3)]
+colnames(dmrs2) <- c("chr", "start", "end")
+
+dmrs <- rbind(dmrs1, dmrs2)
+
+pdf(file = paste(resDir, "sim_data_methpipe_dmrs.pdf", sep="/"), width = 10, height = 5)
+plotManyRegions(bs.smoothed, dmrs, extend = 5000, addRegions = dmrs)
+dev.off()
+```

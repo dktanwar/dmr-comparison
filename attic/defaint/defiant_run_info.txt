@@ -1,0 +1,21 @@
+The command line:  defiant -b -f -fdr bh -i /dev/fd/63,/dev/fd/62,/dev/fd/61 /dev/fd/60,/dev/fd/59,/dev/fd/58
+These files are considered set 1: /dev/fd/63,/dev/fd/62,/dev/fd/61
+
+/dev/fd/63: 233620 nucleotides failed coverage, and 666688 nucleotides passed coverage = 74.1% passing minimum coverage.
+Global methylation percent = 83.3; 333343 CpN, sum(5mC) = 3692050, sum(coverage) = 4431354
+/dev/fd/62: 312216 nucleotides failed coverage, and 509496 nucleotides passed coverage = 62.0% passing minimum coverage.
+Global methylation percent = 82.8; 254747 CpN, sum(5mC) = 2640334, sum(coverage) = 3187925
+/dev/fd/61: 304539 nucleotides failed coverage, and 524850 nucleotides passed coverage = 63.3% passing minimum coverage.
+Global methylation percent = 82.8; 262424 CpN, sum(5mC) = 2730128, sum(coverage) = 3296874
+These files are considered set 2: /dev/fd/60,/dev/fd/59,/dev/fd/58
+
+/dev/fd/60: 262997 nucleotides failed coverage, and 607934 nucleotides passed coverage = 69.8% passing minimum coverage.
+Global methylation percent = 85.1; 303966 CpN, sum(5mC) = 3558263, sum(coverage) = 4180245
+/dev/fd/59: 309244 nucleotides failed coverage, and 515440 nucleotides passed coverage = 62.5% passing minimum coverage.
+Global methylation percent = 83.1; 257719 CpN, sum(5mC) = 2670603, sum(coverage) = 3215337
+/dev/fd/58: 276353 nucleotides failed coverage, and 581222 nucleotides passed coverage = 67.8% passing minimum coverage.
+Global methylation percent = 82.8; 290610 CpN, sum(5mC) = 3081903, sum(coverage) = 3722795
+
+Set 1 vs set 2 global methylation:	p-value = 0.364574	Percent Change = 0.722876%
+
+There will be 1 runs split among 1 workers.

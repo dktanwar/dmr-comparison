@@ -1,0 +1,13 @@
+---
+output: pdf_document
+---
+
+
+
+\begin{flushright}
+City, 2018
+
+
+Authors
+
+\end{flushright}
