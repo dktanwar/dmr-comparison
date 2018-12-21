@@ -185,7 +185,7 @@ dmr.sim <- lapply(files.sim, function(x) read.table(x,
 dmr.sim <- ldply(dmr.sim, data.frame)
 
 write.table(
-  x = dmr.sim, file = gzfile("./output/methpipe_dmr_simulated_data.txt.gz"),
+  x = dmr.sim, file = gzfile("./output/methpipe_dmr_sim_data.txt.gz"),
   sep = "\t", quote = F, row.names = F
 )
 ```
