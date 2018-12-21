@@ -84,6 +84,8 @@ dmr.nc <- data.frame(myDiff.GR.nc)
 
 dmr.nc <- dmr.nc[order(dmr.nc$qvalue),]
 
+colnames(dmr.nc)[7] <- "qval"
+
 write.table(dmr.nc, file = gzfile("./output/methylKit_dmr_negative_control.txt.gz"),
             sep = "\t", row.names = F, quote = F)
 ```
@@ -99,6 +101,8 @@ dmr.sim <- data.frame(myDiff.GR.sim)
 
 dmr.sim <- dmr.sim[order(dmr.sim$qvalue),]
 
+colnames(dmr.sim)[7] <- "qval"
+
 write.table(dmr.sim, file = gzfile("./output/methylKit_dmr_sim_data.txt.gz"),
             sep = "\t", row.names = F, quote = F)
 ```
@@ -108,7 +112,7 @@ write.table(dmr.sim, file = gzfile("./output/methylKit_dmr_sim_data.txt.gz"),
 
 ## Negative control
 ```{r}
-c1 <- dmr.nc$qvalue[dmr.nc$qvalue <= 0.05]
+c1 <- dmr.nc$qval[dmr.nc$qval <= 0.05]
 datatable(
   dmr.nc,
   rownames = F,
@@ -120,7 +124,7 @@ datatable(
   )
 ) %>%
   formatStyle(
-    "qvalue",
+    "qval",
     backgroundColor = styleEqual(c1, rep("#66C2A5", length(c1)))
   )
 ```
@@ -129,7 +133,7 @@ datatable(
 ## Simulated data
 
 ```{r}
-c2 <- dmr.sim$qvalue[dmr.sim$qvalue <= 0.05]
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
 datatable(
   dmr.sim,
   rownames = F,
@@ -141,7 +145,7 @@ datatable(
   )
 ) %>%
   formatStyle(
-    "qvalue",
+    "qval",
     backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
   )
 ```
