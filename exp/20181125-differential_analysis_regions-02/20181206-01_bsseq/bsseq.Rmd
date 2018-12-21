@@ -101,9 +101,8 @@ title("Simulated data")
 ```{r}
 # Negative control
 dmr.nc <- dmrFinder(bs.tstat.nc)
-# dmr.nc$pValue <- pt(abs(dmr.nc$areaStat), 4, lower.tail = FALSE)
-dmr.nc$pValue <- 2 * pt(abs(dmr.nc$areaStat), 4, lower = F)
-dmr.nc$qValue.BH <- p.adjust(p = dmr.nc$pValue, method = "BH")
+# dmr.nc$pValue <- 2 * pt(abs(dmr.nc$areaStat), 4, lower = F)
+# dmr.nc$qValue.BH <- p.adjust(p = dmr.nc$pValue, method = "BH")
 dmr.nc <- subset(dmr.nc, n >= 10 & abs(meanDiff) >= 0.1)
 write.table(dmr.nc,
   file = gzfile("./output/bsseq_dmr_neg_control.txt.gz"), sep = "\t",
@@ -112,8 +111,8 @@ write.table(dmr.nc,
 
 # Simulated data
 dmr.sim <- dmrFinder(bs.tstat.sim)
-dmr.sim$pValue <- 2 * pt(abs(dmr.sim$areaStat), 4, lower = F)
-dmr.sim$qValue.BH <- p.adjust(p = dmr.sim$pValue, method = "BH")
+# dmr.sim$pValue <- 2 * pt(abs(dmr.sim$areaStat), 4, lower = F)
+# dmr.sim$qValue.BH <- p.adjust(p = dmr.sim$pValue, method = "BH")
 dmr.sim <- subset(dmr.sim, n >= 10 & abs(meanDiff) >= 0.1)
 write.table(dmr.sim,
   file = gzfile("./output/bsseq_dmr_simulated_data.txt.gz"), sep = "\t",
@@ -125,7 +124,6 @@ write.table(dmr.sim,
 
 ## Negative control
 ```{r}
-c1 <- dmr.nc$qValue.BH[dmr.nc$qValue.BH <= 0.05]
 datatable(
   dmr.nc,
   rownames = F,
@@ -135,16 +133,11 @@ datatable(
     colReorder = list(realtime = FALSE),
     dom = "fltBip"
   )
-) %>%
-  formatStyle(
-    "qValue.BH",
-    backgroundColor = styleEqual(c1, rep("#66C2A5", length(c1)))
-  )
+)
 ```
 
 ## Simulated data
 ```{r}
-c2 <- dmr.sim$qValue.BH[dmr.sim$qValue.BH <= 0.05]
 datatable(
   dmr.sim,
   rownames = F,
@@ -154,11 +147,7 @@ datatable(
     colReorder = list(realtime = FALSE),
     dom = "fltBip"
   )
-) %>%
-  formatStyle(
-    "qValue.BH",
-    backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
-  )
+)
 ```
 
 
