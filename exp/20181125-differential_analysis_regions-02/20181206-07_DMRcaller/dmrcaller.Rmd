@@ -49,7 +49,7 @@ Unlike the rest of the methods, DMRcaller allows to call DMRs also in non-CpG co
 # Input data
 
 ## Negative control
-```{r}
+```{r, eval=FALSE}
 anno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
 
 files.nc <- list.files("./input", pattern = "NC", full.names = T)
@@ -109,7 +109,7 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
           method = m[i],
           kernelFunction = k[j],
           test = "score",
-          pValueThreshold = 0.9,
+          pValueThreshold = 0.01,
           minCytosinesCount = 10,
           minProportionDifference = 0.1,
           cores = detectCores() - 1
@@ -122,7 +122,7 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
         methylationData2 = grp2,
         method = m[i],
         test = "score",
-        pValueThreshold = 0.9,
+        pValueThreshold = 0.01,
         minCytosinesCount = 10,
         minProportionDifference = 0.1,
         cores = detectCores() - 1
@@ -141,30 +141,30 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
       minGap = 200,
       respectSigns = TRUE,
       minProportionDifference = 0.1,
-      pValueThreshold = 0.9,
+      pValueThreshold = 0.01,
       test = "score",
       cores = detectCores() - 1
     ))
-  
+
   # Change colname
-  
+
   dmr.list.merge <- lapply(dmr.list.merge, function(x) {
     a <- data.frame(x, stringsAsFactors = F)
     colnames(a)[colnames(a) == "pValue"] <- "qval"
     return(GRanges(a))
   })
-  
+
   # Save data
-  
-  for(i in 1:length(dmr.list.merge)){
+
+  for (i in 1:length(dmr.list.merge)) {
     tmp <- data.frame(dmr.list.merge[[i]])
     # colnames(tmp)[15] <- "qval"
-    if(nrow(tmp)!= 0){
-    n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
-    write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
+    if (nrow(tmp) != 0) {
+      n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
+      write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
     }
   }
-  
+
   return(dmr.list.merge)
 }
 ```
@@ -172,23 +172,27 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
 
 ## Negative control
 
-```{r}
-dmr.ls.nc <- dmrcaller_analysis(grp1 = mData.grp1.nc, grp2 = mData.grp2.nc, 
-                                methods = "all", kernals = "all",
-                                keyword = "neg_control")
+```{r, eval=F}
+dmr.ls.nc <- dmrcaller_analysis(
+  grp1 = mData.grp1.nc, grp2 = mData.grp2.nc,
+  methods = "all", kernals = "all",
+  keyword = "neg_control"
+)
 ```
 
 
 ## Simulated data
 
 ```{r}
-dmr.ls.sim <- dmrcaller_analysis(grp1 = mData.grp1.sim, grp2 = mData.grp2.sim, 
-                                methods = "all", kernals = "all",
-                                keyword = "sim_data")
+dmr.ls.sim <- dmrcaller_analysis(
+  grp1 = mData.grp1.sim, grp2 = mData.grp2.sim,
+  methods = "all", kernals = "all",
+  keyword = "sim_data"
+)
 ```
 
 
-<!-- # DMR tables -->
+# DMR tables
 
 <!-- ## Function -->
 
@@ -206,7 +210,7 @@ dmr.ls.sim <- dmrcaller_analysis(grp1 = mData.grp1.sim, grp2 = mData.grp2.sim,
 <!--     colReorder = list(realtime = FALSE), -->
 <!--     dom = "fltBip" -->
 <!--   ) -->
-<!-- )   -->
+<!-- ) -->
 <!-- } else{ -->
 <!-- datatable( -->
 <!--   df, -->
@@ -226,63 +230,65 @@ dmr.ls.sim <- dmrcaller_analysis(grp1 = mData.grp1.sim, grp2 = mData.grp2.sim,
 <!-- } -->
 <!-- ``` -->
 
-<!-- ## Negative control -->
 
+## Negative control {.tabset .tabset-pills}
 
-<!-- ```{r} -->
-<!-- t <- htmltools::tagList( -->
-<!--   lapply(dmr.ls.sim, function(x){ -->
-<!--     df <- data.frame(x) -->
-<!--     fdr.col <- "qval" -->
+```{r, results='asis'}
 
-<!--     c <- df[, fdr.col][df[, fdr.col] <= 0.05] -->
+cat(sprintf(paste("###",  names(dmr.ls.sim))))
+#   cat("### Table \n \n")
 
-<!-- if(length(c) == 0){ -->
-<!-- datatable( -->
-<!--   df, -->
-<!--   rownames = F, -->
-<!--   filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
-<!--     pageLength = 10, -->
-<!--     buttons = c("copy", "csv", "excel", "pdf", "print"), -->
-<!--     colReorder = list(realtime = FALSE), -->
-<!--     dom = "fltBip" -->
-<!--   ) -->
-<!-- )   -->
-<!-- } else{ -->
-<!-- datatable( -->
-<!--   df, -->
-<!--   rownames = F, -->
-<!--   filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
-<!--     pageLength = 10, -->
-<!--     buttons = c("copy", "csv", "excel", "pdf", "print"), -->
-<!--     colReorder = list(realtime = FALSE), -->
-<!--     dom = "fltBip" -->
-<!--   ) -->
-<!-- ) %>% -->
-<!--   formatStyle( -->
-<!--     fdr.col, -->
-<!--     backgroundColor = styleEqual(c, rep("#66C2A5", length(c))) -->
-<!--   ) -->
-<!--   } -->
-<!-- } -->
-<!-- )) -->
+t <- htmltools::tagList(
+  lapply(dmr.ls.sim, function(x) {
+    df <- data.frame(x)
+    fdr.col <- "qval"
 
-<!-- t -->
+    c <- df[, fdr.col][df[, fdr.col] <= 0.05]
 
-<!-- # # print to HTML -->
-<!-- # cat("# Results \n \n ") -->
-<!-- # for(i in seq_along(names(t))){ -->
-<!-- #     name <- names(car_list)[i] -->
-<!-- #     cat("\n \n") -->
-<!-- #     cat(sprintf("## Gears: %s {.tabset .tabset-pills} \n \n", name)) -->
-<!-- #     cat("### Table \n \n") -->
-<!-- #     print(htmltools::tagList(datatable(car_list[[i]][["data"]]))) -->
-<!-- #     cat("\n \n") -->
-<!-- #     cat("### Venn \n \n") -->
-<!-- #     grid.draw(car_list[[i]][["venn"]]) -->
-<!-- #     cat("\n \n") -->
-<!-- # } -->
-<!-- ``` -->
+    if (length(c) == 0) {
+      datatable(
+        df,
+        rownames = F,
+        filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+          pageLength = 10,
+          buttons = c("copy", "csv", "excel", "pdf", "print"),
+          colReorder = list(realtime = FALSE),
+          dom = "fltBip"
+        )
+      )
+    } else {
+      datatable(
+        df,
+        rownames = F,
+        filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+          pageLength = 10,
+          buttons = c("copy", "csv", "excel", "pdf", "print"),
+          colReorder = list(realtime = FALSE),
+          dom = "fltBip"
+        )
+      ) %>%
+        formatStyle(
+          fdr.col,
+          backgroundColor = styleEqual(c, rep("#66C2A5", length(c)))
+        )
+    }
+  })
+)
+t
+
+# t <- dmr.ls.sim
+# 
+# # print to HTML
+# cat("# Results \n \n ")
+# for (i in seq_along(names(t))) {
+#   name <- names(t)[i]
+#   cat("\n \n")
+#   cat(sprintf("## Gears: %s {.tabset .tabset-pills} \n \n", name))
+#   cat("### Table \n \n")
+#   print(htmltools::tagList(datatable(data.frame(t[[i]]))))
+#   cat("\n \n")
+# }
+```
 
 
 

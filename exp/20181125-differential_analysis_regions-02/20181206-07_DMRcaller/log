@@ -86,47 +86,55 @@ Read 516095 records
 Read 516095 records
 Read 516095 records
 Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
 output file: dmrcaller.knit.md
 
 
 Output created: dmrcaller.html
-                       |  25%
-label: unnamed-chunk-2
-  |                                                                         |....................                                             |  31%
+  |                                                                         |..............                                                   |  22%
+label: unnamed-chunk-2 (with options) 
+List of 1
+ $ eval: logi FALSE
+
+  |                                                                         |..................                                               |  28%
   ordinary text without R code
 
-  |                                                                         |........................                                         |  38%
+  |                                                                         |......................                                           |  33%
 label: unnamed-chunk-3
-  |                                                                         |............................                                     |  44%
+  |                                                                         |.........................                                        |  39%
   ordinary text without R code
 
-  |                                                                         |................................                                 |  50%
+  |                                                                         |.............................                                    |  44%
 label: unnamed-chunk-4
-  |                                                                         |.....................................                            |  56%
+  |                                                                         |................................                                 |  50%
   ordinary text without R code
 
-  |                                                                         |.........................................                        |  62%
-label: unnamed-chunk-5
-  |                                                                         |.............................................                    |  69%
+  |                                                                         |....................................                             |  56%
+label: unnamed-chunk-5 (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                         |........................................                         |  61%
   ordinary text without R code
 
-  |                                                                         |.................................................                |  75%
+  |                                                                         |...........................................                      |  67%
 label: unnamed-chunk-6
-  |                                                                         |.....................................................            |  81%
+  |                                                                         |...............................................                  |  72%
   ordinary text without R code
 
-  |                                                                         |.........................................................        |  88%
-label: unnamed-chunk-7
+  |                                                                         |...................................................              |  78%
+label: unnamed-chunk-7 (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |......................................................           |  83%
+  ordinary text without R code
+
+  |                                                                         |..........................................................       |  89%
+label: unnamed-chunk-8
   |                                                                         |.............................................................    |  94%
   ordinary text without R code
 
   |                                                                         |.................................................................| 100%
-label: unnamed-chunk-8
+label: unnamed-chunk-9
 
-/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS dmrcaller.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output dmrcaller.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpQscKnZ/rmarkdown-str5f405f39d009.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS dmrcaller.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output dmrcaller.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpwzbK3c/rmarkdown-str1650359971c8.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
