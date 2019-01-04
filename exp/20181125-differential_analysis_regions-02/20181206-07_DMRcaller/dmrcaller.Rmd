@@ -221,64 +221,64 @@ dmr.ls.sim <- dmrcaller_analysis(
 <!-- ``` -->
 
 
-## Negative control {.tabset .tabset-pills}
+<!-- ## Negative control {.tabset .tabset-pills} -->
 
-```{r, results='asis'}
+<!-- ```{r, results='asis'} -->
 
-cat(sprintf(paste("###",  names(dmr.ls.sim))))
-#   cat("### Table \n \n")
+<!-- cat(sprintf(paste("###",  names(dmr.ls.sim)))) -->
+<!-- #   cat("### Table \n \n") -->
 
-t <- htmltools::tagList(
-  lapply(dmr.ls.sim, function(x) {
-    df <- data.frame(x)
-    fdr.col <- "qval"
+<!-- t <- htmltools::tagList( -->
+<!--   lapply(dmr.ls.sim, function(x) { -->
+<!--     df <- data.frame(x) -->
+<!--     fdr.col <- "qval" -->
 
-    c <- df[, fdr.col][df[, fdr.col] <= 0.05]
+<!--     c <- df[, fdr.col][df[, fdr.col] <= 0.05] -->
 
-    if (length(c) == 0) {
-      datatable(
-        df,
-        rownames = F,
-        filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
-          pageLength = 10,
-          buttons = c("copy", "csv", "excel", "pdf", "print"),
-          colReorder = list(realtime = FALSE),
-          dom = "fltBip"
-        )
-      )
-    } else {
-      datatable(
-        df,
-        rownames = F,
-        filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
-          pageLength = 10,
-          buttons = c("copy", "csv", "excel", "pdf", "print"),
-          colReorder = list(realtime = FALSE),
-          dom = "fltBip"
-        )
-      ) %>%
-        formatStyle(
-          fdr.col,
-          backgroundColor = styleEqual(c, rep("#66C2A5", length(c)))
-        )
-    }
-  })
-)
-t
+<!--     if (length(c) == 0) { -->
+<!--       datatable( -->
+<!--         df, -->
+<!--         rownames = F, -->
+<!--         filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
+<!--           pageLength = 10, -->
+<!--           buttons = c("copy", "csv", "excel", "pdf", "print"), -->
+<!--           colReorder = list(realtime = FALSE), -->
+<!--           dom = "fltBip" -->
+<!--         ) -->
+<!--       ) -->
+<!--     } else { -->
+<!--       datatable( -->
+<!--         df, -->
+<!--         rownames = F, -->
+<!--         filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
+<!--           pageLength = 10, -->
+<!--           buttons = c("copy", "csv", "excel", "pdf", "print"), -->
+<!--           colReorder = list(realtime = FALSE), -->
+<!--           dom = "fltBip" -->
+<!--         ) -->
+<!--       ) %>% -->
+<!--         formatStyle( -->
+<!--           fdr.col, -->
+<!--           backgroundColor = styleEqual(c, rep("#66C2A5", length(c))) -->
+<!--         ) -->
+<!--     } -->
+<!--   }) -->
+<!-- ) -->
+<!-- t -->
 
-# t <- dmr.ls.sim
-# 
-# # print to HTML
-# cat("# Results \n \n ")
-# for (i in seq_along(names(t))) {
-#   name <- names(t)[i]
-#   cat("\n \n")
-#   cat(sprintf("## Gears: %s {.tabset .tabset-pills} \n \n", name))
-#   cat("### Table \n \n")
-#   print(htmltools::tagList(datatable(data.frame(t[[i]]))))
-#   cat("\n \n")
-# }
-```
+<!-- # t <- dmr.ls.sim -->
+<!-- #  -->
+<!-- # # print to HTML -->
+<!-- # cat("# Results \n \n ") -->
+<!-- # for (i in seq_along(names(t))) { -->
+<!-- #   name <- names(t)[i] -->
+<!-- #   cat("\n \n") -->
+<!-- #   cat(sprintf("## Gears: %s {.tabset .tabset-pills} \n \n", name)) -->
+<!-- #   cat("### Table \n \n") -->
+<!-- #   print(htmltools::tagList(datatable(data.frame(t[[i]])))) -->
+<!-- #   cat("\n \n") -->
+<!-- # } -->
+<!-- ``` -->
 
 
 
