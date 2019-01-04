@@ -27,11 +27,18 @@ output:
 library(GenomicRanges)
 ```
 
+# Input files
 
-# DMR files (simulated data)
+## Simulated 100 DMRs
+```{r}
+read.dmr <- GRanges(read.delim("./input/simulated_DMRS.txt.gz", sep = "\t", stringsAsFactors = F, header = T))
+```
+
+
+## DMR files (simulated data)
 
 ```{r}
-files.sim <- list.files(path = "./input", pattern = "sim", full.names = T)
+files.sim <- list.files(path = "./input", pattern = "sim_", full.names = T)
 names(files.sim) <- sapply(files.sim, function(x) strsplit(x, "\\.|/")[[1]][4])
 
 read.sim <- lapply(files.sim, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
@@ -43,8 +50,9 @@ read.sim <- lapply(files.sim, function(x) GRanges(read.delim(x, sep = "\t", stri
 
 ## Function
 ```{r}
-meta_GR <- function(gr1, gr2){
-  ranges <- subsetByOverlaps(gr1, gr2, minoverlap = 1)
+meta_GR <- function(gr1, gr2, n1 = NULL, n2 = NULL){
+  ranges <- subsetByOverlaps(gr1, gr2)
+                             # , minoverlap = 1)
   revRanges <- subsetByOverlaps(gr2, gr1)
   hits <- findOverlaps(gr1, gr2)
   idx <- unique(subjectHits(hits))
@@ -54,7 +62,10 @@ meta_GR <- function(gr1, gr2){
   return(ranges)
 }
 
-reduce(gr1, min.gapwidth = 150)
+# reduce(gr1, min.gapwidth = 150)
+
+
+meta_GR(gr1 = read.dmr, gr2 = read.sim$dmrseq_dmr_sim_data)
 ```
 
 
