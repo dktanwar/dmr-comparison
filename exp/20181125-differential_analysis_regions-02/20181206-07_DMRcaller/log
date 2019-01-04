@@ -80,6 +80,12 @@ The following objects are masked from 'package:dplyr':
     collapse, desc, slice
 
 Loading required package: GenomeInfoDb
+Read 516095 records
+Read 516095 records
+Read 516095 records
+Read 516095 records
+Read 516095 records
+Read 516095 records
 Read 575485 records
 Read 575485 records
 Read 575485 records
@@ -90,11 +96,8 @@ output file: dmrcaller.knit.md
 
 
 Output created: dmrcaller.html
-  |                                                                         |..............                                                   |  22%
-label: unnamed-chunk-2 (with options) 
-List of 1
- $ eval: logi FALSE
-
+                       |  22%
+label: unnamed-chunk-2
   |                                                                         |..................                                               |  28%
   ordinary text without R code
 
@@ -137,4 +140,4 @@ label: unnamed-chunk-8
   |                                                                         |.................................................................| 100%
 label: unnamed-chunk-9
 
-/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS dmrcaller.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output dmrcaller.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/Rtmph3ptQM/rmarkdown-str633417683399.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS dmrcaller.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output dmrcaller.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpHtqsLL/rmarkdown-str68ea8b060b7.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 

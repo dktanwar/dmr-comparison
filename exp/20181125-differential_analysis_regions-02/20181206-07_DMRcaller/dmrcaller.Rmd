@@ -49,13 +49,11 @@ Unlike the rest of the methods, DMRcaller allows to call DMRs also in non-CpG co
 # Input data
 
 ## Negative control
-```{r, eval=FALSE}
+```{r}
 anno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
-
 files.nc <- list.files("./input", pattern = "NC", full.names = T)
 read.nc <- GRangesList(lapply(files.nc, function(x) readBismark(x)))
 names(read.nc) <- anno.nc$names
-
 mData.grp1.nc <- poolMethylationDatasets(read.nc[anno.nc$names[anno.nc$Group == "Group1"]])
 mData.grp2.nc <- poolMethylationDatasets(read.nc[anno.nc$names[anno.nc$Group == "Group2"]])
 ```
@@ -64,11 +62,9 @@ mData.grp2.nc <- poolMethylationDatasets(read.nc[anno.nc$names[anno.nc$Group == 
 ## Simulated data
 ```{r}
 anno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
-
 files.sim <- list.files("./input", pattern = "sim_r", full.names = T)
 read.sim <- GRangesList(lapply(files.sim, function(x) readBismark(x)))
 names(read.sim) <- anno.sim$names
-
 mData.grp1.sim <- poolMethylationDatasets(read.sim[anno.sim$names[anno.sim$Group == "Group1"]])
 mData.grp2.sim <- poolMethylationDatasets(read.sim[anno.sim$names[anno.sim$Group == "Group2"]])
 ```
@@ -79,7 +75,6 @@ mData.grp2.sim <- poolMethylationDatasets(read.sim[anno.sim$names[anno.sim$Group
 ## Function to perform analysis
 ```{r}
 dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyword) {
-
   # Methods
   m <- NULL
   if (methods == "all") {
@@ -87,7 +82,6 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
   } else {
     m <- methods
   }
-
   # Kernals
   k <- NULL
   if (methods == "noise_filter" | methods == "all") {
@@ -95,11 +89,9 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
   } else {
     k <- kernals
   }
-
   # DMRs
   dmr.list.nf <- list()
   dmr.list.ot <- list()
-
   for (i in 1:length(m)) {
     if (m[i] == "noise_filter") {
       for (j in 1:length(k)) {
@@ -109,7 +101,7 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
           method = m[i],
           kernelFunction = k[j],
           test = "score",
-          pValueThreshold = 0.01,
+          pValueThreshold = 0.9,
           minCytosinesCount = 10,
           minProportionDifference = 0.1,
           cores = detectCores() - 1
@@ -122,7 +114,7 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
         methylationData2 = grp2,
         method = m[i],
         test = "score",
-        pValueThreshold = 0.01,
+        pValueThreshold = 0.9,
         minCytosinesCount = 10,
         minProportionDifference = 0.1,
         cores = detectCores() - 1
@@ -130,10 +122,8 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
       names(dmr.list.ot)[i] <- m[i]
     }
   }
-
   dmr.list <- c(dmr.list.nf, dmr.list.ot)
   dmr.list <- dmr.list[!is.na(names(dmr.list))]
-
   dmr.list.merge <- lapply(dmr.list, function(x) mergeDMRsIteratively(
       DMRs = x,
       methylationData1 = grp1,
@@ -141,30 +131,30 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyw
       minGap = 200,
       respectSigns = TRUE,
       minProportionDifference = 0.1,
-      pValueThreshold = 0.01,
+      pValueThreshold = 0.9,
       test = "score",
       cores = detectCores() - 1
     ))
-
+  
   # Change colname
-
+  
   dmr.list.merge <- lapply(dmr.list.merge, function(x) {
     a <- data.frame(x, stringsAsFactors = F)
     colnames(a)[colnames(a) == "pValue"] <- "qval"
     return(GRanges(a))
   })
-
+  
   # Save data
-
-  for (i in 1:length(dmr.list.merge)) {
+  
+  for(i in 1:length(dmr.list.merge)){
     tmp <- data.frame(dmr.list.merge[[i]])
     # colnames(tmp)[15] <- "qval"
-    if (nrow(tmp) != 0) {
-      n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
-      write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
+    if(nrow(tmp)!= 0){
+    n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
+    write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
     }
   }
-
+  
   return(dmr.list.merge)
 }
 ```
