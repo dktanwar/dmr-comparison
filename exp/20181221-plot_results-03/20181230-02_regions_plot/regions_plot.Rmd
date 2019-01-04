@@ -33,13 +33,11 @@ library(dmrseq)
 ## Negative control
 ```{r}
 load("./input/bsseq_neg_control.RData")
-bs.nc <- bs
 ```
 
 ## Simulated data
 ```{r}
 load("./input/bsseq_sim_100.RData")
-colnames(bs.sim$bs) <- anno.sim$names
 ```
 
 
@@ -47,16 +45,17 @@ colnames(bs.sim$bs) <- anno.sim$names
 
 ## NC
 ```{r}
-files.nc <- list.files(path = "./input", pattern = "neg_control.txt|negative_control", full.names = T)
+files.nc <- list.files(path = "./input", pattern = "neg_control.txt", full.names = T)
+files.nc <- files.nc[grep(pattern = "anno", x = files.nc, invert = T)]
 names(files.nc) <- sapply(files.nc, function(x) strsplit(x, "\\.|/")[[1]][4])
 
-read.nc <- lapply(files.nc, function(x) GRanges(read.table(x, sep = "\t", stringsAsFactors = F, header = T)))
+read.nc <- lapply(files.nc, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
 
-for(i in 1:length(read.nc)){
-  if(names(read.nc)[i] != "DMRcaller_dmr_bins_neg_control" | names(read.nc)[i] != "methpipe_dmr_neg_control"){
-    colnames(read.nc[[i]])[colnames(read.nc[[i]])]
-  }
-}
+# for(i in 1:length(read.nc)){
+#   if(names(read.nc)[i] != "DMRcaller_dmr_bins_neg_control" | names(read.nc)[i] != "methpipe_dmr_neg_control"){
+#     colnames(read.nc[[i]])[colnames(read.nc[[i]])]
+#   }
+# }
 
 ```
 
@@ -64,7 +63,7 @@ for(i in 1:length(read.nc)){
 ## SD
 ```{r}
 anno.sim <- read.table("./input/anno_sim_data.txt.gz", sep = "\t", header = T, stringsAsFactors = F)
-files.sim <- list.files(path = "./input", pattern = "sim_data.txt|simulated_data.txt", full.names = T)
+files.sim <- list.files(path = "./input", pattern = "sim_data.txt", full.names = T)
 files.sim <- files.sim[grep(pattern = "anno", x = files.sim, invert = T)]
 
 names(files.sim) <- sapply(files.sim, function(x) strsplit(x, "\\.|/")[[1]][4])
@@ -76,7 +75,7 @@ pData(bs.sim$bs) <- anno.sim
 
 
 
-# Annotation
+# Annotation Human Genome
 ```{r}
 anno <- getAnnot("hg19")
 ```
@@ -84,11 +83,11 @@ anno <- getAnnot("hg19")
 
 # Regions plot
 
-## NC
+## Simulated data
 
 ```{r}
 plotDMRs(BSseq = bs.sim$bs, regions=bs.sim$gr.dmrs[1:10,], testCovariate="Group",
-    compareTrack = GenomicRangesList(read.sim[c(1:4)]), qval = F, stat = F)
+    compareTrack = GenomicRangesList(read.sim[c(6:9)]), qval = F, stat = F)
 ```
 
 
