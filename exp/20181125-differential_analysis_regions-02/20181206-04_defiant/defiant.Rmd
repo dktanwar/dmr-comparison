@@ -63,6 +63,7 @@ dmr.nc <- read.delim("./output/neg_control/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.
   header = T, sep = "\t", stringsAsFactors = F, check.names = F
 )
 
+dmr.nc[,1] <- paste0("chr", dmr.nc[,1])
 colnames(dmr.nc)[10] <- "qval"
 
 write.table(dmr.nc, file = gzfile("./output/defiant_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
@@ -94,6 +95,7 @@ dmr.sim <- read.delim("./output/sim_data/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.ts
   header = T, sep = "\t", stringsAsFactors = F, check.names = F
 )
 
+dmr.sim[,1] <- paste0("chr", dmr.sim[,1])
 colnames(dmr.sim)[10] <- "qval"
 
 write.table(dmr.sim, file = gzfile("./output/defiant_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
