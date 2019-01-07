@@ -115,7 +115,7 @@ dmr.sim <- dmrFinder(bs.tstat.sim)
 # dmr.sim$qValue.BH <- p.adjust(p = dmr.sim$pValue, method = "BH")
 dmr.sim <- subset(dmr.sim, n >= 10 & abs(meanDiff) >= 0.1)
 write.table(dmr.sim,
-  file = gzfile("./output/bsseq_dmr_simulated_data.txt.gz"), sep = "\t",
+  file = gzfile("./output/bsseq_dmr_sim_data.txt.gz"), sep = "\t",
   quote = F, row.names = F
 )
 ```
