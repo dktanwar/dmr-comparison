@@ -1,0 +1,398 @@
+---
+title: "Comparison of the algorithms"
+author: "Deepak Tanwar & Hana Parizkova"
+date: "<b>Created on:</b> 2019-01-07 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Packages required
+```{r, warning=F, message=FALSE}
+library(GenomicRanges)
+library(ggplot2)
+library(data.table)
+```
+
+# Input files
+
+## Simulated 100 DMRs
+```{r}
+read.dmr <- GRanges(read.delim("./input/simulated_DMRS.txt.gz", sep = "\t", stringsAsFactors = F, header = T))
+```
+
+
+## DMR files (simulated data)
+
+```{r}
+files.sim <- list.files(path = "./input", pattern = "sim_", full.names = T)
+names(files.sim) <- sapply(files.sim, function(x) strsplit(x, "\\.|/")[[1]][4])
+
+read.sim <- lapply(files.sim, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
+
+# Filtering regions based on FDR
+sim.new <- list()
+fdrs <- c(0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+
+for (j in 1:length(fdrs)) {
+  sim.fdr <- list()
+  for (i in 1:length(read.sim)) {
+    n <- names(read.sim)[i]
+    sim.fdr[[i]] <- read.sim[[i]][read.sim[[i]]$qval <= fdrs[[j]]]
+    names(sim.fdr)[i] <- n
+    colnames(mcols(sim.fdr[[i]])) <- paste(n, colnames(mcols(sim.fdr[[i]])), sep = ":")
+  }
+  sim.new[[j]] <- sim.fdr
+}
+
+# separately load the methods which do not provide qval
+files.sim.no.qval <- list.files(path = "./input/input_no_qval", pattern = "sim_", full.names = T)
+names(files.sim.no.qval) <- sapply(files.sim.no.qval, function(x) strsplit(x, "\\.|/")[[1]][5])
+
+read.sim.no.qval <- lapply(files.sim.no.qval, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
+```
+
+
+# Helper functions
+
+```{r}
+# returns length of overlap of region gr1 with any of regions in gr2
+#   gr1 ... one range
+#   gr2 ... list of ranges
+meta_GR_overlap <- function(gr1, gr2) {
+  # all overlaps of gr1 with any of ranges in gr2
+  ranges <- overlapsRanges(gr1, gr2, minoverlap = 1)
+  return(sum(width(ranges)))
+}
+```
+
+## Regions common with simulated DMRs for each method and each FDR
+Threshold for required overlap of regions to be considered positive:
+```{r}
+threshold <- 0.8
+```
+
+
+```{r}
+stats.each.threshold <- list()
+stats.each.all <- list()
+stats.each.prop <- list()
+stats.each.nuc <- list()
+
+tot.length.sim <- sum(width(read.dmr))
+
+# for every method with qvals
+for (j in 1:length(sim.new[[1]])) {
+  n <- names(sim.new[[1]])[j]
+  data.tmp.threshold <- data.frame(spec.fdr = numeric(),
+                         tp.found.threshold = numeric(),
+                         fp.found.threshold = numeric(),
+                         tp.sim.threshold = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  data.tmp.all <- data.frame(spec.fdr = numeric(),
+                         tp.found.all = numeric(),
+                         fp.found.all = numeric(),
+                         tp.sim.all = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  data.tmp.prop <- data.frame(spec.fdr = numeric(),
+                         tp.found.prop = numeric(),
+                         fp.found.prop = numeric(),
+                         tp.sim.prop = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  data.tmp.nuc <- data.frame(spec.fdr = numeric(),
+                         tp.found.prop = numeric(),
+                         fp.found.prop = numeric(),
+                         tp.sim.prop = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  # for every FDR
+  for (i in 1:length(fdrs)) {
+    fdr <- fdrs[[i]]
+    num.regions <- length(ranges(sim.new[[i]][[j]]))
+    tot.length <- sum(width(sim.new[[i]][[j]]))
+    
+    if (num.regions > 0) {
+      overlaps.foundToSim <- unlist(lapply(c(1:num.regions), function(x) meta_GR_overlap(ranges(sim.new[[i]][[j]][x]), ranges(read.dmr))))
+      proportions.foundToSim <- overlaps.foundToSim/width(sim.new[[i]][[j]])
+      
+      tp.found.all <- sum(overlaps.foundToSim>0)
+      fp.found.all <- num.regions - tp.found.all
+      
+      tp.found.threshold <- sum(proportions.foundToSim >=threshold)
+      fp.found.threshold <- num.regions - tp.found.threshold
+      
+      tp.found.prop <- sum(proportions.foundToSim)
+      fp.found.prop <- num.regions - tp.found.prop
+      
+      tp.found.nuc <- sum(overlaps.foundToSim)
+      fp.found.nuc <- tot.length - tp.found.nuc
+      
+      overlaps.simToFound <- unlist(lapply(c(1:length(read.dmr)), function(x) meta_GR_overlap(ranges(read.dmr)[x],  ranges(sim.new[[i]][[j]]))))
+      proportions.simToFound <- overlaps.simToFound/width(read.dmr)
+      
+      tp.sim.all <- sum(overlaps.simToFound > 0)
+      
+      tp.sim.threshold <- sum(proportions.simToFound >= threshold)
+      
+      tp.sim.prop <- sum(proportions.simToFound)
+      
+      tp.sim.nuc <- sum(overlaps.simToFound)
+      
+      data.tmp.threshold[i,] <- c(fdr, tp.found.threshold, fp.found.threshold, tp.sim.threshold, num.regions, fp.found.threshold/num.regions, tp.sim.threshold/100, tot.length, n)
+    data.tmp.all[i,] <- c(fdr, tp.found.all, fp.found.all, tp.sim.all, num.regions, fp.found.all/num.regions, tp.sim.all/100, tot.length, n)
+    data.tmp.prop[i,] <- c(fdr, tp.found.prop, fp.found.prop, tp.sim.prop, num.regions, fp.found.prop/num.regions, tp.sim.prop/100, tot.length, n)
+    data.tmp.nuc[i,] <- c(fdr, tp.found.nuc, fp.found.nuc, tp.sim.nuc, tot.length, fp.found.nuc/tot.length, tp.sim.prop/tot.length.sim, tot.length, n)
+      
+    } else {
+      
+      data.tmp.threshold[i,] <- c(fdr, 0, 0, 0, 0, 0, 0, 0, n)
+      data.tmp.all[i,] <- c(fdr, 0, 0, 0, 0, 0, 0, 0, n)
+      data.tmp.prop[i,] <- c(fdr, 0, 0, 0, 0, 0, 0, 0, n)
+      data.tmp.nuc[i,] <- c(fdr, 0, 0, 0, 0, 0, 0, 0, n)
+    }
+  }
+  
+  stats.each.threshold[[j]] <- data.tmp.threshold
+  names(stats.each.threshold)[j] <- n
+  stats.each.all[[j]] <- data.tmp.all
+  names(stats.each.all)[j] <- n
+  stats.each.prop[[j]] <- data.tmp.prop
+  names(stats.each.prop)[j] <- n
+  stats.each.nuc[[j]] <- data.tmp.nuc
+  names(stats.each.nuc)[j] <- n
+}
+```
+
+```{r}
+# add methods without qvals
+for (i in 1:length(read.sim.no.qval)) {
+  n <- names(files.sim.no.qval)[i]
+  num.regions <- length(ranges(read.sim.no.qval[[i]]))
+  tot.length <- sum(width(read.sim.no.qval[[i]]))
+  data.tmp.threshold <- data.frame(spec.fdr = numeric(),
+                         tp.found.threshold = numeric(),
+                         fp.found.threshold = numeric(),
+                         tp.sim.threshold = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  data.tmp.all <- data.frame(spec.fdr = numeric(),
+                         tp.found.all = numeric(),
+                         fp.found.all = numeric(),
+                         tp.sim.all = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  data.tmp.prop <- data.frame(spec.fdr = numeric(),
+                         tp.found.prop = numeric(),
+                         fp.found.prop = numeric(),
+                         tp.sim.prop = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  data.tmp.nuc <- data.frame(spec.fdr = numeric(),
+                         tp.found.prop = numeric(),
+                         fp.found.prop = numeric(),
+                         tp.sim.prop = numeric(),
+                         num.regions = numeric(),
+                         obs.fdr = numeric(),
+                         power = numeric(),
+                         total.length = numeric(),
+                         method = character(),
+                         stringsAsFactors = F)
+  
+  overlaps.foundToSim <- unlist(lapply(c(1:num.regions), function(x) meta_GR_overlap(ranges(read.sim.no.qval[[i]][x]), ranges(read.dmr))))
+  proportions.foundToSim <- overlaps.foundToSim/width(read.sim.no.qval[[i]])
+      
+  tp.found.all <- sum(overlaps.foundToSim>0)
+  fp.found.all <- num.regions - tp.found.all
+      
+  tp.found.threshold <- sum(proportions.foundToSim >=threshold)
+  fp.found.threshold <- num.regions - tp.found.threshold
+      
+  tp.found.prop <- sum(proportions.foundToSim)
+  fp.found.prop <- num.regions - tp.found.prop
+  
+  tp.found.nuc <- sum(overlaps.foundToSim)
+  fp.found.nuc <- tot.length - tp.found.nuc
+  
+
+  overlaps.simToFound <- unlist(lapply(c(1:length(read.dmr)), function(x) meta_GR_overlap(ranges(read.dmr)[x],  ranges(read.sim.no.qval[[i]]))))
+  proportions.simToFound <- overlaps.simToFound/width(read.dmr)
+      
+  tp.sim.all <- sum(overlaps.simToFound > 0)
+      
+  tp.sim.threshold <- sum(proportions.simToFound >= threshold)
+      
+  tp.sim.prop <- sum(proportions.simToFound)
+  
+  tp.sim.nuc <- sum(overlaps.simToFound)
+  
+  
+  data.tmp.threshold[1,] <- c(NaN, tp.found.threshold, fp.found.threshold, tp.sim.threshold, num.regions, fp.found.threshold/num.regions, tp.sim.threshold/100, tot.length, n)
+  data.tmp.all[1,] <- c(NaN, tp.found.all, fp.found.all, tp.sim.all, num.regions, fp.found.all/num.regions, tp.sim.all/100, tot.length, n)
+  data.tmp.prop[1,] <- c(NaN, tp.found.prop, fp.found.prop, tp.sim.prop, num.regions, fp.found.prop/num.regions, tp.sim.prop/100, tot.length, n)
+  data.tmp.nuc[1,] <- c(fdr, tp.found.nuc, fp.found.nuc, tp.sim.nuc, tot.length, fp.found.nuc/tot.length, tp.sim.prop/tot.length.sim, tot.length, n)
+  
+  stats.each.threshold[[length(sim.new[[1]])+i]] <- data.tmp.threshold
+  stats.each.all[[length(sim.new[[1]])+i]] <- data.tmp.all
+  stats.each.prop[[length(sim.new[[1]])+i]] <- data.tmp.prop
+  stats.each.nuc[[length(sim.new[[1]])+i]] <- data.tmp.nuc
+}
+```
+
+```{r}
+# concatenate the data frames
+data.all <- rbindlist(stats.each.all)
+data.all$obs.fdr <- as.numeric(data.all$obs.fdr)
+data.all$power <- as.numeric(data.all$power)
+data.all$spec.fdr <- as.numeric(data.all$spec.fdr)
+data.all$tp.sim.all <- as.numeric(data.all$tp.sim.all)
+data.all$fp.found.all <- as.numeric(data.all$fp.found.all)
+data.all$total.length <- as.numeric(data.all$total.length)
+
+data.prop <- rbindlist(stats.each.prop)
+data.prop$obs.fdr <- as.numeric(data.prop$obs.fdr)
+data.prop$power <- as.numeric(data.prop$power)
+
+data.threshold <- rbindlist(stats.each.threshold)
+data.threshold$obs.fdr <- as.numeric(data.threshold$obs.fdr)
+data.threshold$power <- as.numeric(data.threshold$power)
+
+data.nuc <- rbindlist(stats.each.nuc)
+data.nuc$obs.fdr <- as.numeric(data.nuc$obs.fdr)
+data.nuc$power <- as.numeric(data.nuc$power)
+```
+
+# Plots
+
+## Observed FDR vs. power
+```{r}
+ggplot(data.all, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+  geom_point() + 
+  geom_line() +
+  labs(x="observed FDR", y="observed power", title="any overlap") +
+  theme_light() +
+  xlim(0,1) + ylim(0,1)
+  
+ggplot(data.prop, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+  geom_point() + 
+  geom_line() +
+  labs(x="observed FDR", y="observed power", title="proportional") +
+  theme_light() +
+  xlim(0,1) + ylim(0,1)
+
+ggplot(data.threshold, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+  geom_point() + 
+  geom_line() +
+  labs(x="observed FDR", y="observed power", title="overlap at least 80 %") +
+  theme_light() +
+  xlim(0,1) + ylim(0,1)
+```
+
+
+## Specified FDR vs. observed FDR
+```{r}
+#only for any overlap
+ggplot(data.all, aes(x=spec.fdr, y=obs.fdr, color=method, group=method)) + 
+  geom_point() + 
+  geom_line() +
+  labs(x="specified FDR", y="observed FDR") +
+  theme_light() +
+  xlim(0,1) + ylim(0,1) +
+  geom_abline(linetype=3)
+```
+
+## FP vs. TP
+```{r}
+ggplot(data.all, aes(x=fp.found.all, y=tp.sim.all, color=method, group=method)) + 
+  geom_point() + 
+  geom_line() +
+  labs(x="found FPs", y="found TPs") +
+  theme_light() 
+```
+
+## Average length of reported regions
+```{r}
+means <- data.frame(avg_length = numeric(),
+  method = character(),
+  stringsAsFactors = F)
+for( i in 1:length(sim.new[[4]])) {
+  mean <- mean(width(sim.new[[4]][[i]]))
+  means[i,] <- c(mean, names(sim.new[[4]])[i])
+}
+for (i in 1:length(read.sim.no.qval)) {
+  mean <- mean(width(read.sim.no.qval[[i]]))
+  means[length(sim.new[[4]])+i,] <- c(mean, names(read.sim.no.qval)[i])
+}
+means$avg_length <- as.numeric(means$avg_length)
+
+ggplot(means, aes(x=method, y=avg_length, color=method, fill=method)) + geom_bar(stat="identity")
+```
+The average length of ranges reported by `dmrseq` is highest from all the methods. Isn't `dmrseq` good only because it reports longer intervals (that by chance overlap some simulated interval)?
+
+## FDR vs. power - nucleotidewise
+Each nucleotide position is classified as TP (is simulated and is reported), FP (is not simuated and is reported), FN (is simulated and is not reported) or TN (is not simulated and is not reported).
+
+FDR = FP/(FP+TP)
+
+power = TP/(TP+FN)
+
+```{r}
+ggplot(data.nuc, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+  geom_point() + 
+  geom_line() +
+  labs(x="observed FDR", y="observed power", title="by nucleotides") +
+  theme_light() +
+  xlim(0,1)
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```
