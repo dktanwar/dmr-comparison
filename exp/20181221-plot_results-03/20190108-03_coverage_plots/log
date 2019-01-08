@@ -1,0 +1,185 @@
+
+
+processing file: coverage_plots.Rmd
+Loading required package: limma
+
+Attaching package: 'reshape2'
+
+The following objects are masked from 'package:data.table':
+
+    dcast, melt
+
+Loading required package: ggplot2
+
+Attaching package: 'plotly'
+
+The following object is masked from 'package:ggplot2':
+
+    last_plot
+
+The following object is masked from 'package:stats':
+
+    filter
+
+The following object is masked from 'package:graphics':
+
+    layout
+
+Loading required package: viridisLite
+Loading required package: gtools
+Using Samples as id variables
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+Using Samples as id variables
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+Using Samples as id variables
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+Using Samples as id variables
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+output file: coverage_plots.knit.md
+
+
+Output created: coverage_plots.html
+There were 24 warnings (use warnings() to see them)
+             |.........                                                        |  13%
+  ordinary text without R code
+
+  |                                                                         |..........                                                       |  16%
+label: unnamed-chunk-3
+  |                                                                         |............                                                     |  18%
+  ordinary text without R code
+
+  |                                                                         |..............                                                   |  21%
+label: unnamed-chunk-4
+  |                                                                         |...............                                                  |  24%
+  ordinary text without R code
+
+  |                                                                         |.................                                                |  26%
+label: unnamed-chunk-5 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |...................                                              |  29%
+  ordinary text without R code
+
+  |                                                                         |.....................                                            |  32%
+label: unnamed-chunk-6 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |......................                                           |  34%
+  ordinary text without R code
+
+  |                                                                         |........................                                         |  37%
+label: unnamed-chunk-7 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |..........................                                       |  39%
+  ordinary text without R code
+
+  |                                                                         |...........................                                      |  42%
+label: unnamed-chunk-8 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |.............................                                    |  45%
+  ordinary text without R code
+
+  |                                                                         |...............................                                  |  47%
+label: unnamed-chunk-9 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |................................                                 |  50%
+  ordinary text without R code
+
+  |                                                                         |..................................                               |  53%
+label: unnamed-chunk-10 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |....................................                             |  55%
+  ordinary text without R code
+
+  |                                                                         |......................................                           |  58%
+label: unnamed-chunk-11 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |.......................................                          |  61%
+  ordinary text without R code
+
+  |                                                                         |.........................................                        |  63%
+label: unnamed-chunk-12 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |...........................................                      |  66%
+  ordinary text without R code
+
+  |                                                                         |............................................                     |  68%
+label: unnamed-chunk-13 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |..............................................                   |  71%
+  ordinary text without R code
+
+  |                                                                         |................................................                 |  74%
+label: unnamed-chunk-14 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |..................................................               |  76%
+  ordinary text without R code
+
+  |                                                                         |...................................................              |  79%
+label: unnamed-chunk-15 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |.....................................................            |  82%
+  ordinary text without R code
+
+  |                                                                         |.......................................................          |  84%
+label: unnamed-chunk-16 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |........................................................         |  87%
+  ordinary text without R code
+
+  |                                                                         |..........................................................       |  89%
+label: unnamed-chunk-17 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |............................................................     |  92%
+  ordinary text without R code
+
+  |                                                                         |..............................................................   |  95%
+label: unnamed-chunk-18 (with options) 
+List of 2
+ $ warning: symbol F
+ $ message: symbol F
+
+  |                                                                         |...............................................................  |  97%
+  ordinary text without R code
+
+  |                                                                         |.................................................................| 100%
+label: unnamed-chunk-19
+
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS coverage_plots.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output coverage_plots.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpRYYd7Y/rmarkdown-str2a43401d01c6.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
