@@ -30,6 +30,11 @@ library(bsseq)
 library(DT)
 ```
 
+# Method description
+In BSseq, the genome is partitioned into windows and the methylation proportions in each window are approximated by a second degree polynomial. To find DMRs, signal-to-noise statistc on the smoothed data, similar to t-test, is computed.
+
+
+
 
 # Input files and phenoData
 Read in input files.

@@ -31,6 +31,8 @@ library(data.table)
 library(DT)
 ```
 
+# Method description
+In MethylKit, genome is fractioned into bins and the methylation levels within each bin are compared using logistic regression (or Fisher's exact test, if there is only one replicate in each group). 
 
 # Input files
 Read in input files.

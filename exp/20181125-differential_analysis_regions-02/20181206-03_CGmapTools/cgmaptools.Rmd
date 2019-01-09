@@ -28,6 +28,9 @@ library(DT)
 library(data.table)
 ```
 
+# Method description
+CGmapTools uses ‘dynamic-fragment finding method’. First, background fragments are defined using several criteria (contain a minimum number of CpGs, at most maximal distance between two adjacent CpGs, etc.). An unpaired t-test is then carried out to compare the methylation levels of CpG sites shared between fragments in the two groups. DMRs are then selected from these background fragments by p-values. 
+
 
 # Merge groups into one table
 First, the data from each group need to be merged into a single file.

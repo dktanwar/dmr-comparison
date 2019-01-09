@@ -22,6 +22,10 @@ output:
   documentclass: article
 ---
 
+
+
+Analysis following the [DMRcaller vignette](https://bioconductor.org/packages/release/bioc/vignettes/DMRcaller/inst/doc/DMRcaller.pdf).
+
 # Packages required
 ```{r, warning=F, message=FALSE}
 library(DT)
@@ -29,8 +33,6 @@ library(dplyr)
 library(data.table)
 library(DMRcaller)
 ```
-
-Analysis following the [DMRcaller vignette](https://bioconductor.org/packages/release/bioc/vignettes/DMRcaller/inst/doc/DMRcaller.pdf).
 
 # Method description
 

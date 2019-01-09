@@ -77,8 +77,10 @@ link to methylKit
 # Results
 The reported DMRs were (if possible) filtered for only those that contain at least 10 CpGs and the mean difference between the two groups is at least 0.1 (the simulated regions had effect sizes between 0.163 and 0.450).
 
-# Discussion and Conclusion
+link to results
 
+# Discussion and Conclusion
+mention that we used simulating function from dmrseq
 
 # SessionInfo
 

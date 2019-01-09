@@ -30,6 +30,9 @@ library(DT)
 library(plyr)
 ```
 
+# Method description
+Differential methylation scores are first computed at individual CpG sites in a way similar to one-directional version of Fisher’s test. HMRs (hypomethylated regions) are detected using Hidden Markov Model individually in each sample (group). Non-overlapping intervals of HMRs are then checked if they contain sufficient number of DMLs.
+
 
 # Merging results from the replicates
 The methylation data within each group first need to be combined into a single file using `merge-methcounts`.

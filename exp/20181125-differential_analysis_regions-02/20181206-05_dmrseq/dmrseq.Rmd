@@ -29,6 +29,9 @@ library(dmrseq)
 library(DT)
 ```
 
+# Method description
+In dmrseq, the methylation data are smoothed and then analyzes using generalized least squares model. Biological variability and correlation between neighbouring loci is taken into account.
+
 # Input files
 Read in input files and create a `BSseq` object.
 # Negative control
