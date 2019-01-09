@@ -28,17 +28,58 @@ library(GenomicRanges)
 library(ggplot2)
 library(data.table)
 library(plotly)
+library(DT)
 ```
 
 # Input files
+## Negative control
+Methods providing q-values - filter only data with q-value below 0.05.
+```{r}
+files.neg <- list.files(path = "./input", pattern = "neg_", full.names = T)
+names(files.neg) <- sapply(files.neg, function(x) strsplit(x, "\\.|/")[[1]][4])
 
-## 100 simulated DMRs
+read.neg <- lapply(files.neg, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
+
+for (i in 1:length(read.neg)) {
+    read.neg[[i]] <- read.neg[[i]][read.neg[[i]]$qval <= 0.05]
+}
+```
+
+Methods that do not provide q-values (BSseq and MethPipe):
+```{r}
+files.neg.no.qval <- list.files(path = "./input/input_no_qval", pattern = "neg_", full.names = T)
+names(files.neg.no.qval) <- sapply(files.neg.no.qval, function(x) strsplit(x, "\\.|/")[[1]][5])
+
+read.neg.no.qval <- lapply(files.neg.no.qval, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
+```
+
+Modify the names of objects in `read.neg` and `read.neg.no.qval` to be nicer:
+```{r}
+modify_name <- function(name){
+  if (startsWith(name, "DMRcaller")) {
+    name.split <- strsplit(name, "_")[[1]]
+    new.name <- paste(name.split[1], head(tail(name.split, n=3), n=1), sep="_")
+  } else {
+    new.name <- strsplit(name, "_")[[1]][1]
+  }
+  return(new.name)
+}
+
+names(read.neg) <- sapply(names(read.neg), function(x) modify_name(x))
+names(read.neg.no.qval) <- sapply(names(read.neg.no.qval), function(x) modify_name(x))
+```
+
+Paste the two lists:
+```{r}
+read.neg.all <- c(read.neg, read.neg.no.qval)
+```
+
+## Simulated data
+True DMRs:
 ```{r}
 read.dmr <- GRanges(read.delim("./input/simulated_DMRS.txt.gz", sep = "\t", stringsAsFactors = F, header = T))
 ```
 
-
-## Detected DMRs
 Read the DMRs detected in simulated data by the individual methods.
 ```{r}
 files.sim <- list.files(path = "./input", pattern = "sim_", full.names = T)
@@ -94,6 +135,38 @@ for (j in 1:length(cutoffs)) {
 
 # Computing the comparison statistics
 ## Negative control
+For each method compute number of identified regions (which are all false-positives) and their total length.
+```{r}
+data.neg <- data.frame(method=character(),
+                       num.regions=numeric(),
+                       tot.length=numeric(),
+                       stringsAsFactors = FALSE)
+for (i in 1:length(read.neg.all)) {
+  method <- names(read.neg.all)[i]
+  num.regions <- length(width(read.neg.all[[i]]))
+  tot.length <- sum(width(read.neg.all[[i]]))
+  data.neg[i,] <- c(method, num.regions, tot.length)
+}
+
+data.neg$num.regions <- as.numeric(data.neg$num.regions)
+data.neg$tot.length <- as.numeric(data.neg$tot.length)
+
+data.neg <- data.neg[order(data.neg$method),]
+```
+
+```{r}
+datatable(
+  data.neg,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 12,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)
+```
+Two methods have correctly found no DMRs - defiant and dmrseq.
 
 ## Simulated data
 ### Helper function
@@ -390,6 +463,23 @@ for (i in 1:8) {
 # Plots
 
 ## Negative control
+### Number of identified regions
+```{r}
+ggplotly(ggplot(data.neg, aes(x=method, y=num.regions, fill=method)) +
+           geom_bar(stat="identity") +
+           theme_light() +
+          labs(y="number of identified regions") +
+          theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none") )
+```
+
+### Total length of identified regions
+```{r}
+ggplotly(ggplot(data.neg, aes(x=method, y=tot.length, fill=method)) +
+           geom_bar(stat="identity") +
+           theme_light() +
+          labs(y="total length of identified regions") +
+          theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none") )
+```
 
 ## Simulated data
 
