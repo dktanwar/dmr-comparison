@@ -53,22 +53,29 @@ In total 7 different methods were used for the comparison. Their main features a
 | methylKit  | Fisher's exact test, or logistic regression with tiling                                 | yes                    | all contexts  | R                       | 10.1186/gb-2012-13-10-r87     | [Bioconductor package methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html) |
 
 ### `bsseq` analysis
+link to bsseq
 
 ### `CGmapTools` analysis
+link to CGmapTools
 
 ### `defiant` analysis
+link to defiant
 
 ### `DMRcaller` analysis
+link to DMRcaller
 
 ### `dmrseq` analysis
+link to dmrseq
 
 ### `methPipe` analysis
+link to methPipe
 
 ### `methylKit` analysis
+link to methylKit
 
 
 # Results
-
+The reported DMRs were (if possible) filtered for only those that contain at least 10 CpGs and the mean difference between the two groups is at least 0.1 (the simulated regions had effect sizes between 0.163 and 0.450).
 
 # Discussion and Conclusion
 
