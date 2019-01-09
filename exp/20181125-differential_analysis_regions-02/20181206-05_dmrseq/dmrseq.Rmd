@@ -76,7 +76,8 @@ pData(bismarkBSseq.sim) <- anno.sim
 dmr.nc <- dmrseq(
   bs = bismarkBSseq.nc,
   testCovariate = "Group",
-  BPPARAM = BiocParallel::MulticoreParam(workers = 16)
+  BPPARAM = BiocParallel::MulticoreParam(workers = 16,),
+  minNumRegion = 10
 )
 
 dmr.nc <- data.frame(dmr.nc, stringsAsFactors = F)
@@ -89,7 +90,8 @@ write.table(dmr.nc, file = gzfile("./output/dmrseq_dmr_neg_control.txt.gz"), sep
 dmr.sim <- dmrseq(
   bs = bismarkBSseq.sim,
   testCovariate = "Group",
-  BPPARAM = BiocParallel::MulticoreParam(workers = 16)
+  BPPARAM = BiocParallel::MulticoreParam(workers = 16),
+  minNumRegion = 10
 )
 
 dmr.sim <- data.frame(dmr.sim, stringsAsFactors = F)
