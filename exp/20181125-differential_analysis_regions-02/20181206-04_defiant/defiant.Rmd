@@ -55,6 +55,7 @@ cd ../../
 
 # DMR Tables
 Identified DMRs with q-value not higher than 0.05.
+
 ## Negative control
 
 ```{r}
@@ -65,6 +66,8 @@ dmr.nc <- read.delim("./output/neg_control/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.
 dmr.nc[,1] <- paste0("chr", dmr.nc[,1])
 # rename the q-value column to be compatible with further analysis
 colnames(dmr.nc)[10] <- "qval"
+# filter only regions with mean difference at least 10 (%)
+dmr.nc <- dmr.nc[abs(dmr.nc$Mean_Difference) >= 10,]
 
 write.table(dmr.nc, file = gzfile("./output/defiant_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
@@ -98,6 +101,8 @@ dmr.sim <- read.delim("./output/sim_data/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.ts
 dmr.sim[,1] <- paste0("chr", dmr.sim[,1])
 # rename the q-value column to be compatible with further analysis
 colnames(dmr.sim)[10] <- "qval"
+# filter only regions with mean difference at least 10 (%)
+dmr.sim <- dmr.sim[abs(dmr.sim$Mean_Difference) >= 10,]
 
 write.table(dmr.sim, file = gzfile("./output/defiant_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
