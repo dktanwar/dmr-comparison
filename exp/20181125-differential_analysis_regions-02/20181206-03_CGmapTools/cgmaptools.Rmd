@@ -102,6 +102,9 @@ dmr.nc <- read.table("./output/03_dmr/neg_control.dmr.gz",
 # adjust p-values
 dmr.nc$qval <- p.adjust(p = dmr.nc$pVal, method = "BH")
 dmr.nc <- dmr.nc[order(dmr.nc$qval), ]
+# select only regions with methylation difference at least 0.1
+dmr.nc <- dmr.nc[abs(dmr.nc$mGrp1-dmr.nc$mGrp2) >= 0.1,]
+
 write.table(dmr.nc, file = gzfile("./output/cgmaptools_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
@@ -135,6 +138,8 @@ dmr.sim <- read.table("./output/03_dmr/sim_data.dmr.gz",
 # adjust p-values
 dmr.sim$qval <- p.adjust(p = dmr.sim$pVal, method = "BH")
 dmr.sim <- dmr.sim[order(dmr.sim$qval), ]
+# select only regions with methylation difference at least 0.1
+dmr.sim <- dmr.sim[abs(dmr.sim$mGrp1-dmr.sim$mGrp2) >= 0.1,]
 write.table(dmr.sim, file = gzfile("./output/cgmaptools_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
