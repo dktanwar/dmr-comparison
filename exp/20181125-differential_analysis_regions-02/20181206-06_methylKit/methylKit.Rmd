@@ -86,6 +86,9 @@ dmr.nc <- dmr.nc[order(dmr.nc$qvalue),]
 
 colnames(dmr.nc)[7] <- "qval"
 
+# filter regions with mean methylation difference at least 10 % and at least 10 CpGs long
+dmr.nc <- dmr.nc[abs(dmr.nc$meth.diff)>=10 && dmr.nc$width >= 10,]
+
 write.table(dmr.nc, file = gzfile("./output/methylKit_dmr_negative_control.txt.gz"),
             sep = "\t", row.names = F, quote = F)
 ```
@@ -96,12 +99,19 @@ write.table(dmr.nc, file = gzfile("./output/methylKit_dmr_negative_control.txt.g
 tiles.sim=tileMethylCounts(myobj.sim, win.size=1000,step.size=1000)
 meth.sim <- unite(tiles.sim)
 myDiff.sim <- calculateDiffMeth(meth.sim, mc.cores = detectCores() - 1, overdispersion = "MN")
+# filter regions with mean methylation difference at least 10 %
+myDiff.sim <- getMethylDiff(myDiff.sim, difference=10)
+
 myDiff.GR.sim <- as(myDiff.sim,"GRanges")
 dmr.sim <- data.frame(myDiff.GR.sim)
 
 dmr.sim <- dmr.sim[order(dmr.sim$qvalue),]
 
 colnames(dmr.sim)[7] <- "qval"
+
+# filter regions with mean methylation difference at least 10 % and at least 10 CpGs long
+dmr.sim <- dmr.sim[abs(dmr.sim$meth.diff)>=10 && dmr.sim$width >= 10,]
+
 
 write.table(dmr.sim, file = gzfile("./output/methylKit_dmr_sim_data.txt.gz"),
             sep = "\t", row.names = F, quote = F)
