@@ -30,7 +30,6 @@ library(dplyr)
 
 
 # DMRs analysis
-
 ## Negative Control
 ```{r, engine='bash'}
 mkdir -p ./output/neg_control && cd ./output/neg_control
@@ -55,6 +54,7 @@ cd ../../
 
 
 # DMR Tables
+Defiant already accounts for multiple testing, hence we do not need to do any multiple testing correction.
 
 ## Negative control
 
@@ -64,6 +64,7 @@ dmr.nc <- read.delim("./output/neg_control/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.
 )
 
 dmr.nc[,1] <- paste0("chr", dmr.nc[,1])
+# rename the q-value column to be compatible with further analysis
 colnames(dmr.nc)[10] <- "qval"
 
 write.table(dmr.nc, file = gzfile("./output/defiant_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
@@ -96,6 +97,7 @@ dmr.sim <- read.delim("./output/sim_data/set1_vs_set2_c1_CpN10_d1_p0.90_P10_q.ts
 )
 
 dmr.sim[,1] <- paste0("chr", dmr.sim[,1])
+# rename the q-value column to be compatible with further analysis
 colnames(dmr.sim)[10] <- "qval"
 
 write.table(dmr.sim, file = gzfile("./output/defiant_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
