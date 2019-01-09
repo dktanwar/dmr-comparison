@@ -29,8 +29,8 @@ library(data.table)
 ```
 
 
-# Merge Groups into one table
-
+# Merge groups into one table
+First, the data from each group need to be merged into a single file.
 ## Negative control
 
 ### Group1
@@ -59,6 +59,7 @@ cgmaptools mergelist tosingle -i <(zcat ./input/sim_rep2.cov.gz),<(zcat ./input/
 
 
 # Tables to perform DMRs analysis
+The files with data from group 1 and group 2 are then also merged using `intersect` function.
 
 ## Negative control
 ```{r, engine='bash'}
@@ -74,7 +75,7 @@ cgmaptools intersect -1 <(zcat ./output/01_merged_tables/sim_data_grp1.merge.gz)
 
 
 # DMRs analysis
-
+We compute DMRs.
 ## Negative Control
 ```{r, engine='bash'}
 mkdir -p ./output/03_dmr
@@ -89,7 +90,7 @@ cgmaptools dmr -i <(zcat ./output/02_intersect_grp1_grp2/sim_data.intersect.gz) 
 
 
 # DMR Tables
-
+The provided p-values are adjusted for multiple testing by Benjamini-Hochberg correction.
 ## Negative control
 
 ```{r}
@@ -98,6 +99,7 @@ dmr.nc <- read.table("./output/03_dmr/neg_control.dmr.gz",
   col.names = c("chr", "start", "end", "stat", "pVal", "mGrp1", "mGrp2", "N_site")
 )
 
+# adjust p-values
 dmr.nc$qval <- p.adjust(p = dmr.nc$pVal, method = "BH")
 dmr.nc <- dmr.nc[order(dmr.nc$qval), ]
 write.table(dmr.nc, file = gzfile("./output/cgmaptools_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
@@ -130,9 +132,9 @@ dmr.sim <- read.table("./output/03_dmr/sim_data.dmr.gz",
   col.names = c("chr", "start", "end", "t", "pVal", "mGrp1", "mGrp2", "N_site")
 )
 
+# adjust p-values
 dmr.sim$qval <- p.adjust(p = dmr.sim$pVal, method = "BH")
 dmr.sim <- dmr.sim[order(dmr.sim$qval), ]
-
 write.table(dmr.sim, file = gzfile("./output/cgmaptools_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
