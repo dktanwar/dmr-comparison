@@ -1,5 +1,5 @@
 ---
-title: "DMRs: dmrseq"
+title: "DMRs: methylKit"
 author: "Deepak Tanwar & Hana Parizkova"
 date: "<b>Created on:</b> 2018-12-19 <br> <b>Updated on:</b> `r Sys.Date()`"
 output:
@@ -33,7 +33,7 @@ library(DT)
 
 
 # Input files
-
+Read in input files.
 ## Negative control
 ```{r}
 files.nc <- list.files("./input", pattern = "NC", full.names = T)
@@ -109,7 +109,7 @@ write.table(dmr.sim, file = gzfile("./output/methylKit_dmr_sim_data.txt.gz"),
 
 
 # DMR Tables
-
+Identified DMRs with q-value not higher than 0.05.
 ## Negative control
 ```{r}
 c1 <- dmr.nc$qval[dmr.nc$qval <= 0.05]
