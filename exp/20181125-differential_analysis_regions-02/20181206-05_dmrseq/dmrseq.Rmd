@@ -30,7 +30,7 @@ library(DT)
 ```
 
 # Input files
-
+Read in input files and create a `BSseq` object.
 # Negative control
 ```{r}
 files.nc <- list.files("./input", pattern = "NC", full.names = T)
@@ -99,7 +99,7 @@ write.table(dmr.sim, file = gzfile("./output/dmrseq_dmr_sim_data.txt.gz"), sep =
 
 
 # DMR Tables
-
+Identified DMRs with q-value not higher than 0.05.
 ## Negative control
 ```{r}
 datatable(

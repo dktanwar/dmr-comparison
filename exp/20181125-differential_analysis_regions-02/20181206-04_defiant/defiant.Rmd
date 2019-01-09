@@ -54,8 +54,7 @@ cd ../../
 
 
 # DMR Tables
-Defiant already accounts for multiple testing, hence we do not need to do any multiple testing correction.
-
+Identified DMRs with q-value not higher than 0.05.
 ## Negative control
 
 ```{r}
