@@ -77,9 +77,11 @@ mData.grp2.sim <- poolMethylationDatasets(read.sim[anno.sim$names[anno.sim$Group
 Two different statistical tests are available - Fisher's exact and Score test. Since according to the original paper both of them should perform equally well, we have decided to use computationally much less expensive Score test.
 
 The p-values of the test are already corrected for multiple testing.
+
 ## Function to perform the analysis
 ```{r}
-dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernels = NULL, keyword) {
+dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernals = NULL, keyword) {
+
   # Methods
   m <- NULL
   if (methods == "all") {
@@ -87,7 +89,8 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernels = NULL, keyw
   } else {
     m <- methods
   }
-  # kernels
+  
+  # Kernals
   k <- NULL
   if (methods == "noise_filter" | methods == "all") {
     k <- c("uniform", "triangular", "gaussian", "epanechnicov")
@@ -145,24 +148,23 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernels = NULL, keyw
     ))
   
   # Change colname to be compatible with the downstream analysis
-  
   dmr.list.merge <- lapply(dmr.list.merge, function(x) {
     a <- data.frame(x, stringsAsFactors = F)
     colnames(a)[colnames(a) == "pValue"] <- "qval"
     return(GRanges(a))
   })
-  
+
   # Save data
-  
-  for(i in 1:length(dmr.list.merge)){
+
+  for (i in 1:length(dmr.list.merge)) {
     tmp <- data.frame(dmr.list.merge[[i]])
     # colnames(tmp)[15] <- "qval"
-    if(nrow(tmp)!= 0){
-    n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
-    write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
+    if (nrow(tmp) != 0) {
+      n <- paste0("./output/DMRcaller_dmr_", names(dmr.list.merge)[i], "_", keyword, ".txt")
+      write.table(tmp, file = n, quote = F, sep = "\t", row.names = F)
     }
   }
-  
+
   return(dmr.list.merge)
 }
 ```
@@ -170,10 +172,10 @@ dmrcaller_analysis <- function(grp1, grp2, methods = "all", kernels = NULL, keyw
 
 ## Negative control
 
-```{r, eval=F}
+```{r}
 dmr.ls.nc <- dmrcaller_analysis(
   grp1 = mData.grp1.nc, grp2 = mData.grp2.nc,
-  methods = "all", kernels = "all",
+  methods = "all", kernals = "all",
   keyword = "neg_control"
 )
 ```
@@ -184,110 +186,47 @@ dmr.ls.nc <- dmrcaller_analysis(
 ```{r}
 dmr.ls.sim <- dmrcaller_analysis(
   grp1 = mData.grp1.sim, grp2 = mData.grp2.sim,
-  methods = "all", kernels = "all",
+  methods = "all", kernals = "all",
   keyword = "sim_data"
 )
 ```
 
 
-# DMR tables
+# DMR tables {.tabset .tabset-pills}
 
-<!-- ## Function -->
+```{r, echo=FALSE,include = FALSE}
+# You need this code to conduct the magic dependences attaching...
+DT::datatable(matrix())
+```
 
-<!-- ```{r} -->
-<!-- display_table <- function(df, fdr.col){ -->
-<!-- c <- df[, fdr.col][df[, fdr.col] <= 0.05] -->
+## Negative control {.tabset .tabset-dropdown}
 
-<!-- if(length(c) == 0){ -->
-<!-- datatable( -->
-<!--   df, -->
-<!--   rownames = F, -->
-<!--   filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
-<!--     pageLength = 10, -->
-<!--     buttons = c("copy", "csv", "excel", "pdf", "print"), -->
-<!--     colReorder = list(realtime = FALSE), -->
-<!--     dom = "fltBip" -->
-<!--   ) -->
-<!-- ) -->
-<!-- } else{ -->
-<!-- datatable( -->
-<!--   df, -->
-<!--   rownames = F, -->
-<!--   filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
-<!--     pageLength = 10, -->
-<!--     buttons = c("copy", "csv", "excel", "pdf", "print"), -->
-<!--     colReorder = list(realtime = FALSE), -->
-<!--     dom = "fltBip" -->
-<!--   ) -->
-<!-- ) %>% -->
-<!--   formatStyle( -->
-<!--     fdr.col, -->
-<!--     backgroundColor = styleEqual(c, rep("#66C2A5", length(c))) -->
-<!--   ) -->
-<!-- } -->
-<!-- } -->
-<!-- ``` -->
+```{r, results='asis'}
+for (i in seq_along(dmr.ls.nc)) {
+  name <- names(dmr.ls.nc)[i]
+  cat("\n \n")
+  cat(paste("###", name))
+  cat("\n \n")
+  print(htmltools::tagList(DT::datatable(data.frame(dmr.ls.nc[[i]]),
+    rownames = F, width = "100%"
+  )))
+  cat("\n \n")
+}
+```
 
-
-<!-- ## Negative control {.tabset .tabset-pills} -->
-
-<!-- ```{r, results='asis'} -->
-
-<!-- cat(sprintf(paste("###",  names(dmr.ls.sim)))) -->
-<!-- #   cat("### Table \n \n") -->
-
-<!-- t <- htmltools::tagList( -->
-<!--   lapply(dmr.ls.sim, function(x) { -->
-<!--     df <- data.frame(x) -->
-<!--     fdr.col <- "qval" -->
-
-<!--     c <- df[, fdr.col][df[, fdr.col] <= 0.05] -->
-
-<!--     if (length(c) == 0) { -->
-<!--       datatable( -->
-<!--         df, -->
-<!--         rownames = F, -->
-<!--         filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
-<!--           pageLength = 10, -->
-<!--           buttons = c("copy", "csv", "excel", "pdf", "print"), -->
-<!--           colReorder = list(realtime = FALSE), -->
-<!--           dom = "fltBip" -->
-<!--         ) -->
-<!--       ) -->
-<!--     } else { -->
-<!--       datatable( -->
-<!--         df, -->
-<!--         rownames = F, -->
-<!--         filter = "top", extensions = c("Buttons", "ColReorder"), options = list( -->
-<!--           pageLength = 10, -->
-<!--           buttons = c("copy", "csv", "excel", "pdf", "print"), -->
-<!--           colReorder = list(realtime = FALSE), -->
-<!--           dom = "fltBip" -->
-<!--         ) -->
-<!--       ) %>% -->
-<!--         formatStyle( -->
-<!--           fdr.col, -->
-<!--           backgroundColor = styleEqual(c, rep("#66C2A5", length(c))) -->
-<!--         ) -->
-<!--     } -->
-<!--   }) -->
-<!-- ) -->
-<!-- t -->
-
-<!-- # t <- dmr.ls.sim -->
-<!-- #  -->
-<!-- # # print to HTML -->
-<!-- # cat("# Results \n \n ") -->
-<!-- # for (i in seq_along(names(t))) { -->
-<!-- #   name <- names(t)[i] -->
-<!-- #   cat("\n \n") -->
-<!-- #   cat(sprintf("## Gears: %s {.tabset .tabset-pills} \n \n", name)) -->
-<!-- #   cat("### Table \n \n") -->
-<!-- #   print(htmltools::tagList(datatable(data.frame(t[[i]])))) -->
-<!-- #   cat("\n \n") -->
-<!-- # } -->
-<!-- ``` -->
-
+## Simulated data {.tabset .tabset-dropdown}
+```{r, results='asis'}
+for (i in seq_along(dmr.ls.sim)) {
+  name <- names(dmr.ls.sim)[i]
+  cat("\n \n")
+  cat(paste("###", name))
+  cat("\n \n")
+  print(htmltools::tagList(DT::datatable(data.frame(dmr.ls.sim[[i]]),
+    rownames = F, width = "100%"
+  )))
+  cat("\n \n")
+}
+```
 
 
 # Compress output

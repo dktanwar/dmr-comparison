@@ -42,9 +42,12 @@ read.dmr <- GRanges(read.delim("./input/simulated_DMRS.txt.gz", sep = "\t", stri
 ```{r}
 files.sim <- list.files(path = "./input", pattern = "sim_", full.names = T)
 names(files.sim) <- sapply(files.sim, function(x) strsplit(x, "\\.|/")[[1]][4])
+
 read.sim <- lapply(files.sim, function(x) GRanges(read.delim(x, sep = "\t", stringsAsFactors = F, header = T)))
+
 # Filtering regions based on FDR
 sim.new <- list()
+
 for (i in 1:length(read.sim)) {
   n <- names(read.sim)[i]
   sim.new[[i]] <- read.sim[[i]][read.sim[[i]]$qval <= 0.05]
@@ -62,9 +65,12 @@ meta_GR <- function(gr1, gr2) {
   ranges <- subsetByOverlaps(gr1, gr2, minoverlap = 1)
   revRanges <- subsetByOverlaps(gr2, gr1)
   hits <- findOverlaps(gr1, gr2)
+
   idx1 <- subjectHits(hits)
   idx2 <- queryHits(hits)
+
   r1 <- gr1[idx2]
+
   values <- DataFrame(gr2[idx1])
   colnames(values) <- c("GRanges", colnames(values)[2:ncol(values)])
   mcols(r1) <- c(mcols(r1), values)
@@ -89,6 +95,7 @@ regions.common.each <- list()
 for (i in 1:length(sim.new)) {
   n <- names(sim.new)[i]
   tmp <- meta_GR(gr1 = read.dmr, gr2 = sim.new[[i]])
+
   regions.common.each[[i]] <- tmp
   names(regions.common.each)[i] <- n
 }
@@ -121,6 +128,7 @@ DT::datatable(matrix())
 
 ```{r, results='asis'}
 system("mkdir -p ./output/results_mapping_dmrs")
+
 for (i in seq_along(regions.common.each)) {
   name <- names(regions.common.each)[i]
   cat("\n \n")
@@ -130,6 +138,7 @@ for (i in seq_along(regions.common.each)) {
     rownames = F, width = "100%"
   )))
   cat("\n \n")
+
   write.table(data.frame(regions.common.each[[i]]),
     file = gzfile(paste0("./output/results_mapping_dmrs/", name, ".txt.gz")),
     quote = F, sep = "\t", row.names = F
@@ -146,13 +155,16 @@ tab <- data.frame(matrix(nrow = length(sim.new), ncol = 3))
 colnames(tab) <- c("Technique", "Regions_identified", "Regions_map_to_DMRs")
 rownames(tab) <- names(sim.new)
 tab$Technique <- gsub(pattern = "_dmr|_sim_data", replacement = "", x = rownames(tab))
+
 for (i in 1:nrow(tab)) {
   n <- rownames(tab)[i]
   tmp.r <- data.frame(sim.new[[n]], stringsAsFactors = F)
   tmp.c <- regions.common.each[[n]]
+
   tab$Regions_identified[i] <- nrow(tmp.r)
   tab$Regions_map_to_DMRs[i] <- length(unique(ranges(tmp.c)))
 }
+
 write.table(tab, gzfile("./output/truth_table.txt.gz"), quote = F, sep = "\t")
 ```
 

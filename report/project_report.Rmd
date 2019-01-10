@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Comparison of statistical methods for the detection of differentially methylated regions."
 author: "Hana Parizkova & Deepak Tanwar"
 date: "<b>Created on:</b> 2018-12-21 <br> <b>Updated on:</b> `r Sys.Date()`"
 output:

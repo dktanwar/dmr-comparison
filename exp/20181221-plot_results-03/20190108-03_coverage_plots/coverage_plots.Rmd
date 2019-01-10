@@ -1,0 +1,405 @@
+---
+title: "Coverage plots"
+author: "Deepak Tanwar & Hana Parizkova"
+date: "<b>Created on:</b> 2019-01-08 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 10
+    fig_height: 7
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 11pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Libraries
+
+```{r, message=FALSE, warning=FALSE}
+library(data.table)
+library(edgeR)
+library(reshape2)
+library(plotly)
+library(ggdendro)
+library(viridis)
+library(autoplotly)
+library(ggfortify)
+library(ClusterR)
+```
+
+
+# Read Bismark files
+
+## Negative control
+```{r}
+files.nc <- list.files(path = "./input", pattern = "NC_rep", full.names = T)
+
+anno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+bismark.nc <- readBismark2DGE(files = files.nc, sample.names = anno.nc$names)
+```
+
+
+## Simulated data
+```{r}
+files.sim <- list.files(path = "./input", pattern = "sim_rep", full.names = T)
+
+anno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+bismark.sim <- readBismark2DGE(files = files.sim, sample.names = anno.sim$names)
+```
+
+
+
+# Filtering and plotting
+
+## Function
+```{r}
+beta_calc <- function(objectDGE, coverageThreshold, anno = anno) {
+  ## Function to calculate Beta values from DGE object obtained from readBismark2DGE function.
+  ## objectDGE: DGEList
+  ## coverageThreshold: Coverage threshold to be used for all samples
+  ## Return: Coverage, Coverage melted table, distribution, Beta value table, Beta value melted table, distribution
+
+  # Counts (raw coverage)
+  df <- data.frame(objectDGE$counts, stringsAsFactors = F, check.names = F)
+
+  me.raw <- df[, grep("Me", colnames(df))]
+  un.raw <- df[, grep("Un", colnames(df))]
+  cov.raw <- me.raw + un.raw
+
+
+  # Filter based on coverage
+  data <- NULL
+
+  if (is.null(coverageThreshold)) {
+    data <- df
+    coverageThreshold <- "NO filtering"
+  } else {
+    data <- df[rowSums(cov.raw > coverageThreshold) == ncol(cov.raw), ]
+  }
+
+  # Beta valus after filtering
+  me <- data[, grep("Me", colnames(data))]
+  un <- data[, grep("Un", colnames(data))]
+  beta <- me / (me + un)
+  colnames(beta) <- as.character(sapply(colnames(beta), function(x) strsplit(x, "-")[[1]][1]))
+
+  # Beta values for plotting
+  reshape.beta <- data.frame(t(beta))
+  reshape.beta$Samples <- rownames(reshape.beta)
+  reshape.beta.melt <- melt(reshape.beta)
+
+  # Plotting Beta value
+  p1 <- ggplotly(ggplot(reshape.beta.melt, aes(x = value)) +
+    geom_histogram(aes(y = ..density..), alpha = 0.7, fill = "#333333") +
+    geom_density(fill = "#CC6666", alpha = 0.3) +
+    theme(panel.background = element_rect(fill = "#ffffff")) +
+    facet_wrap(~Samples, nrow = 3, shrink = T) +
+    ggtitle(paste0("Beta distribution (coverage > ", coverageThreshold, ")")) +
+    labs(x = "Beta value", y = ""))
+
+  # Coverage plot after filtering
+  cov <- me + un
+  colnames(cov) <- as.character(sapply(colnames(cov), function(x) strsplit(x, "-")[[1]][1]))
+  reshape.cov <- data.frame(t(cov))
+  reshape.cov$Samples <- rownames(reshape.cov)
+  reshape.cov.melt <- melt(reshape.cov)
+  reshape.cov.melt.log2 <- reshape.cov.melt
+  reshape.cov.melt.log2$value <- log2(reshape.cov.melt.log2$value)
+
+  p2 <- ggplotly(ggplot(reshape.cov.melt.log2, aes(x = value)) +
+    geom_histogram(aes(y = ..density..), alpha = 0.7, fill = "#333333") +
+    geom_density(fill = "#20AAEA", alpha = 0.3) +
+    theme(panel.background = element_rect(fill = "#ffffff")) +
+    facet_wrap(~Samples, nrow = 3, shrink = T) +
+    ggtitle(paste0("Coverage distribution (coverage > ", coverageThreshold, ")")) +
+    labs(x = "Coverage (log2 scaled)", y = ""))
+
+  # PCA plot
+
+  ## Coverage
+  pca.cov <- prcomp(t(cov))
+
+  p3.cov <- plot_ly(
+    x = pca.cov$x[, 1], y = pca.cov$x[, 2],
+    data = anno, color = ~Group, mode = "markers",
+    symbol = ~ as.numeric(as.factor(Group)),
+    marker = list(size = 10), hoverinfo = "text",
+    text = ~ paste("<b>Group:</b> ", Group, "<br><b>SampleID:</b> ", names),
+    type = "scatter"
+  ) %>%
+    layout(
+      title = paste0(
+        "<b>Coverage PCA plot (<span style='color: blue;'>coverage > ",
+        coverageThreshold, "</span>)<b>"
+      ),
+      xaxis = list(title = "<b><i>PC1<i><b>"),
+      yaxis = list(title = "<b><i>PC2<i><b>")
+    )
+
+
+  ## Beta
+  pca.beta <- prcomp(t(beta))
+
+  p3.beta <- plot_ly(
+    x = pca.beta$x[, 1], y = pca.beta$x[, 2],
+    data = anno, color = ~Group, mode = "markers",
+    symbol = ~ as.numeric(as.factor(Group)),
+    marker = list(size = 10), hoverinfo = "text",
+    text = ~ paste("<b>Group:</b> ", Group, "<br><b>SampleID:</b> ", names),
+    type = "scatter"
+  ) %>%
+    layout(
+      title = paste0(
+        "<b>Beta PCA plot (<span style='color: blue;'>coverage > ",
+        coverageThreshold, "</span>)<b>"
+      ),
+      xaxis = list(title = "<b><i>PC1<i><b>"),
+      yaxis = list(title = "<b><i>PC2<i><b>")
+    )
+
+
+  # MDS plot
+
+  ## Coverage
+  mds.cov <- cmdscale(dist(t(cov)))
+
+  p4.cov <- plot_ly(
+    x = mds.cov[, 1], y = mds.cov[, 2],
+    data = anno, color = ~Group, mode = "markers",
+    symbol = ~ as.numeric(as.factor(Group)),
+    marker = list(size = 10), hoverinfo = "text",
+    text = ~ paste("<b>Group:</b> ", Group, "<br><b>SampleID:</b> ", names),
+    type = "scatter"
+  ) %>%
+    layout(
+      title = paste0(
+        "<b>Coverage MDS plot (<span style='color: blue;'>coverage > ",
+        coverageThreshold, "</span>)<b>"
+      ),
+      xaxis = list(title = "<b><i>MDS1<i><b>"),
+      yaxis = list(title = "<b><i>MDS2<i><b>")
+    )
+
+
+  ## Beta
+  mds.beta <- cmdscale(dist(t(beta)))
+
+  p4.beta <- plot_ly(
+    x = mds.beta[, 1], y = mds.beta[, 2],
+    data = anno, color = ~Group, mode = "markers",
+    symbol = ~ as.numeric(as.factor(Group)),
+    marker = list(size = 10), hoverinfo = "text",
+    text = ~ paste("<b>Group:</b> ", Group, "<br><b>SampleID:</b> ", names),
+    type = "scatter"
+  ) %>%
+    layout(
+      title = paste0(
+        "<b>Beta MDS plot (<span style='color: blue;'>coverage > ",
+        coverageThreshold, "</span>)<b>"
+      ),
+      xaxis = list(title = "<b><i>MDS1<i><b>"),
+      yaxis = list(title = "<b><i>MDS2<i><b>")
+    )
+
+  # SVD
+
+  ## Coverage
+
+  svd.cov <- svd(x = t(cov))
+
+  p5.cov <- plot_ly(
+    x = svd.cov$u[, 1], y = svd.cov$u[, 2],
+    data = anno, color = ~Group, mode = "markers",
+    symbol = ~ as.numeric(as.factor(Group)),
+    marker = list(size = 10), hoverinfo = "text",
+    text = ~ paste("<b>Group:</b> ", Group, "<br><b>SampleID:</b> ", names),
+    type = "scatter"
+  ) %>%
+    layout(
+      title = paste0(
+        "<b>Coverage SVD plot (<span style='color: blue;'>coverage > ",
+        coverageThreshold, "</span>)<b>"
+      ),
+      xaxis = list(title = "<b><i>SVD1<i><b>"),
+      yaxis = list(title = "<b><i>SVD2<i><b>")
+    )
+
+  ## Beta
+  svd.beta <- svd(x = t(beta))
+
+
+  p5.beta <- plot_ly(
+    x = svd.beta$u[, 1], y = svd.beta$u[, 2],
+    data = anno, color = ~Group, mode = "markers",
+    symbol = ~ as.numeric(as.factor(Group)),
+    marker = list(size = 10), hoverinfo = "text",
+    text = ~ paste("<b>Group:</b> ", Group, "<br><b>SampleID:</b> ", names),
+    type = "scatter"
+  ) %>%
+    layout(
+      title = paste0(
+        "<b>Beta SVD plot (<span style='color: blue;'>coverage > ",
+        coverageThreshold, "</span>)<b>"
+      ),
+      xaxis = list(title = "<b><i>SVD1<i><b>"),
+      yaxis = list(title = "<b><i>SVD2<i><b>")
+    )
+
+
+  # Clustering
+
+  ## Coverage
+  p6.cov <- ggdendrogram(hclust(dist(t(cov)))) +
+    ggtitle(paste0("Coverage dendrogram (coverage > ", coverageThreshold, ")"))
+
+  ## Beta
+  p6.beta <- ggdendrogram(hclust(dist(t(beta)))) +
+    ggtitle(paste0("Beta dendrogram (coverage > ", coverageThreshold, ")"))
+
+
+  list <- list(
+    cov, reshape.cov.melt, p2, beta, reshape.beta.melt, p1,
+    p3.cov, p4.cov, p5.cov, p6.cov, p3.beta, p4.beta, p5.beta, p6.beta
+  )
+  names(list) <- c(
+    "Coverage", "reshapedCoverage", "DHPlotCov", "BetaValues", "reshapedBetaValues", "DHplotBeta",
+    "PCAcov", "MDScov", "SVDcov", "HCcov", "PCAbeta", "MDSbeta", "SVDbeta", "HCbeta"
+  )
+
+  return(list)
+}
+```
+
+
+## Calculation
+
+### Negative control
+```{r, warning=F, message=F}
+cov.nc <- beta_calc(objectDGE = bismark.nc, coverageThreshold = NULL, anno = anno.nc)
+```
+
+
+### Simulated data
+```{r, warning=F, message=F}
+cov.sim <- beta_calc(objectDGE = bismark.sim, coverageThreshold = NULL, anno = anno.sim)
+```
+
+
+# Coverage Plots {.tabset .tabset-pills}
+
+## Negative control
+
+```{r, warning=F, message=F}
+cov.nc$DHPlotCov
+```
+
+
+## Simulated data
+
+```{r, warning=F, message=F}
+cov.sim$DHPlotCov
+```
+
+
+# Beta Plots {.tabset .tabset-pills}
+
+## Negative control
+
+```{r, warning=F, message=F}
+cov.nc$DHplotBeta
+```
+
+## Simulated data
+
+```{r, warning=F, message=F}
+cov.sim$DHplotBeta
+```
+
+
+# Clustering of samples {.tabset .tabset-pills}
+
+## Negative control
+```{r, warning=F, message=F}
+cov.nc$HCcov
+cov.nc$HCbeta
+```
+
+
+## Simulated data
+```{r, warning=F, message=F}
+cov.sim$HCcov
+cov.sim$HCbeta
+```
+
+
+# PCA Plots {.tabset .tabset-pills}
+
+## Negative control
+
+```{r, warning=F, message=F}
+cov.nc$PCAcov
+cov.nc$PCAbeta
+```
+
+
+## Simulated data
+
+```{r, warning=F, message=F}
+cov.sim$PCAcov
+cov.sim$PCAbeta
+```
+
+
+
+# MDS Plots {.tabset .tabset-pills}
+
+## Negative control
+
+```{r, warning=F, message=F}
+cov.nc$MDScov
+cov.nc$MDSbeta
+```
+
+
+## Simulated data
+
+```{r, warning=F, message=F}
+cov.sim$MDScov
+cov.sim$MDSbeta
+```
+
+
+
+# SVD Plots {.tabset .tabset-pills}
+
+## Negative control
+
+```{r, warning=F, message=F}
+cov.nc$SVDcov
+cov.nc$SVDbeta
+```
+
+
+## Simulated data
+
+```{r, warning=F, message=F}
+cov.sim$SVDcov
+cov.sim$SVDbeta
+```
+
+
+# SessionInfo
+```{r}
+devtools::session_info()
+```
