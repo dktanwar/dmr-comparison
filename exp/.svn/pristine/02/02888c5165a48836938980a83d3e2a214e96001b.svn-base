@@ -1,0 +1,158 @@
+---
+title: "DMRs: dmrseq"
+author: "Deepak Tanwar & Hana Parizkova"
+date: "<b>Created on:</b> 2018-12-19 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+
+# Packages required
+
+```{r, message=FALSE, warning=FALSE}
+library(methylKit)
+library(data.table)
+library(DT)
+```
+
+
+# Input files
+
+## Negative control
+```{r}
+files.nc <- list.files("./input", pattern = "NC", full.names = T)
+files.list.nc <- as.list(files.nc)
+
+anno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+myobj.nc <- methRead(
+  location = files.list.nc, sample.id = as.list(anno.nc$names),
+  assembly = "hg19", pipeline = "bismarkCoverage", header = F, skip = 0,
+  dbtype = "tabix", treatment = c(0,1,0,1,0,1), dbdir = "./output/methylDB"
+)
+
+
+# Merging samples
+meth.nc <- unite(myobj.nc)
+```
+
+## Simulated data
+
+```{r}
+files.sim <- list.files("./input", pattern = "sim_r", full.names = T)
+files.list.sim <- as.list(files.sim)
+
+anno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+myobj.sim <- methRead(
+  location = files.list.sim, sample.id = as.list(anno.sim$names),
+  assembly = "hg19", pipeline = "bismarkCoverage", header = F, skip = 0,
+  dbtype = "tabix", treatment = c(0,1,0,1,0,1), dbdir = "./output/methylDB"
+)
+
+
+# Merging samples
+meth.sim <- unite(myobj.sim)
+```
+
+
+# DMR analysis
+
+## Negative control
+```{r}
+tiles.nc=tileMethylCounts(myobj.nc, win.size=1000,step.size=1000)
+meth.nc <- unite(tiles.nc)
+myDiff.nc <- calculateDiffMeth(meth.nc, mc.cores = detectCores() - 1, overdispersion = "MN")
+myDiff.GR.nc <- as(myDiff.nc,"GRanges")
+dmr.nc <- data.frame(myDiff.GR.nc)
+
+dmr.nc <- dmr.nc[order(dmr.nc$qvalue),]
+
+colnames(dmr.nc)[7] <- "qval"
+
+write.table(dmr.nc, file = gzfile("./output/methylKit_dmr_negative_control.txt.gz"),
+            sep = "\t", row.names = F, quote = F)
+```
+
+
+## Simulated data
+```{r}
+tiles.sim=tileMethylCounts(myobj.sim, win.size=1000,step.size=1000)
+meth.sim <- unite(tiles.sim)
+myDiff.sim <- calculateDiffMeth(meth.sim, mc.cores = detectCores() - 1, overdispersion = "MN")
+myDiff.GR.sim <- as(myDiff.sim,"GRanges")
+dmr.sim <- data.frame(myDiff.GR.sim)
+
+dmr.sim <- dmr.sim[order(dmr.sim$qvalue),]
+
+colnames(dmr.sim)[7] <- "qval"
+
+write.table(dmr.sim, file = gzfile("./output/methylKit_dmr_sim_data.txt.gz"),
+            sep = "\t", row.names = F, quote = F)
+```
+
+
+# DMR Tables
+
+## Negative control
+```{r}
+c1 <- dmr.nc$qval[dmr.nc$qval <= 0.05]
+datatable(
+  dmr.nc,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c1, rep("#66C2A5", length(c1)))
+  )
+```
+
+
+## Simulated data
+
+```{r}
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
+  )
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```

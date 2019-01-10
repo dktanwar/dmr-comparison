@@ -22,15 +22,22 @@ output:
   documentclass: article
 ---
 
+Analysis following the [Analyzing WGBS data with bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq_analysis.html) vignette.
+
 # Packages required
 ```{r, warning=F, message=FALSE}
 library(bsseq)
 library(DT)
 ```
 
+# Method description
+In BSseq, the genome is partitioned into windows and the methylation proportions in each window are approximated by a second degree polynomial. To find DMRs, signal-to-noise statistc on the smoothed data, similar to t-test, is computed.
+
+
+
 
 # Input files and phenoData
-
+Read in input files.
 ## Negative control
 ```{r}
 pheno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
@@ -59,6 +66,7 @@ pData(bs.sim) <- pheno.sim
 
 
 # Smoothing
+The first step of the analysis is smoothing of the data.
 ```{r}
 bs.smoothed.nc <- BSmooth(BSseq = bs.nc, mc.cores = detectCores() - 1)
 bs.smoothed.sim <- BSmooth(BSseq = bs.sim, mc.cores = detectCores() - 1)
@@ -66,7 +74,9 @@ bs.smoothed.sim <- BSmooth(BSseq = bs.sim, mc.cores = detectCores() - 1)
 
 
 # Computing t-statistics
+In the vignette, CpGs with no or little coverage are removed at this point. We have already filtered the data in the Data download and filtering step.
 
+We now compute t-statistics.
 ```{r}
 bs.tstat.nc <- BSmooth.tstat(bs.smoothed.nc,
   mc.cores = detectCores() - 1, estimate.var = "same",
@@ -87,6 +97,7 @@ bs.tstat.sim <- BSmooth.tstat(bs.smoothed.sim,
 
 
 ## Marginal distribution of the `t-statistic`
+We can have a look at the marginal distribution of the t-statistics.
 ```{r, fig.align='center', fig.width=11, fig.height=8.5, fig.cap="Distribution of `t-statistic`."}
 par(mfrow = c(1, 2), pty = "s")
 plot(bs.tstat.nc)
@@ -98,11 +109,10 @@ title("Simulated data")
 
 
 # DMRs
+We can now compute DMRs by thresholding the t-statistics. Default values are used. The resulting DMRs are filtered for only those that are at least 10 CpGs long and the mean difference between the two groups is at least 0.1.
 ```{r}
 # Negative control
 dmr.nc <- dmrFinder(bs.tstat.nc)
-# dmr.nc$pValue <- 2 * pt(abs(dmr.nc$areaStat), 4, lower = F)
-# dmr.nc$qValue.BH <- p.adjust(p = dmr.nc$pValue, method = "BH")
 dmr.nc <- subset(dmr.nc, n >= 10 & abs(meanDiff) >= 0.1)
 write.table(dmr.nc,
   file = gzfile("./output/bsseq_dmr_neg_control.txt.gz"), sep = "\t",
@@ -111,8 +121,6 @@ write.table(dmr.nc,
 
 # Simulated data
 dmr.sim <- dmrFinder(bs.tstat.sim)
-# dmr.sim$pValue <- 2 * pt(abs(dmr.sim$areaStat), 4, lower = F)
-# dmr.sim$qValue.BH <- p.adjust(p = dmr.sim$pValue, method = "BH")
 dmr.sim <- subset(dmr.sim, n >= 10 & abs(meanDiff) >= 0.1)
 write.table(dmr.sim,
   file = gzfile("./output/bsseq_dmr_sim_data.txt.gz"), sep = "\t",

@@ -29,8 +29,11 @@ library(dmrseq)
 library(DT)
 ```
 
-# Input files
+# Method description
+In dmrseq, the methylation data are smoothed and then analyzes using generalized least squares model. Biological variability and correlation between neighbouring loci is taken into account.
 
+# Input files
+Read in input files and create a `BSseq` object.
 # Negative control
 ```{r}
 files.nc <- list.files("./input", pattern = "NC", full.names = T)
@@ -76,7 +79,8 @@ pData(bismarkBSseq.sim) <- anno.sim
 dmr.nc <- dmrseq(
   bs = bismarkBSseq.nc,
   testCovariate = "Group",
-  BPPARAM = BiocParallel::MulticoreParam(workers = 16)
+  BPPARAM = BiocParallel::MulticoreParam(workers = 16,),
+  minNumRegion = 10
 )
 
 dmr.nc <- data.frame(dmr.nc, stringsAsFactors = F)
@@ -89,7 +93,8 @@ write.table(dmr.nc, file = gzfile("./output/dmrseq_dmr_neg_control.txt.gz"), sep
 dmr.sim <- dmrseq(
   bs = bismarkBSseq.sim,
   testCovariate = "Group",
-  BPPARAM = BiocParallel::MulticoreParam(workers = 16)
+  BPPARAM = BiocParallel::MulticoreParam(workers = 16),
+  minNumRegion = 10
 )
 
 dmr.sim <- data.frame(dmr.sim, stringsAsFactors = F)
@@ -99,7 +104,7 @@ write.table(dmr.sim, file = gzfile("./output/dmrseq_dmr_sim_data.txt.gz"), sep =
 
 
 # DMR Tables
-
+Identified DMRs with q-value not higher than 0.05.
 ## Negative control
 ```{r}
 datatable(

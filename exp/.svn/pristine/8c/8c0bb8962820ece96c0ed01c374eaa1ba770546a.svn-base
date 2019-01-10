@@ -1,0 +1,211 @@
+---
+title: "DMRs: MethPipe"
+author: "Hana Parizkova & Deepak Tanwar"
+date: "<b>Created on:</b> 2018-11-28 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    highlight: pyg
+    keep_md: no
+    number_sections: yes
+    fig_width: 8.5
+    fig_height: 11
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+---
+
+# Packages required
+```{r lib, warning=F, message=FALSE}
+library(DT)
+library(plyr)
+```
+
+
+# Merging results from the replicates
+
+## Negative control
+
+### Group1
+```{r, engine='bash'}
+mkdir -p ./output/01_merge_methcounts
+
+merge-methcounts <(zcat ./input/NC_rep1.cov.gz) <(zcat ./input/NC_rep3.cov.gz) <(zcat ./input/NC_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/neg_control_grp1.meth.gz
+```
+
+### Group2
+```{r, engine='bash'}
+merge-methcounts <(zcat ./input/NC_rep2.cov.gz) <(zcat ./input/NC_rep4.cov.gz) <(zcat ./input/NC_rep6.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/neg_control_grp2.meth.gz
+```
+
+
+## Simulated data
+
+### Group1
+```{r, engine='bash'}
+merge-methcounts <(zcat ./input/sim_rep1.cov.gz) <(zcat ./input/sim_rep3.cov.gz) <(zcat ./input/sim_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp1.meth.gz
+```
+
+### Group2
+```{r, engine='bash'}
+merge-methcounts <(zcat ./input/sim_rep2.cov.gz) <(zcat ./input/sim_rep4.cov.gz) <(zcat ./input/sim_rep6.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp2.meth.gz
+```
+
+
+# Differential methylation score of each CpG site
+
+## Negative control
+```{r, engine='bash'}
+mkdir -p ./output/02_methdiff
+
+methdiff <(zcat ./output/01_merge_methcounts/neg_control_grp1.meth.gz) <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/02_methdiff/neg_control.methdiff.gz
+```
+
+
+## Simulated data
+```{r, engine='bash'}
+methdiff <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) <(zcat ./output/01_merge_methcounts/sim_data_grp2.meth.gz) | pigz -11 -p 16 > ./output/02_methdiff/sim_data.methdiff.gz
+```
+
+
+# Identifying hypo- and hypermethylated regions (HMRs):
+
+## Negative control
+
+### Group1
+```{r, engine='bash'}
+mkdir -p ./output/03_hmr
+
+hmr <(zcat ./output/01_merge_methcounts/neg_control_grp1.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/neg_control_grp1.hmr.gz
+```
+
+### Group2
+```{r, engine='bash'}
+hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/neg_control_grp2.hmr.gz
+```
+
+
+## Simulated data
+
+### Group1
+```{r, engine='bash'}
+hmr <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp1.hmr.gz
+```
+
+### Group2
+```{r, engine='bash'}
+hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp2.hmr.gz
+```
+
+
+# Computing DMRs
+
+## Negative control
+
+```{r, engine='bash'}
+mkdir -p ./output/04_dmr
+
+dmr <(zcat ./output/02_methdiff/neg_control.methdiff.gz) <(zcat ./output/03_hmr/neg_control_grp1.hmr.gz) <(zcat ./output/03_hmr/neg_control_grp2.hmr.gz) ./output/04_dmr/neg_control_grp1.dmr ./output/04_dmr/neg_control_grp2.dmr
+```
+
+
+## Simulated data
+
+```{r, engine='bash'}
+dmr <(zcat ./output/02_methdiff/sim_data.methdiff.gz) <(zcat ./output/03_hmr/sim_data_grp1.hmr.gz) <(zcat ./output/03_hmr/sim_data_grp2.hmr.gz) ./output/04_dmr/sim_data_grp1.dmr ./output/04_dmr/sim_data_grp2.dmr
+
+pigz -11 -p 16 ./output/04_dmr/*.dmr
+```
+
+
+# DMRs with at least 10 CpGs and from that at least 5 significant loci
+
+**_as suggested by the documentation_**
+
+```{r, engine='bash'}
+mkdir -p ./output/05_fltered_dmr
+
+for i in ./output/04_dmr/*.dmr.gz
+  do
+  bname=`basename $i .dmr.gz`
+  fname=./output/05_fltered_dmr/${bname}.filt.dmr.gz
+  
+  awk -F '[:\t]' '$5 >= 10 && $6>=5 {print $0}' <(zcat $i) | pigz -11 -p 16 > $fname
+done
+```
+
+
+
+# DMR Tables
+
+## Negative control
+```{r}
+files.nc <- list.files("./output/05_fltered_dmr", pattern = "neg", full.names = T)
+dmr.nc <- lapply(files.nc, function(x) read.table(x,
+    sep = "\t", header = F, stringsAsFactors = F,
+    col.names = c("chr", "start", "end", "nCpG", "sig.CpG", "strand")
+  ))
+
+dmr.nc <- ldply(dmr.nc, data.frame)
+
+write.table(
+  x = dmr.nc, file = gzfile("./output/methpipe_dmr_neg_control.txt.gz"),
+  sep = "\t", quote = F, row.names = F
+)
+```
+
+```{r}
+datatable(
+  dmr.nc,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)
+```
+
+## Simulated data
+```{r}
+files.sim <- list.files("./output/05_fltered_dmr", pattern = "sim", full.names = T)
+dmr.sim <- lapply(files.sim, function(x) read.table(x,
+    sep = "\t", header = F, stringsAsFactors = F,
+    col.names = c("chr", "start", "end", "nCpG", "sig.CpG", "strand")
+  ))
+
+dmr.sim <- ldply(dmr.sim, data.frame)
+
+write.table(
+  x = dmr.sim, file = gzfile("./output/methpipe_dmr_sim_data.txt.gz"),
+  sep = "\t", quote = F, row.names = F
+)
+```
+
+```{r}
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```

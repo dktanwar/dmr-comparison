@@ -139,7 +139,6 @@ for (i in seq_along(regions.common.each)) {
   )))
   cat("\n \n")
 
-
   write.table(data.frame(regions.common.each[[i]]),
     file = gzfile(paste0("./output/results_mapping_dmrs/", name, ".txt.gz")),
     quote = F, sep = "\t", row.names = F

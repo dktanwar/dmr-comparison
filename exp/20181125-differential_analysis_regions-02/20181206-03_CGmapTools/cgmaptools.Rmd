@@ -28,9 +28,12 @@ library(DT)
 library(data.table)
 ```
 
+# Method description
+CGmapTools uses ‘dynamic-fragment finding method’. First, background fragments are defined using several criteria (contain a minimum number of CpGs, at most maximal distance between two adjacent CpGs, etc.). An unpaired t-test is then carried out to compare the methylation levels of CpG sites shared between fragments in the two groups. DMRs are then selected from these background fragments by p-values. 
 
-# Merge Groups into one table
 
+# Merge groups into one table
+First, the data from each group need to be merged into a single file.
 ## Negative control
 
 ### Group1
@@ -59,6 +62,7 @@ cgmaptools mergelist tosingle -i <(zcat ./input/sim_rep2.cov.gz),<(zcat ./input/
 
 
 # Tables to perform DMRs analysis
+The files with data from group 1 and group 2 are then also merged using `intersect` function.
 
 ## Negative control
 ```{r, engine='bash'}
@@ -74,7 +78,7 @@ cgmaptools intersect -1 <(zcat ./output/01_merged_tables/sim_data_grp1.merge.gz)
 
 
 # DMRs analysis
-
+We compute DMRs.
 ## Negative Control
 ```{r, engine='bash'}
 mkdir -p ./output/03_dmr
@@ -89,7 +93,7 @@ cgmaptools dmr -i <(zcat ./output/02_intersect_grp1_grp2/sim_data.intersect.gz) 
 
 
 # DMR Tables
-
+The provided p-values are adjusted for multiple testing by Benjamini-Hochberg correction.
 ## Negative control
 
 ```{r}
@@ -98,8 +102,12 @@ dmr.nc <- read.table("./output/03_dmr/neg_control.dmr.gz",
   col.names = c("chr", "start", "end", "stat", "pVal", "mGrp1", "mGrp2", "N_site")
 )
 
+# adjust p-values
 dmr.nc$qval <- p.adjust(p = dmr.nc$pVal, method = "BH")
 dmr.nc <- dmr.nc[order(dmr.nc$qval), ]
+# select only regions with methylation difference at least 0.1
+dmr.nc <- dmr.nc[abs(dmr.nc$mGrp1-dmr.nc$mGrp2) >= 0.1,]
+
 write.table(dmr.nc, file = gzfile("./output/cgmaptools_dmr_neg_control.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 
@@ -130,9 +138,11 @@ dmr.sim <- read.table("./output/03_dmr/sim_data.dmr.gz",
   col.names = c("chr", "start", "end", "t", "pVal", "mGrp1", "mGrp2", "N_site")
 )
 
+# adjust p-values
 dmr.sim$qval <- p.adjust(p = dmr.sim$pVal, method = "BH")
 dmr.sim <- dmr.sim[order(dmr.sim$qval), ]
-
+# select only regions with methylation difference at least 0.1
+dmr.sim <- dmr.sim[abs(dmr.sim$mGrp1-dmr.sim$mGrp2) >= 0.1,]
 write.table(dmr.sim, file = gzfile("./output/cgmaptools_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
 ```
 

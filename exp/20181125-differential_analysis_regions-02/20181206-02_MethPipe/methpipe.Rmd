@@ -22,14 +22,20 @@ output:
   documentclass: article
 ---
 
+Analysis following the [MethPipe manual](http://smithlabresearch.org/downloads/methpipe-manual.pdf).
+
 # Packages required
 ```{r lib, warning=F, message=FALSE}
 library(DT)
 library(plyr)
 ```
 
+# Method description
+Differential methylation scores are first computed at individual CpG sites in a way similar to one-directional version of Fisher’s test. HMRs (hypomethylated regions) are detected using Hidden Markov Model individually in each sample (group). Non-overlapping intervals of HMRs are then checked if they contain sufficient number of DMLs.
+
 
 # Merging results from the replicates
+The methylation data within each group first need to be combined into a single file using `merge-methcounts`.
 
 ## Negative control
 
@@ -60,6 +66,7 @@ merge-methcounts <(zcat ./input/sim_rep2.cov.gz) <(zcat ./input/sim_rep4.cov.gz)
 
 
 # Differential methylation score of each CpG site
+Differential methylation score of each CpG site is computed. This gives us probability that the methylation level at the particular CpG site is lower in the first group than in the second.
 
 ## Negative control
 ```{r, engine='bash'}
@@ -75,7 +82,8 @@ methdiff <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) <(zcat ./out
 ```
 
 
-# Identifying hypo- and hypermethylated regions (HMRs):
+# Identifying hypomethylated regions (HMRs)
+Hypomethylated regions (HMRs) need to be computed.
 
 ## Negative control
 
@@ -106,6 +114,7 @@ hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 
 
 
 # Computing DMRs
+Finally, DMRs can be detected using the `methdiff` and `hmr` files.
 
 ## Negative control
 
@@ -125,9 +134,8 @@ pigz -11 -p 16 ./output/04_dmr/*.dmr
 ```
 
 
-# DMRs with at least 10 CpGs and from that at least 5 significant loci
-
-**_as suggested by the documentation_**
+# Filtering
+MethPipe does not provide the user with the effect size in the identified region, it only provides the total number of CpGs within the region and how many of them were significantly differently methylated. Thus, as suggested by the documentation, we have decided to filter out only those regions that are at least 10 CpGs long and provide at least 5 significantly differently methylated CpGs.
 
 ```{r, engine='bash'}
 mkdir -p ./output/05_fltered_dmr
