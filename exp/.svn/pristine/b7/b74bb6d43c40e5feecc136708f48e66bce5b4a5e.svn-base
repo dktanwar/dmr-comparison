@@ -1,126 +1,0 @@
-
-
-processing file: methpipe.Rmd
-running: bash  -c 'mkdir -p ./output/01_merge_methcounts
-
-merge-methcounts <(zcat ./input/NC_rep1.cov.gz) <(zcat ./input/NC_rep3.cov.gz) <(zcat ./input/NC_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/neg_control_grp1.meth.gz'
-running: bash  -c 'merge-methcounts <(zcat ./input/NC_rep2.cov.gz) <(zcat ./input/NC_rep4.cov.gz) <(zcat ./input/NC_rep6.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/neg_control_grp2.meth.gz'
-running: bash  -c 'merge-methcounts <(zcat ./input/sim_rep1.cov.gz) <(zcat ./input/sim_rep3.cov.gz) <(zcat ./input/sim_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp1.meth.gz'
-running: bash  -c 'merge-methcounts <(zcat ./input/sim_rep2.cov.gz) <(zcat ./input/sim_rep4.cov.gz) <(zcat ./input/sim_rep6.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp2.meth.gz'
-running: bash  -c 'mkdir -p ./output/02_methdiff
-
-methdiff <(zcat ./output/01_merge_methcounts/neg_control_grp1.meth.gz) <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/02_methdiff/neg_control.methdiff.gz'
-running: bash  -c 'methdiff <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) <(zcat ./output/01_merge_methcounts/sim_data_grp2.meth.gz) | pigz -11 -p 16 > ./output/02_methdiff/sim_data.methdiff.gz'
-running: bash  -c 'mkdir -p ./output/03_hmr
-
-hmr <(zcat ./output/01_merge_methcounts/neg_control_grp1.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/neg_control_grp1.hmr.gz'
-running: bash  -c 'hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/neg_control_grp2.hmr.gz'
-running: bash  -c 'hmr <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp1.hmr.gz'
-running: bash  -c 'hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp2.hmr.gz'
-running: bash  -c 'mkdir -p ./output/04_dmr
-
-dmr <(zcat ./output/02_methdiff/neg_control.methdiff.gz) <(zcat ./output/03_hmr/neg_control_grp1.hmr.gz) <(zcat ./output/03_hmr/neg_control_grp2.hmr.gz) ./output/04_dmr/neg_control_grp1.dmr ./output/04_dmr/neg_control_grp2.dmr'
-running: bash  -c 'dmr <(zcat ./output/02_methdiff/sim_data.methdiff.gz) <(zcat ./output/03_hmr/sim_data_grp1.hmr.gz) <(zcat ./output/03_hmr/sim_data_grp2.hmr.gz) ./output/04_dmr/sim_data_grp1.dmr ./output/04_dmr/sim_data_grp2.dmr
-
-pigz -11 -p 16 ./output/04_dmr/*.dmr'
-running: bash  -c "mkdir -p ./output/05_fltered_dmr
-
-for i in ./output/04_dmr/*.dmr.gz
-  do
-  bname=\`basename \$i .dmr.gz\`
-  fname=./output/05_fltered_dmr/\${bname}.filt.dmr.gz
-  
-  awk -F '[:\\t]' '\$5 >= 10 && \$6>=5 {print \$0}' <(zcat \$i) | pigz -11 -p 16 > \$fname
-done"
-output file: methpipe.knit.md
-
-
-Output created: methpipe.html
-                                                                |........................                                         |  37%
-label: unnamed-chunk-6 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |..........................                                       |  39%
-  ordinary text without R code
-
-  |                                                                         |...........................                                      |  42%
-label: unnamed-chunk-7 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |.............................                                    |  45%
-  ordinary text without R code
-
-  |                                                                         |...............................                                  |  47%
-label: unnamed-chunk-8 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |................................                                 |  50%
-  ordinary text without R code
-
-  |                                                                         |..................................                               |  53%
-label: unnamed-chunk-9 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |....................................                             |  55%
-  ordinary text without R code
-
-  |                                                                         |......................................                           |  58%
-label: unnamed-chunk-10 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |.......................................                          |  61%
-  ordinary text without R code
-
-  |                                                                         |.........................................                        |  63%
-label: unnamed-chunk-11 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |...........................................                      |  66%
-  ordinary text without R code
-
-  |                                                                         |............................................                     |  68%
-label: unnamed-chunk-12 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |..............................................                   |  71%
-  ordinary text without R code
-
-  |                                                                         |................................................                 |  74%
-label: unnamed-chunk-13 (with options) 
-List of 1
- $ engine: chr "bash"
-
-  |                                                                         |..................................................               |  76%
-  ordinary text without R code
-
-  |                                                                         |...................................................              |  79%
-label: unnamed-chunk-14
-  |                                                                         |.....................................................            |  82%
-  ordinary text without R code
-
-  |                                                                         |.......................................................          |  84%
-label: unnamed-chunk-15
-  |                                                                         |........................................................         |  87%
-  ordinary text without R code
-
-  |                                                                         |..........................................................       |  89%
-label: unnamed-chunk-16
-  |                                                                         |............................................................     |  92%
-  ordinary text without R code
-
-  |                                                                         |..............................................................   |  95%
-label: unnamed-chunk-17
-  |                                                                         |...............................................................  |  97%
-  ordinary text without R code
-
-  |                                                                         |.................................................................| 100%
-label: unnamed-chunk-18
-
-/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS methpipe.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output methpipe.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/Rtmp5RHEO5/rmarkdown-str5ca73d867606.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
