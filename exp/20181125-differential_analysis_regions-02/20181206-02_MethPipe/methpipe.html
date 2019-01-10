@@ -5799,101 +5799,110 @@ div.tocify {
 
 <h1 class="title toc-ignore">DMRs: MethPipe</h1>
 <h4 class="author"><em>Hana Parizkova &amp; Deepak Tanwar</em></h4>
-<h4 class="date"><em><b>Created on:</b> 2018-11-28 <br> <b>Updated on:</b> 2019-01-04</em></h4>
+<h4 class="date"><em><b>Created on:</b> 2018-11-28 <br> <b>Updated on:</b> 2019-01-10</em></h4>
 
 </div>
 
 
+<p>Analysis following the <a href="http://smithlabresearch.org/downloads/methpipe-manual.pdf">MethPipe manual</a>.</p>
 <div id="packages-required" class="section level1">
 <h1><span class="header-section-number">1</span> Packages required</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(DT)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(plyr)</a></code></pre></div>
 </div>
+<div id="method-description" class="section level1">
+<h1><span class="header-section-number">2</span> Method description</h1>
+<p>Differential methylation scores are first computed at individual CpG sites in a way similar to one-directional version of Fisher’s test. HMRs (hypomethylated regions) are detected using Hidden Markov Model individually in each sample (group). Non-overlapping intervals of HMRs are then checked if they contain sufficient number of DMLs.</p>
+</div>
 <div id="merging-results-from-the-replicates" class="section level1">
-<h1><span class="header-section-number">2</span> Merging results from the replicates</h1>
+<h1><span class="header-section-number">3</span> Merging results from the replicates</h1>
+<p>The methylation data within each group first need to be combined into a single file using <code>merge-methcounts</code>.</p>
 <div id="negative-control" class="section level2">
-<h2><span class="header-section-number">2.1</span> Negative control</h2>
+<h2><span class="header-section-number">3.1</span> Negative control</h2>
 <div id="group1" class="section level3">
-<h3><span class="header-section-number">2.1.1</span> Group1</h3>
+<h3><span class="header-section-number">3.1.1</span> Group1</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">mkdir</span> -p ./output/01_merge_methcounts</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"><span class="ex">merge-methcounts</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/NC_rep1.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/NC_rep3.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/NC_rep5.cov.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/01_merge_methcounts/neg_control_grp1.meth.gz</a></code></pre></div>
 </div>
 <div id="group2" class="section level3">
-<h3><span class="header-section-number">2.1.2</span> Group2</h3>
+<h3><span class="header-section-number">3.1.2</span> Group2</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">merge-methcounts</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/NC_rep2.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/NC_rep4.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/NC_rep6.cov.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/01_merge_methcounts/neg_control_grp2.meth.gz</a></code></pre></div>
 </div>
 </div>
 <div id="simulated-data" class="section level2">
-<h2><span class="header-section-number">2.2</span> Simulated data</h2>
+<h2><span class="header-section-number">3.2</span> Simulated data</h2>
 <div id="group1-1" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Group1</h3>
+<h3><span class="header-section-number">3.2.1</span> Group1</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">merge-methcounts</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/sim_rep1.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/sim_rep3.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/sim_rep5.cov.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/01_merge_methcounts/sim_data_grp1.meth.gz</a></code></pre></div>
 </div>
 <div id="group2-1" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> Group2</h3>
+<h3><span class="header-section-number">3.2.2</span> Group2</h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ex">merge-methcounts</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/sim_rep2.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/sim_rep4.cov.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./input/sim_rep6.cov.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/01_merge_methcounts/sim_data_grp2.meth.gz</a></code></pre></div>
 </div>
 </div>
 </div>
 <div id="differential-methylation-score-of-each-cpg-site" class="section level1">
-<h1><span class="header-section-number">3</span> Differential methylation score of each CpG site</h1>
+<h1><span class="header-section-number">4</span> Differential methylation score of each CpG site</h1>
+<p>Differential methylation score of each CpG site is computed. This gives us probability that the methylation level at the particular CpG site is lower in the first group than in the second.</p>
 <div id="negative-control-1" class="section level2">
-<h2><span class="header-section-number">3.1</span> Negative control</h2>
+<h2><span class="header-section-number">4.1</span> Negative control</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="fu">mkdir</span> -p ./output/02_methdiff</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"><span class="ex">methdiff</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/neg_control_grp1.meth.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/neg_control_grp2.meth.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/02_methdiff/neg_control.methdiff.gz</a></code></pre></div>
 </div>
 <div id="simulated-data-1" class="section level2">
-<h2><span class="header-section-number">3.2</span> Simulated data</h2>
+<h2><span class="header-section-number">4.2</span> Simulated data</h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="ex">methdiff</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/sim_data_grp1.meth.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/sim_data_grp2.meth.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/02_methdiff/sim_data.methdiff.gz</a></code></pre></div>
 </div>
 </div>
-<div id="identifying-hypo--and-hypermethylated-regions-hmrs" class="section level1">
-<h1><span class="header-section-number">4</span> Identifying hypo- and hypermethylated regions (HMRs):</h1>
+<div id="identifying-hypomethylated-regions-hmrs" class="section level1">
+<h1><span class="header-section-number">5</span> Identifying hypomethylated regions (HMRs)</h1>
+<p>Hypomethylated regions (HMRs) need to be computed.</p>
 <div id="negative-control-2" class="section level2">
-<h2><span class="header-section-number">4.1</span> Negative control</h2>
+<h2><span class="header-section-number">5.1</span> Negative control</h2>
 <div id="group1-2" class="section level3">
-<h3><span class="header-section-number">4.1.1</span> Group1</h3>
+<h3><span class="header-section-number">5.1.1</span> Group1</h3>
 <div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="fu">mkdir</span> -p ./output/03_hmr</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"><span class="ex">hmr</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/neg_control_grp1.meth.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/03_hmr/neg_control_grp1.hmr.gz</a></code></pre></div>
 </div>
 <div id="group2-2" class="section level3">
-<h3><span class="header-section-number">4.1.2</span> Group2</h3>
+<h3><span class="header-section-number">5.1.2</span> Group2</h3>
 <div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="ex">hmr</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/neg_control_grp2.meth.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/03_hmr/neg_control_grp2.hmr.gz</a></code></pre></div>
 </div>
 </div>
 <div id="simulated-data-2" class="section level2">
-<h2><span class="header-section-number">4.2</span> Simulated data</h2>
+<h2><span class="header-section-number">5.2</span> Simulated data</h2>
 <div id="group1-3" class="section level3">
-<h3><span class="header-section-number">4.2.1</span> Group1</h3>
+<h3><span class="header-section-number">5.2.1</span> Group1</h3>
 <div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ex">hmr</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/sim_data_grp1.meth.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/03_hmr/sim_data_grp1.hmr.gz</a></code></pre></div>
 </div>
 <div id="group2-3" class="section level3">
-<h3><span class="header-section-number">4.2.2</span> Group2</h3>
+<h3><span class="header-section-number">5.2.2</span> Group2</h3>
 <div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="ex">hmr</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/01_merge_methcounts/neg_control_grp2.meth.gz<span class="op">)</span> <span class="kw">|</span> <span class="ex">pigz</span> -11 -p 16 <span class="op">&gt;</span> ./output/03_hmr/sim_data_grp2.hmr.gz</a></code></pre></div>
 </div>
 </div>
 </div>
 <div id="computing-dmrs" class="section level1">
-<h1><span class="header-section-number">5</span> Computing DMRs</h1>
+<h1><span class="header-section-number">6</span> Computing DMRs</h1>
+<p>Finally, DMRs can be detected using the <code>methdiff</code> and <code>hmr</code> files.</p>
 <div id="negative-control-3" class="section level2">
-<h2><span class="header-section-number">5.1</span> Negative control</h2>
+<h2><span class="header-section-number">6.1</span> Negative control</h2>
 <div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="fu">mkdir</span> -p ./output/04_dmr</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="ex">dmr</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/02_methdiff/neg_control.methdiff.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/03_hmr/neg_control_grp1.hmr.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/03_hmr/neg_control_grp2.hmr.gz<span class="op">)</span> ./output/04_dmr/neg_control_grp1.dmr ./output/04_dmr/neg_control_grp2.dmr</a></code></pre></div>
 </div>
 <div id="simulated-data-3" class="section level2">
-<h2><span class="header-section-number">5.2</span> Simulated data</h2>
+<h2><span class="header-section-number">6.2</span> Simulated data</h2>
 <div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ex">dmr</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/02_methdiff/sim_data.methdiff.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/03_hmr/sim_data_grp1.hmr.gz<span class="op">)</span> <span class="op">&lt;(</span><span class="fu">zcat</span> ./output/03_hmr/sim_data_grp2.hmr.gz<span class="op">)</span> ./output/04_dmr/sim_data_grp1.dmr ./output/04_dmr/sim_data_grp2.dmr</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb13-3" data-line-number="3"><span class="ex">pigz</span> -11 -p 16 ./output/04_dmr/*.dmr</a></code></pre></div>
 </div>
 </div>
-<div id="dmrs-with-at-least-10-cpgs-and-from-that-at-least-5-significant-loci" class="section level1">
-<h1><span class="header-section-number">6</span> DMRs with at least 10 CpGs and from that at least 5 significant loci</h1>
-<p><strong><em>as suggested by the documentation</em></strong></p>
+<div id="filtering" class="section level1">
+<h1><span class="header-section-number">7</span> Filtering</h1>
+<p>MethPipe does not provide the user with the effect size in the identified region, it only provides the total number of CpGs within the region and how many of them were significantly differently methylated. Thus, as suggested by the documentation, we have decided to filter out only those regions that are at least 10 CpGs long and provide at least 5 significantly differently methylated CpGs.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="fu">mkdir</span> -p ./output/05_fltered_dmr</a>
 <a class="sourceLine" id="cb14-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw">for</span> <span class="ex">i</span> in ./output/04_dmr/*.dmr.gz</a>
@@ -5905,9 +5914,9 @@ div.tocify {
 <a class="sourceLine" id="cb14-9" data-line-number="9"><span class="kw">done</span></a></code></pre></div>
 </div>
 <div id="dmr-tables" class="section level1">
-<h1><span class="header-section-number">7</span> DMR Tables</h1>
+<h1><span class="header-section-number">8</span> DMR Tables</h1>
 <div id="negative-control-4" class="section level2">
-<h2><span class="header-section-number">7.1</span> Negative control</h2>
+<h2><span class="header-section-number">8.1</span> Negative control</h2>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">files.nc &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;./output/05_fltered_dmr&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;neg&quot;</span>, <span class="dt">full.names =</span> T)</a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">dmr.nc &lt;-<span class="st"> </span><span class="kw">lapply</span>(files.nc, <span class="cf">function</span>(x) <span class="kw">read.table</span>(x,</a>
 <a class="sourceLine" id="cb15-3" data-line-number="3">    <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">header =</span> F, <span class="dt">stringsAsFactors =</span> F,</a>
@@ -5930,11 +5939,11 @@ div.tocify {
 <a class="sourceLine" id="cb16-8" data-line-number="8">    <span class="dt">dom =</span> <span class="st">&quot;fltBip&quot;</span></a>
 <a class="sourceLine" id="cb16-9" data-line-number="9">  )</a>
 <a class="sourceLine" id="cb16-10" data-line-number="10">)</a></code></pre></div>
-<div id="htmlwidget-8b4ec0480399e456f512" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8b4ec0480399e456f512">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"59221896\" data-max=\"77348756\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"59222009\" data-max=\"77349006\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"6\" data-max=\"18\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons","ColReorder"],"data":[["chr18","chr18","chr18","chr18"],[74499338,77348756,59221896,77279897],[74500046,77349006,59222009,77280295],["X:29","X:13","X:10","X:24"],[18,6,10,9],["+","+","+","+"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>chr<\/th>\n      <th>start<\/th>\n      <th>end<\/th>\n      <th>nCpG<\/th>\n      <th>sig.CpG<\/th>\n      <th>strand<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"buttons":["copy","csv","excel","pdf","print"],"colReorder":{"realtime":false},"dom":"fltBip","columnDefs":[{"className":"dt-right","targets":[1,2,4]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-75dc1f585a0cdd9a647f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-75dc1f585a0cdd9a647f">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"59221896\" data-max=\"77348756\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"59222009\" data-max=\"77349006\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"6\" data-max=\"18\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons","ColReorder"],"data":[["chr18","chr18","chr18","chr18"],[74499338,77348756,59221896,77279897],[74500046,77349006,59222009,77280295],["X:29","X:13","X:10","X:24"],[18,6,10,9],["+","+","+","+"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>chr<\/th>\n      <th>start<\/th>\n      <th>end<\/th>\n      <th>nCpG<\/th>\n      <th>sig.CpG<\/th>\n      <th>strand<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"buttons":["copy","csv","excel","pdf","print"],"colReorder":{"realtime":false},"dom":"fltBip","columnDefs":[{"className":"dt-right","targets":[1,2,4]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="simulated-data-4" class="section level2">
-<h2><span class="header-section-number">7.2</span> Simulated data</h2>
+<h2><span class="header-section-number">8.2</span> Simulated data</h2>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">files.sim &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;./output/05_fltered_dmr&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;sim&quot;</span>, <span class="dt">full.names =</span> T)</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">dmr.sim &lt;-<span class="st"> </span><span class="kw">lapply</span>(files.sim, <span class="cf">function</span>(x) <span class="kw">read.table</span>(x,</a>
 <a class="sourceLine" id="cb17-3" data-line-number="3">    <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">header =</span> F, <span class="dt">stringsAsFactors =</span> F,</a>
@@ -5957,12 +5966,12 @@ div.tocify {
 <a class="sourceLine" id="cb18-8" data-line-number="8">    <span class="dt">dom =</span> <span class="st">&quot;fltBip&quot;</span></a>
 <a class="sourceLine" id="cb18-9" data-line-number="9">  )</a>
 <a class="sourceLine" id="cb18-10" data-line-number="10">)</a></code></pre></div>
-<div id="htmlwidget-164de636ba8c0f65eacb" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-164de636ba8c0f65eacb">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"2145824\" data-max=\"77348756\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"2150466\" data-max=\"77349006\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"5\" data-max=\"37\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons","ColReorder"],"data":[["chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18"],[2145824,12076399,20518822,28014543,48167266,48169847,48171664,48255861,68835715,74499380,77348756,59221916,77279897],[2150466,12076738,20519485,28016230,48169544,48171573,48172859,48255967,68837087,74499803,77349006,59222009,77280305],["X:37","X:27","X:10","X:10","X:15","X:21","X:12","X:15","X:10","X:25","X:13","X:11","X:25"],[37,13,6,10,14,17,11,5,10,14,6,11,9],["+","+","+","+","+","+","+","+","+","+","+","+","+"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>chr<\/th>\n      <th>start<\/th>\n      <th>end<\/th>\n      <th>nCpG<\/th>\n      <th>sig.CpG<\/th>\n      <th>strand<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"buttons":["copy","csv","excel","pdf","print"],"colReorder":{"realtime":false},"dom":"fltBip","columnDefs":[{"className":"dt-right","targets":[1,2,4]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-811dfeab3df2220a2e45" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-811dfeab3df2220a2e45">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"2145824\" data-max=\"77348756\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"2150466\" data-max=\"77349006\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"5\" data-max=\"37\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"disabled\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons","ColReorder"],"data":[["chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18","chr18"],[2145824,12076399,20518822,28014543,48167266,48169847,48171664,48255861,68835715,74499380,77348756,59221916,77279897],[2150466,12076738,20519485,28016230,48169544,48171573,48172859,48255967,68837087,74499803,77349006,59222009,77280305],["X:37","X:27","X:10","X:10","X:15","X:21","X:12","X:15","X:10","X:25","X:13","X:11","X:25"],[37,13,6,10,14,17,11,5,10,14,6,11,9],["+","+","+","+","+","+","+","+","+","+","+","+","+"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>chr<\/th>\n      <th>start<\/th>\n      <th>end<\/th>\n      <th>nCpG<\/th>\n      <th>sig.CpG<\/th>\n      <th>strand<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"buttons":["copy","csv","excel","pdf","print"],"colReorder":{"realtime":false},"dom":"fltBip","columnDefs":[{"className":"dt-right","targets":[1,2,4]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="sessioninfo" class="section level1">
-<h1><span class="header-section-number">8</span> SessionInfo</h1>
+<h1><span class="header-section-number">9</span> SessionInfo</h1>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">session_info</span>()</a></code></pre></div>
 <pre><code>## ─ Session info ──────────────────────────────────────────────────────────
 ##  setting  value                       
@@ -5974,7 +5983,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Europe/Zurich               
-##  date     2019-01-04                  
+##  date     2019-01-10                  
 ## 
 ## ─ Packages ──────────────────────────────────────────────────────────────
 ##  package     * version date       lib source        
