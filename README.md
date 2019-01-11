@@ -5,8 +5,8 @@
 - [STA426-project](#sta426-project)
     - [Title](#title)
     - [Methods to be compared](#methods-to-be-compared)
-    - [Data:](#data)
-    - [Final report:](#final-report)
+    - [Data](#data)
+    - [Final report](#final-report)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +27,7 @@ Comparison of statistical methods for the detection of differentially methylated
 - [methylKit](https://www.bioconductor.org/packages/devel/bioc/vignettes/methylKit/inst/doc/methylKit.html)
 
 
-### Data:
+### Data
 - negative control data - two groups, each of three samples, from normal human dendritic cells ([data in GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177))
 - simulated data - simulated DMRs added to negative control by `simDMRS` function from `dmrseq` package ([docs](https://bioconductor.org/packages/release/bioc/vignettes/dmrseq/inst/doc/dmrseq.html#6_simulating_dmrs))
 
