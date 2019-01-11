@@ -159,7 +159,7 @@ data.neg <- data.neg[order(data.neg$method),]
 ```
 
 ```{r}
-datatable(
+d1 <- datatable(
   data.neg,
   rownames = F,
   filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
@@ -169,6 +169,10 @@ datatable(
     dom = "fltBip"
   )
 )
+
+d1
+
+htmlwidgets::saveWidget(as_widget(d1), "num_regions_table_NC.html")
 ```
 Two methods have correctly found no DMRs - defiant and dmrseq.
 
@@ -469,11 +473,15 @@ for (i in 1:8) {
 ## Negative control
 ### Number of identified regions
 ```{r, fig.align='center', fig.height=8, fig.width=8}
-ggplotly(ggplot(data.neg, aes(x=method, y=num.regions, fill=method)) +
+g1 <- ggplotly(ggplot(data.neg, aes(x=method, y=num.regions, fill=method)) +
            geom_bar(stat="identity") +
            theme_light() +
           labs(y="Number of identified regions") +
           theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none") )
+
+g1
+
+htmlwidgets::saveWidget(as_widget(g1), "barplot_num_regions_NC.html")
 ```
 
 ### Total length of identified regions
@@ -490,26 +498,36 @@ ggplotly(ggplot(data.neg, aes(x=method, y=tot.length, fill=method)) +
 ### Observed FDR vs. power
 The observed FDR vs. observed power for different cut-offs.
 ```{r, fig.align='center', fig.height=8, fig.width=8}
-ggplotly(ggplot(data.all, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+g2 <- ggplotly(ggplot(data.all, aes(x=obs.fdr, y=power, color=method, group=method)) + 
   geom_point() + 
   geom_line() +
   labs(x="Observed FDR", y="Observed power", title="Any overlap") +
   theme_light() +
   xlim(0,1) + ylim(0,1))
+g2
+
+htmlwidgets::saveWidget(as_widget(g2), "fdr_power_any.html")
   
-ggplotly(ggplot(data.prop, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+g3 <- ggplotly(ggplot(data.prop, aes(x=obs.fdr, y=power, color=method, group=method)) + 
   geom_point() + 
   geom_line() +
   labs(x="Observed FDR", y="Observed power", title="Proportional") +
   theme_light() +
   xlim(0,1) + ylim(0,1))
+g3
 
-ggplotly(ggplot(data.threshold, aes(x=obs.fdr, y=power, color=method, group=method)) + 
+htmlwidgets::saveWidget(as_widget(g3), "fdr_power_prop.html")
+
+
+g4 <- ggplotly(ggplot(data.threshold, aes(x=obs.fdr, y=power, color=method, group=method)) + 
   geom_point() + 
   geom_line() +
   labs(x="Observed FDR", y="Observed power", title="Overlap at least 80 %") +
   theme_light() +
   xlim(0,1) + ylim(0,1))
+g4
+
+htmlwidgets::saveWidget(as_widget(g4), "fdr_power_80.html")
 ```
 Since the relative ordering of the methods stays the same, the used method of classifying regions as TPs, FPs, etc. does not seem to play a big role. Thus, from now on we use only the data with any overlap.
 
@@ -517,13 +535,16 @@ Since the relative ordering of the methods stays the same, the used method of cl
 How well do the methods control FDR?
 ```{r, fig.align='center', fig.height=8, fig.width=8}
 #only for any overlap
-ggplotly(ggplot(data.all, aes(x=spec.fdr, y=obs.fdr, color=method, group=method)) + 
+g5 <- ggplotly(ggplot(data.all, aes(x=spec.fdr, y=obs.fdr, color=method, group=method)) + 
   geom_point() + 
   geom_line() +
   labs(x="Specified FDR", y="Observed FDR") +
   theme_light() +
   xlim(0,1) + ylim(0,1) +
   geom_abline(linetype=3))
+g5
+
+htmlwidgets::saveWidget(as_widget(g5), "fdr_obs_specified.html")
 ```
 
 ### FP vs. TP
@@ -579,6 +600,12 @@ ggplotly(ggplot(data.nuc, aes(x=obs.fdr, y=power, color=method, group=method)) +
   xlim(0,1) + ylim(0,1))
 ```
 
+
+# Move html figures to output
+
+```{r}
+system("mv *.html ./output/")
+```
 
 # SessionInfo
 
