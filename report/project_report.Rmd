@@ -55,7 +55,7 @@ Sequencing the whole genome is generally quite expensive. Therefore, although it
 
 ## Basic pipeline for WGBS data analysis{#basic_pipeline_for_wgbs_data_analysis}
 
-```{r, echo=F, message=F, Figureure=T, Figure.align='center', Figure.height=5, Figure.width=6, Figure.cap="Figure 1. Basic pipeline for WGBS data analysis."}
+```{r, echo=T, message=F, fig.align='center', fig.height=5, fig.width=6, fig.cap="Figure 1. Basic pipeline for WGBS data analysis."}
 library(DiagrammeR)
 grViz("
 digraph flowchart {
@@ -87,7 +87,8 @@ D->G[label = '  DMRs: identify regions']
 }
 ")
 ```
-
+<br>
+<br>
 
 ## Limitations of current methods{#limitations_of_current_methods}
 - Methods are greatly hindered by low sample size. Most of the methods depend on large sample sizes.
@@ -155,6 +156,8 @@ Distribution of the coverage and beta values of all the samples, shown in [Figur
 <iframe src="./input/figures/coverage_sim.html" width="100%" height="800" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 2B. Coverage plot of simulated data.</div></center>
 
+<br>
+<br>
 
 ### Beta values{#beta_values .tabset .tabset-pills}
 
@@ -163,11 +166,16 @@ Distribution of the coverage and beta values of all the samples, shown in [Figur
 <iframe src="input/figures/beta_NC.html" width="100%" height="800" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 3A. Beta values histogram of negative control data.</div></center>
 
+<br>
+<br>
+
 #### Simulated data
 
 <iframe src="./input/figures/beta_sim.html" width="100%" height="800" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 3B. Beta values histogram of simulated data.</div></center>
 
+<br>
+<br>
 
 ### PCA plots{#pca_plots .tabset .tabset-pills}
 
@@ -215,10 +223,15 @@ As per negative control, we do not expect any true DMRs, all the identified regi
 <iframe src="./input/figures/barplot_num_regions_NC.html" width="100%" height="750" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 6. Barplot of no. of regions identified in negative control data.</div></center>
 
+<br>
+<br>
+
 #### Table
 <iframe src="./input/figures/num_regions_table_NC.html" width="130%" height="700" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Table 2. No. of regions and their total length, identified in negative control data.</div></center>
 
+<br>
+<br>
 
 ### Simulated Data{#simulated_data}
 
@@ -229,16 +242,22 @@ As per negative control, we do not expect any true DMRs, all the identified regi
 <iframe src="./input/figures/fdr_power_any.html" width="110%" height="700" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 7. FDR vs Power plot.</div></center>
 
+<br>
+<br>
+
 #### FDR: Specified vs Observed{#fdr:_specified_vs_observed}
 We have also checked how well the methods control FDR, [Figure 8](#fdr:_specified_vs_observed). For this, we plotted the observed FDR (the proportion of false discoveries) and the specified FDR (cutoff after multiple testing correction by BH). We can see that dmrseq again outperforms the other methods.
  
  
- <iframe src="./input/figures/fdr_obs_specified.html" width="110%" height="700" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="./input/figures/fdr_obs_specified.html" width="110%" height="700" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 8. FDR: Specified vs Observed.</div></center>
+
+<br>
+<br>
  
- BSseq and methpipe do not allow user control of FDR, and are thus not depicted in the Figureure. 
+BSseq and methpipe do not allow user control of FDR, and are thus not depicted in the Figureure. 
  
- More comparison plots as well as the code can be found [here](./input/reports/comparison_plots.html).
+More comparison plots as well as the code can be found [here](./input/reports/comparison_plots.html).
 
 
 # Conclusion{#conclusion}
