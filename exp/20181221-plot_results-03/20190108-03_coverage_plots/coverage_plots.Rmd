@@ -302,6 +302,7 @@ cov.sim <- beta_calc(objectDGE = bismark.sim, coverageThreshold = NULL, anno = a
 
 ```{r, warning=F, message=F}
 cov.nc$DHPlotCov
+htmlwidgets::saveWidget(as_widget(cov.nc$DHPlotCov), "coverage_NC.html")
 ```
 
 
@@ -309,6 +310,7 @@ cov.nc$DHPlotCov
 
 ```{r, warning=F, message=F}
 cov.sim$DHPlotCov
+htmlwidgets::saveWidget(as_widget(cov.sim$DHPlotCov), "coverage_sim.html")
 ```
 
 
@@ -318,12 +320,14 @@ cov.sim$DHPlotCov
 
 ```{r, warning=F, message=F}
 cov.nc$DHplotBeta
+htmlwidgets::saveWidget(as_widget(cov.nc$DHplotBeta), "beta_NC.html")
 ```
 
 ## Simulated data
 
 ```{r, warning=F, message=F}
 cov.sim$DHplotBeta
+htmlwidgets::saveWidget(as_widget(cov.sim$DHplotBeta), "beta_sim.html")
 ```
 
 
@@ -350,6 +354,7 @@ cov.sim$HCbeta
 ```{r, warning=F, message=F}
 cov.nc$PCAcov
 cov.nc$PCAbeta
+htmlwidgets::saveWidget(as_widget(cov.nc$PCAbeta), "PCA_beta_NC.html")
 ```
 
 
@@ -358,6 +363,7 @@ cov.nc$PCAbeta
 ```{r, warning=F, message=F}
 cov.sim$PCAcov
 cov.sim$PCAbeta
+htmlwidgets::saveWidget(as_widget(cov.sim$PCAbeta), "PCA_beta_sim.html")
 ```
 
 
@@ -396,6 +402,12 @@ cov.nc$SVDbeta
 ```{r, warning=F, message=F}
 cov.sim$SVDcov
 cov.sim$SVDbeta
+```
+
+# Move html figures to outpput
+
+```{r}
+system("mv *.html ./output/")
 ```
 
 
