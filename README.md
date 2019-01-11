@@ -31,4 +31,4 @@ Comparison of statistical methods for the detection of differentially methylated
 - simulated data - simulated DMRs added to negative control by `simDMRS` function from `dmrseq` package ([docs](https://bioconductor.org/packages/release/bioc/vignettes/dmrseq/inst/doc/dmrseq.html#6_simulating_dmrs))
 
 ### Final report
-[Project report(]https://github.com/sta426hs2018/sta426-project-dmr-comparison/blob/master/report/project_report.html)
+[Project report)]https://github.com/sta426hs2018/sta426-project-dmr-comparison/blob/master/report/project_report.html)
