@@ -80,6 +80,8 @@ One, representing negative control (with no expected DMRs), contained six methyl
 
 The second set of data was created from the negative control by adding 100 simulated DMRs using `simDMRS` function from R package `dmrseq`. 
 
+The data are the same as were used in the [dmrseq paper](https://academic.oup.com/biostatistics/advance-article-abstract/doi/10.1093/biostatistics/kxy007/4899074?redirectedFrom=fulltext)
+
 The reported DMRs were (if possible) filtered for only those that contain at least 10 CpGs and the mean difference between the two groups is at least 0.1 (the simulated regions had effect sizes between 0.163 and 0.450).
 
 [Data download and filtering](https://github.com/sta426hs2018/sta426-project-dmr-comparison/blob/master/data/data_download_and_filter.html)
@@ -147,7 +149,7 @@ We have also checked how well the methods control FDR (figure ...). For this, we
  BSseq and methpipe do not allow user control of FDR, and are thus not depicted in the figure. 
 
 # Conclusion
-In this project, we wanted to compare the methods for identification of DMRs, which were not compared in the dmrseq paper (ref). We used nearly all methods available, except the ones which do not have a proper statistical description or have not been updated for a long time. We found that dmrseq outperforms all the methods that we compared. This is especially important when we take into acccount that we used just 3 samples per group, which is the most one can hope for in the real experiments (due to the high cost of WGBS). But, it has to be mentioned that the simulated DMRs we used for the comparison were created using a function which is a part of the dmrseq method. It would be nice to repeat the experiment on some independently generated data.
+In this project, we wanted to compare the methods for identification of DMRs, which were not compared in the [dmrseq paper](https://academic.oup.com/biostatistics/advance-article-abstract/doi/10.1093/biostatistics/kxy007/4899074?redirectedFrom=fulltext). We used nearly all methods available, except the ones which do not have a proper statistical description or have not been updated for a long time. We found that dmrseq outperforms all the methods that we compared. This is especially important when we take into acccount that we used just 3 samples per group, which is the most one can hope for in the real experiments (due to the high cost of WGBS). But, it has to be mentioned that the data we used were the same as in the original [dmrseq paper](https://academic.oup.com/biostatistics/advance-article-abstract/doi/10.1093/biostatistics/kxy007/4899074?redirectedFrom=fulltextd) and that the simulated DMRs were created using a function which is a part of the dmrseq method. It would be nice and useful to repeat the experiment with some independently generated data.
 
 All the methods were well documented and were easy to use for a non-experienced user, except for CGmapTools, where the documentation was not clear. 
 
