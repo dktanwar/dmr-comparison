@@ -7,4 +7,4 @@
 
 all: task1
 task1:
-	Rscript -e 'rmarkdown::render("project_report.Rmd", "html_document")' 2> log >> log
+	Rscript -e 'rmarkdown::render("project_report.Rmd", "html_document")' 2> ./log/log >> ./log/log && Rscript -e 'rmarkdown::render("project_report_readthedown.Rmd")' 2> ./log/readthedoc.log >> ./log/readthedoc.log
