@@ -5249,14 +5249,22 @@ div.tocify {
 <h1>Introduction</h1>
 <div id="dna_methylation" class="section level2">
 <h2>DNA methylation</h2>
-<p>DNA methylation (DNAme) is a process by which methyl groups are added to the DNA molecule. Methylation could change the activity of the DNA without changing it’s code. It serves as a critical phenomenon to several biological functions and has a role in certain disease states. Further, DNAme is a privileged candidate for epigenetic inheritance due to its plasticity and stability across mitosis and meiosis. It is one of the major mechanisms of epigenetic modification and has a fundamental influence on gene expression, genomic stability and cellular activity [ ].</p>
-<p>With the advancement of next-generation (NGS) sequencing techniques, there are several methods for studying DNA methylation, but, few offer a better resolution of methylation status such as bisulfite sequencing (also known as Bisulfite-Seq, BS-Seq, Methyl-Seq or WGBS). The key idea of the method is combining the power of high-throughput DNA sequencing with the treatment of DNA with sodium bisulfite. The human methylome contains around 28 million CG sites in humans. There are also non-CG methylated sites: CHG or CHH, where H represents adenine, thymine, or cytosine.</p>
+<p>DNA methylation (DNAme) is a process by which methyl groups are added to the DNA molecule. Methylation could change the activity of the DNA without changing its code. It serves as a critical phenomenon to several biological functions and has a role in certain disease states. Further, DNAme is a privileged candidate for epigenetic inheritance due to its plasticity and stability across mitosis and meiosis. It is one of the major mechanisms of epigenetic modification and has a fundamental influence on gene expression, genomic stability and cellular activity <span class="citation">(Leek et al. <a href="#ref-Leek2010">2010</a>; Lavie et al. <a href="#ref-Lavie2004">2004</a>)</span>.</p>
+<p>With the advancement of next-generation (NGS) sequencing techniques, there are several methods for studying DNA methylation, but, few offer a better resolution of methylation status such as bisulfite sequencing (also known as Bisulfite-Seq, BS-Seq, Methyl-Seq or WGBS). The key idea of the method is combining the power of high-throughput DNA sequencing with the treatment of DNA with sodium bisulfite.</p>
 </div>
 <div id="whole_genome_bisulphite_sequencing" class="section level2">
 <h2>Whole Genome Bisulphite Sequencing</h2>
 <p>Whole Genome Bisulphite Sequencing (WGBS) is a gold standard NGS technique for studying DNAme in the genome of mammals. WGBS combines sodium bisulfite conversion of the DNA sequence with high throughput DNA sequencing. The sodium bisulfite reaction converts the unmethylated cytosines (C) to uracils (U), whereas, methylated C remains unchanged. These U are further converted to thymine (T) after the polymerase chain reaction (PCR). Although, no change occurs for methylated C. Methylcytosines are the methylated versions of the cytosine bases. This is done by transferring a methyl group onto the C5 position of the cytosine.</p>
 <p>The aim of NGS-based DNA methylation analysis is to investigate genomic DNA and find out whether single cytosines or entire regions in the genome are methylated or not. WGBS is the most comprehensive sequencing for DNA methylation profiling, allowing single-base resolution of 5-mC within the whole genome. By comparing treated and untreated sequences, the location of the methylated cytosines is determined.</p>
-<p>There are several applications of WGBS, including (not limited to): - detection of differentially methylated regions (DMRs) - detection of differentially methylated loci (DMLs) - detection of copy number variations (CNVs) - detection of single nucleotide polymorphisms (SNPs) - detection of cytosine methylation levels of transcription factor binding sites (TFBSs) - detecting methylation level or distribution (globally, single nucleotide, chromosome-wide and gene-centric)</p>
+<p><strong>There are several applications of WGBS, including (not limited to):</strong></p>
+<ul>
+<li><p>detection of differentially methylated regions (DMRs)</p></li>
+<li><p>detection of differentially methylated locis (DMLs)</p></li>
+<li><p>detection of copy number variations (CNVs)</p></li>
+<li><p>detection of single nucleotide polymorphisms (SNPs)</p></li>
+<li><p>detection of cytosine methylation levels of transcription factor binding sites (TFBSs)</p></li>
+<li><p>detecting methylation level or distribution (globally, single nucleotide, chromosome-wide and gene-centric)</p></li>
+</ul>
 <p>Sequencing the whole genome is generally quite expensive. Therefore, although it has been applied to large genomes such as the human genome, large numbers of individual samples are seldom sequenced. Reduced representation bisulfite sequencing (RRBS) has been developed for this reason, in which the bisulfite reaction occurs but the sequencing is limited to around 1% of the genome. This enables the sequencing of the genome of several individuals.</p>
 </div>
 <div id="basic_pipeline_for_wgbs_data_analysis" class="section level2">
@@ -5292,8 +5300,8 @@ div.tocify {
 <a class="sourceLine" id="cb1-29" data-line-number="29"><span class="st">}</span></a>
 <a class="sourceLine" id="cb1-30" data-line-number="30"><span class="st">&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
-<div id="htmlwidget-78f38751a21ce7e739a2" style="width:576px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-78f38751a21ce7e739a2">{"x":{"diagram":"\ndigraph flowchart {\ngraph [overlap = true, layout=dot,fontsize=12]\n\nnode [shape = box, style=filled, fillcolor=NavajoWhite, color=DarkslateGray, fontsize=12];\nA; B; E; F; G;\nnode [shape = egg, style=filled, fillcolor=NavajoWhite, color=DarkslateGray, fontsize=12];\nC; D;\n\nA [label=\"Quality Check: FastQC\"]\nB [label=\"Quality Control: trim_galore\"]\nC [label=\"Alignment: Bismark\"]\nD [label=\"Methylation extraction: Bismark\"]\nE [label=\"Overview of QC: MultiQC\"]\nF [label=\"Differential analysis: DMLs\"]\nG [label=\"Differential analysis: DMRs\"]\nedge[color=DarkslateGray,\n  penwidth=5\n]\nA->B\nB->C[label = \"  trim adapters, remove shorter reads, trim Ns\"]\nC->D\nC->E\nA->E\nB->E\nD->F[label = \"  DMLs: single basepair resolution\"]\nD->G[label = \"  DMRs: identify regions\"]\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-9d871e36fdd102949fe2" style="width:576px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9d871e36fdd102949fe2">{"x":{"diagram":"\ndigraph flowchart {\ngraph [overlap = true, layout=dot,fontsize=12]\n\nnode [shape = box, style=filled, fillcolor=NavajoWhite, color=DarkslateGray, fontsize=12];\nA; B; E; F; G;\nnode [shape = egg, style=filled, fillcolor=NavajoWhite, color=DarkslateGray, fontsize=12];\nC; D;\n\nA [label=\"Quality Check: FastQC\"]\nB [label=\"Quality Control: trim_galore\"]\nC [label=\"Alignment: Bismark\"]\nD [label=\"Methylation extraction: Bismark\"]\nE [label=\"Overview of QC: MultiQC\"]\nF [label=\"Differential analysis: DMLs\"]\nG [label=\"Differential analysis: DMRs\"]\nedge[color=DarkslateGray,\n  penwidth=5\n]\nA->B\nB->C[label = \"  trim adapters, remove shorter reads, trim Ns\"]\nC->D\nC->E\nA->E\nB->E\nD->F[label = \"  DMLs: single basepair resolution\"]\nD->G[label = \"  DMRs: identify regions\"]\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
 Figure 1. Basic pipeline for WGBS data analysis.
 </p>
@@ -5303,21 +5311,23 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <div id="limitations_of_current_methods" class="section level2">
 <h2>Limitations of current methods</h2>
 <ul>
-<li>Methods are greatly hindered by low sample size. Most of the methods depend on large sample sizes. The number of tests performed = the number of loci analyzed. Example: Human genome has ~30 million CpGs [1].</li>
-<li>Measurements are spatially correlated across the genome [2], but in most methods measurements from all loci are treated independently.</li>
-<li>Multiple testing corrections without considering the spatial correlation can result in a loss of power.</li>
-<li>DMRs more biologically relevant than DMLs.</li>
-<li>DML approaches may construct DMRs by chaining together neighboring significant loci, but this type of approach will not yield a proper assessment of the statistical significance of the constructed regions, nor will the FDR be properly controlled [4]. Controlling the FDR at the level of individual loci is not the same as controlling FDR of regions.</li>
-<li>Methylation data cannot be modeled either by Gaussian models (due to low coverage) or by Binomial models (do not account for biological variability). Beta-Binomial models are computationally difficult.</li>
+<li><p>Methods are greatly hindered by low sample size. Most of the methods depend on large sample sizes.</p></li>
+<li><p>The number of tests performed = the number of loci analyzed. Example: Human genome has ~30 million CpGs <span class="citation">(Smith and Meissner <a href="#ref-Smith2013">2013</a>)</span>.</p></li>
+<li><p>Measurements are spatially correlated across the genome <span class="citation">(Leek et al. <a href="#ref-Leek2010">2010</a>)</span>, but in most methods measurements from all loci are treated independently.</p></li>
+<li><p>Multiple testing corrections without considering the spatial correlation can result in a loss of power.</p></li>
+<li><p>DMRs more biologically relevant than DMLs.</p></li>
+<li><p>DML approaches may construct DMRs by chaining together neighboring significant loci, but this type of approach will not yield a proper assessment of the statistical significance of the constructed regions, nor will the FDR be properly controlled <span class="citation">(Robinson et al. <a href="#ref-Robinson2014">2014</a>)</span>.</p></li>
+<li><p>Controlling the FDR at the level of individual loci is not the same as controlling FDR of regions.</p></li>
+<li><p>Methylation data cannot be modeled either by Gaussian models (due to low coverage) or by Binomial models (do not account for biological variability). Beta-Binomial models are computationally difficult.</p></li>
 </ul>
 </div>
 <div id="challenges_for_assessing_dmrs" class="section level2">
 <h2>Challenges for assessing DMRs</h2>
 <ul>
-<li>defining region boundaries</li>
-<li>methods ignore correlation across loci</li>
-<li>biological variability from sample to sample</li>
-<li>should be powerful even in the case of 2 samples per group.</li>
+<li><p>defining region boundaries</p></li>
+<li><p>methods ignore correlation across loci</p></li>
+<li><p>biological variability from sample to sample</p></li>
+<li><p>should be powerful even in the case of 2 samples per group.</p></li>
 </ul>
 </div>
 </div>
@@ -5325,16 +5335,15 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <h1>Methods</h1>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Two data sets were used.</p>
-<p>One, representing negative control (with no expected DMRs), contained six methylation profiling samples from normal human dendritic cells (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177">data in GEO</a>). The samples were artificially divided into two groups of three samples, group 1 consisting of samples <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565940">GSM1565940</a>, <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565944">GSM1565944</a>, and <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565948">GSM1565948</a>, group 2 consisting of samples <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565942">GSM1565942</a>, <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565946">GSM1565946</a>, and <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565950">GSM1565950</a>. To obtain reasonable running times, only methylation data from chromosome 18 were used.</p>
-<p>The second set of data was created from the negative control by adding 100 simulated DMRs using <code>simDMRS</code> function from R package <code>dmrseq</code>.</p>
-<p>The data are the same as were used in the <a href="https://academic.oup.com/biostatistics/advance-article-abstract/doi/10.1093/biostatistics/kxy007/4899074?redirectedFrom=fulltext">dmrseq paper</a></p>
-<p>The reported DMRs were (if possible) filtered for only those that contain at least 10 CpGs and the mean difference between the two groups is at least 0.1 (the simulated regions had effect sizes between 0.163 and 0.450).</p>
-<p><a href="./input/reports/data_download_and_filter.html">Data download and filtering</a></p>
+<p><strong>Two data sets were used in this project.</strong></p>
+<p><strong>First</strong>, representing negative control (with no expected DMRs), contained six methylation profiling samples from normal human dendritic cells (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177">data in GEO</a>). The samples were artificially divided into two groups of three samples, <strong>Group1</strong> consisting of samples <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565940">GSM1565940</a>, <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565944">GSM1565944</a>, and <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565948">GSM1565948</a>, <strong>Group2</strong> consisting of samples <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565942">GSM1565942</a>, <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565946">GSM1565946</a>, and <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565950">GSM1565950</a>. To obtain reasonable running times, only methylation data from chromosome 18 were used, similar to the <code>dmrseq</code> paper <span class="citation">(Korthauer et al. <a href="#ref-Korthauer2018">2018</a>)</span>.</p>
+<p>The <strong>second</strong> set of data was created from the negative control by adding 100 simulated DMRs using <code>simDMRS</code> function from the R package <code>dmrseq</code>.</p>
+<p>The reported DMRs were (if possible) filtered for only those that contain <strong>at least 10 CpGs</strong> and the <strong>mean difference between the two groups is at least 0.1</strong> (the simulated regions had <strong>effect sizes between 0.163 and 0.450</strong>).</p>
+<p><a href="./input/reports/data_download_and_filter.html">The report of data download and filtering</a></p>
 </div>
 <div id="the_methods_used_for_comparison" class="section level2">
 <h2>The methods used for comparison</h2>
-<p>In total 7 different methods were used for the comparison. Their main features, as well as links to the analysis files are summarized in the <a href="#the_methods_used_for_comparison">Table 1</a>:</p>
+<p>In total <strong>7 different methods</strong> were used for the comparison. Their main features, as well as links to the analysis files are summarized in the <a href="#the_methods_used_for_comparison">Table 1</a>:</p>
 <table>
 <colgroup>
 <col width="3%"></col>
@@ -5348,14 +5357,14 @@ Figure 1. Basic pipeline for WGBS data analysis.
 </colgroup>
 <thead>
 <tr class="header">
-<th>Method</th>
-<th>Preprocessing + statistical test used</th>
-<th>p-value estimate given</th>
-<th>CpG / non CpG</th>
-<th>Implementation language</th>
-<th>DOI</th>
-<th>Availability</th>
-<th>Analysis file</th>
+<th><strong>Methods</strong></th>
+<th><strong>Preprocessing + statistical test used</strong></th>
+<th><strong>p-value estimate given</strong></th>
+<th><strong>CpG / non CpG</strong></th>
+<th><strong>Implementation</strong></th>
+<th><strong>Reference</strong></th>
+<th><strong>Availability</strong></th>
+<th><strong>Analysis file</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -5365,7 +5374,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>no</td>
 <td>CpG only</td>
 <td>R</td>
-<td>10.1186/gb-2012-13-10-r83</td>
+<td><span class="citation">(Hansen, Langmead, and Irizarry <a href="#ref-Hansen2012">2012</a>)</span></td>
 <td><a href="https://bioconductor.org/packages/release/bioc/html/bsseq.html">Bioconductor package bsseq</a></td>
 <td><a href="./input/reports/bsseq.html">Report</a></td>
 </tr>
@@ -5375,7 +5384,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>yes</td>
 <td>CpG only</td>
 <td>C, C++, Python</td>
-<td>10.1093/bioinformatics/btx595</td>
+<td><span class="citation">(Guo et al. <a href="#ref-Guo2017">2017</a>)</span></td>
 <td><a href="https://cgmaptools.github.io/">binary package</a></td>
 <td><a href="./input/reports/cgmaptools.html">Report</a></td>
 </tr>
@@ -5385,7 +5394,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>yes</td>
 <td>CpG only</td>
 <td>Shell</td>
-<td>10.1186/s12859-018-2037-1</td>
+<td><span class="citation">(Condon et al. <a href="#ref-Condon2018">2018</a>)</span></td>
 <td><a href="https://github.com/hhg7/defiant">binary package</a></td>
 <td><a href="./input/reports/defiant.html">Report</a></td>
 </tr>
@@ -5395,7 +5404,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>yes</td>
 <td>all contexts</td>
 <td>R</td>
-<td>10.1093/nar/gky602</td>
+<td><span class="citation">(Catoni et al. <a href="#ref-Catoni2018">2018</a>)</span></td>
 <td><a href="https://bioconductor.org/packages/release/bioc/html/DMRcaller.html">Bioconductor package DMRcaller</a></td>
 <td><a href="./input/reports/dmrcaller.html">Report</a></td>
 </tr>
@@ -5405,7 +5414,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>yes</td>
 <td>CpG only</td>
 <td>R</td>
-<td>10.1093/biostatistics/kxy007</td>
+<td><span class="citation">(Korthauer et al. <a href="#ref-Korthauer2018">2018</a>)</span></td>
 <td><a href="https://bioconductor.org/packages/release/bioc/html/dmrseq.html">Bioconductor package dmrseq</a></td>
 <td><a href="./input/reports/dmrseq.html">Report</a></td>
 </tr>
@@ -5415,7 +5424,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>no</td>
 <td>CpG only</td>
 <td>C, C++</td>
-<td>10.1371/journal.pone.0081148</td>
+<td><span class="citation">(Song et al. <a href="#ref-Song2013">2013</a>)</span></td>
 <td><a href="http://smithlabresearch.org/software/methpipe/">binary package</a></td>
 <td><a href="./input/reports/methpipe.html">Report</a></td>
 </tr>
@@ -5425,7 +5434,7 @@ Figure 1. Basic pipeline for WGBS data analysis.
 <td>yes</td>
 <td>all contexts</td>
 <td>R</td>
-<td>10.1186/gb-2012-13-10-r87</td>
+<td><span class="citation">(Akalin et al. <a href="#ref-Akalin2012">2012</a>)</span></td>
 <td><a href="https://bioconductor.org/packages/release/bioc/html/methylKit.html">Bioconductor package methylKit</a></td>
 <td><a href="./input/reports/methylKit.html">Report</a></td>
 </tr>
@@ -5586,106 +5595,53 @@ Figure 8. FDR: Specified vs Observed.
 </center>
 <p><br> <br></p>
 <p>BSseq and methpipe do not allow user control of FDR, and are thus not depicted in the Figureure.</p>
-<p>More comparison plots as well as the code can be found <a href="./input/reports/comparison_plots.html">here</a>.</p>
+<p>More comparison plots as well as the code can be found <a href="./input/reports/comparison_plots.html">in this report</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>In this project, we wanted to compare the methods for identification of DMRs, which were not compared in the <a href="https://academic.oup.com/biostatistics/advance-article-abstract/doi/10.1093/biostatistics/kxy007/4899074?redirectedFrom=fulltext">dmrseq paper</a>. We used nearly all methods available, except the ones which do not have a proper statistical description or have not been updated for a long time. We found that dmrseq outperforms all the methods that we compared. This is especially important when we take into acccount that we used just 3 samples per group, which is the most one can hope for in the real experiments (due to the high cost of WGBS). But, it has to be mentioned that the data we used were the same as in the original <a href="https://academic.oup.com/biostatistics/advance-article-abstract/doi/10.1093/biostatistics/kxy007/4899074?redirectedFrom=fulltextd">dmrseq paper</a> and that the simulated DMRs were created using a function which is a part of the dmrseq method. It would be nice and useful to repeat the experiment with some independently generated data.</p>
+<p>In this project, we wanted to compare the methods for identification of DMRs, which were not compared in the <strong>dmrseq paper</strong> <span class="citation">(Korthauer et al. <a href="#ref-Korthauer2018">2018</a>)</span>. We used nearly all methods available, except the ones which do not have a proper statistical description or have not been updated for a long time. We found that dmrseq outperforms all the methods that we compared. This is especially important when we take into acccount that we used just 3 samples per group, which is the most one can hope for in the real experiments (due to the high cost of WGBS). But, it has to be mentioned that the data we used were the same as in the original <strong>dmrseq paper</strong> <span class="citation">(Korthauer et al. <a href="#ref-Korthauer2018">2018</a>)</span> and that the simulated DMRs were created using a function which is a part of the dmrseq method. It would be nice and useful to repeat the experiment with some independently generated data.</p>
 <p>All the methods were well documented and were easy to use for a non-experienced user, except for CGmapTools, where the documentation was not clear.</p>
 </div>
-<div id="sessioninfo" class="section level1">
-<h1>SessionInfo</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">session_info</span>()</a></code></pre></div>
-<pre><code>## ─ Session info ──────────────────────────────────────────────────────────
-##  setting  value                       
-##  version  R version 3.5.1 (2018-07-02)
-##  os       Ubuntu 16.04.5 LTS          
-##  system   x86_64, linux-gnu           
-##  ui       X11                         
-##  language (EN)                        
-##  collate  en_US.UTF-8                 
-##  ctype    en_US.UTF-8                 
-##  tz       Europe/Zurich               
-##  date     2019-01-11                  
-## 
-## ─ Packages ──────────────────────────────────────────────────────────────
-##  package      * version   date       lib source        
-##  assertthat     0.2.0     2017-04-11 [1] CRAN (R 3.5.1)
-##  backports      1.1.3     2018-12-14 [1] CRAN (R 3.5.1)
-##  bindr          0.1.1     2018-03-13 [1] CRAN (R 3.5.1)
-##  bindrcpp       0.2.2     2018-03-29 [1] CRAN (R 3.5.1)
-##  brew           1.0-6     2011-04-13 [1] CRAN (R 3.5.1)
-##  callr          3.1.1     2018-12-21 [1] CRAN (R 3.5.1)
-##  cli            1.0.1     2018-09-25 [1] CRAN (R 3.5.1)
-##  colorspace     1.3-2     2016-12-14 [1] CRAN (R 3.5.1)
-##  crayon         1.3.4     2017-09-16 [1] CRAN (R 3.5.1)
-##  desc           1.2.0     2018-05-01 [1] CRAN (R 3.5.1)
-##  devtools       2.0.1     2018-10-26 [1] CRAN (R 3.5.1)
-##  DiagrammeR   * 1.0.0     2018-03-01 [1] CRAN (R 3.5.1)
-##  digest         0.6.18    2018-10-10 [1] CRAN (R 3.5.1)
-##  downloader     0.4       2015-07-09 [1] CRAN (R 3.5.1)
-##  dplyr          0.7.8     2018-11-10 [1] CRAN (R 3.5.1)
-##  evaluate       0.12      2018-10-09 [1] CRAN (R 3.5.1)
-##  fs             1.2.6     2018-08-23 [1] CRAN (R 3.5.1)
-##  ggplot2        3.1.0     2018-10-25 [1] CRAN (R 3.5.1)
-##  glue           1.3.0     2018-07-17 [1] CRAN (R 3.5.1)
-##  gridExtra      2.3       2017-09-09 [1] CRAN (R 3.5.1)
-##  gtable         0.2.0     2016-02-26 [1] CRAN (R 3.5.1)
-##  hms            0.4.2     2018-03-10 [1] CRAN (R 3.5.1)
-##  htmltools      0.3.6     2017-04-28 [1] CRAN (R 3.5.1)
-##  htmlwidgets    1.3       2018-09-30 [1] CRAN (R 3.5.1)
-##  igraph         1.2.2     2018-07-27 [1] CRAN (R 3.5.1)
-##  influenceR     0.1.0     2015-09-03 [1] CRAN (R 3.5.1)
-##  jsonlite       1.6       2018-12-07 [1] CRAN (R 3.5.1)
-##  knitr          1.21      2018-12-10 [1] CRAN (R 3.5.1)
-##  lazyeval       0.2.1     2017-10-29 [1] CRAN (R 3.5.1)
-##  magrittr       1.5       2014-11-22 [1] CRAN (R 3.5.1)
-##  memoise        1.1.0     2017-04-21 [1] CRAN (R 3.5.1)
-##  munsell        0.5.0     2018-06-12 [1] CRAN (R 3.5.1)
-##  pillar         1.3.1     2018-12-15 [1] CRAN (R 3.5.1)
-##  pkgbuild       1.0.2     2018-10-16 [1] CRAN (R 3.5.1)
-##  pkgconfig      2.0.2     2018-08-16 [1] CRAN (R 3.5.1)
-##  pkgload        1.0.2     2018-10-29 [1] CRAN (R 3.5.1)
-##  plyr           1.8.4     2016-06-08 [1] CRAN (R 3.5.1)
-##  prettyunits    1.0.2     2015-07-13 [1] CRAN (R 3.5.1)
-##  processx       3.2.1     2018-12-05 [1] CRAN (R 3.5.1)
-##  ps             1.3.0     2018-12-21 [1] CRAN (R 3.5.1)
-##  purrr          0.2.5     2018-05-29 [1] CRAN (R 3.5.1)
-##  R6             2.3.0     2018-10-04 [1] CRAN (R 3.5.1)
-##  RColorBrewer   1.1-2     2014-12-07 [1] CRAN (R 3.5.1)
-##  Rcpp           1.0.0     2018-11-07 [1] CRAN (R 3.5.1)
-##  readr          1.3.1     2018-12-21 [1] CRAN (R 3.5.1)
-##  remotes        2.0.2     2018-10-30 [1] CRAN (R 3.5.1)
-##  rgexf          0.15.3    2015-03-24 [1] CRAN (R 3.5.1)
-##  rlang          0.3.0.1   2018-10-25 [1] CRAN (R 3.5.1)
-##  rmarkdown      1.11      2018-12-08 [1] CRAN (R 3.5.1)
-##  Rook           1.1-1     2014-10-20 [1] CRAN (R 3.5.1)
-##  rprojroot      1.3-2     2018-01-03 [1] CRAN (R 3.5.1)
-##  rstudioapi     0.8       2018-10-02 [1] CRAN (R 3.5.1)
-##  scales         1.0.0     2018-08-09 [1] CRAN (R 3.5.1)
-##  sessioninfo    1.1.1     2018-11-05 [1] CRAN (R 3.5.1)
-##  stringi        1.2.4     2018-07-20 [1] CRAN (R 3.5.1)
-##  stringr        1.3.1     2018-05-10 [1] CRAN (R 3.5.1)
-##  testthat       2.0.1     2018-10-13 [1] CRAN (R 3.5.1)
-##  tibble         1.4.2     2018-01-22 [1] CRAN (R 3.5.1)
-##  tidyr          0.8.2     2018-10-28 [1] CRAN (R 3.5.1)
-##  tidyselect     0.2.5     2018-10-11 [1] CRAN (R 3.5.1)
-##  usethis        1.4.0     2018-08-14 [1] CRAN (R 3.5.1)
-##  viridis        0.5.1     2018-03-29 [1] CRAN (R 3.5.1)
-##  viridisLite    0.3.0     2018-02-01 [1] CRAN (R 3.5.1)
-##  visNetwork     2.0.5     2018-12-05 [1] CRAN (R 3.5.1)
-##  withr          2.1.2     2018-03-15 [1] CRAN (R 3.5.1)
-##  xfun           0.4       2018-10-23 [1] CRAN (R 3.5.1)
-##  XML            3.98-1.16 2018-08-19 [1] CRAN (R 3.5.1)
-##  yaml           2.2.0     2018-07-25 [1] CRAN (R 3.5.1)
-## 
-## [1] /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5
-## [2] /usr/local/lib/R/site-library
-## [3] /usr/lib/R/site-library
-## [4] /usr/lib/R/library</code></pre>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-Akalin2012">
+<p>Akalin, Altuna, Matthias Kormaksson, Sheng Li, Francine E Garrett-Bakelman, Maria E Figueroa, Ari Melnick, and Christopher E Mason. 2012. “methylKit: A Comprehensive R Package for the Analysis of Genome-Wide DNA Methylation Profiles.” <em>Genome Biology</em> 13 (10). Springer Nature: R87. <a href="https://doi.org/10.1186/gb-2012-13-10-r87" class="uri">https://doi.org/10.1186/gb-2012-13-10-r87</a>.</p>
+</div>
+<div id="ref-Catoni2018">
+<p>Catoni, Marco, Jonathan MF Tsang, Alessandro P Greco, and Nicolae Radu Zabet. 2018. “DMRcaller: A Versatile R/Bioconductor Package for Detection and Visualization of Differentially Methylated Regions in CpG and Non-CpG Contexts.” <em>Nucleic Acids Research</em>, July. Oxford University Press (OUP). <a href="https://doi.org/10.1093/nar/gky602" class="uri">https://doi.org/10.1093/nar/gky602</a>.</p>
+</div>
+<div id="ref-Condon2018">
+<p>Condon, David E., Phu V. Tran, Yu-Chin Lien, Jonathan Schug, Michael K. Georgieff, Rebecca A. Simmons, and Kyoung-Jae Won. 2018. “Defiant: (DMRs: Easy, Fast, Identification and ANnoTation) Identifies Differentially Methylated Regions from Iron-Deficient Rat Hippocampus.” <em>BMC Bioinformatics</em> 19 (1). Springer Nature. <a href="https://doi.org/10.1186/s12859-018-2037-1" class="uri">https://doi.org/10.1186/s12859-018-2037-1</a>.</p>
+</div>
+<div id="ref-Guo2017">
+<p>Guo, Weilong, Ping Zhu, Matteo Pellegrini, Michael Q Zhang, Xiangfeng Wang, and Zhongfu Ni. 2017. “CGmapTools Improves the Precision of Heterozygous SNV Calls and Supports Allele-Specific Methylation Detection and Visualization in Bisulfite-Sequencing Data.” Edited by Inanc Birol. <em>Bioinformatics</em> 34 (3). Oxford University Press (OUP): 381–87. <a href="https://doi.org/10.1093/bioinformatics/btx595" class="uri">https://doi.org/10.1093/bioinformatics/btx595</a>.</p>
+</div>
+<div id="ref-Hansen2012">
+<p>Hansen, Kasper D, Benjamin Langmead, and Rafael A Irizarry. 2012. “BSmooth: From Whole Genome Bisulfite Sequencing Reads to Differentially Methylated Regions.” <em>Genome Biology</em> 13 (10). Springer Nature: R83. <a href="https://doi.org/10.1186/gb-2012-13-10-r83" class="uri">https://doi.org/10.1186/gb-2012-13-10-r83</a>.</p>
+</div>
+<div id="ref-Korthauer2018">
+<p>Korthauer, Keegan, Sutirtha Chakraborty, Yuval Benjamini, and Rafael A Irizarry. 2018. “Detection and Accurate False Discovery Rate Control of Differentially Methylated Regions from Whole Genome Bisulfite Sequencing.” <em>Biostatistics</em>, February. Oxford University Press (OUP). <a href="https://doi.org/10.1093/biostatistics/kxy007" class="uri">https://doi.org/10.1093/biostatistics/kxy007</a>.</p>
+</div>
+<div id="ref-Lavie2004">
+<p>Lavie, L., M. Kitova, E. Maldener, E. Meese, and J. Mayer. 2004. “CpG Methylation Directly Regulates Transcriptional Activity of the Human Endogenous Retrovirus Family HERV-K(HML-2).” <em>Journal of Virology</em> 79 (2). American Society for Microbiology: 876–83. <a href="https://doi.org/10.1128/jvi.79.2.876-883.2005" class="uri">https://doi.org/10.1128/jvi.79.2.876-883.2005</a>.</p>
+</div>
+<div id="ref-Leek2010">
+<p>Leek, Jeffrey T., Robert B. Scharpf, Héctor Corrada Bravo, David Simcha, Benjamin Langmead, W. Evan Johnson, Donald Geman, Keith Baggerly, and Rafael A. Irizarry. 2010. “Tackling the Widespread and Critical Impact of Batch Effects in High-Throughput Data.” <em>Nature Reviews Genetics</em> 11 (10). Springer Nature: 733–39. <a href="https://doi.org/10.1038/nrg2825" class="uri">https://doi.org/10.1038/nrg2825</a>.</p>
+</div>
+<div id="ref-Robinson2014">
+<p>Robinson, Mark D., Abdullah Kahraman, Charity W. Law, Helen Lindsay, Malgorzata Nowicka, Lukas M. Weber, and Xiaobei Zhou. 2014. “Statistical Methods for Detecting Differentially Methylated Loci and Regions.” <em>Frontiers in Genetics</em> 5 (September). Frontiers Media SA. <a href="https://doi.org/10.3389/fgene.2014.00324" class="uri">https://doi.org/10.3389/fgene.2014.00324</a>.</p>
+</div>
+<div id="ref-Smith2013">
+<p>Smith, Zachary D., and Alexander Meissner. 2013. “DNA Methylation: Roles in Mammalian Development.” <em>Nature Reviews Genetics</em> 14 (3). Springer Nature: 204–20. <a href="https://doi.org/10.1038/nrg3354" class="uri">https://doi.org/10.1038/nrg3354</a>.</p>
+</div>
+<div id="ref-Song2013">
+<p>Song, Qiang, Benjamin Decato, Elizabeth E. Hong, Meng Zhou, Fang Fang, Jianghan Qu, Tyler Garvin, Michael Kessler, Jun Zhou, and Andrew D. Smith. 2013. “A Reference Methylome Database and Analysis Pipeline to Facilitate Integrative and Comparative Epigenomics.” Edited by Osman El-Maarri. <em>PLoS ONE</em> 8 (12). Public Library of Science (PLoS): e81148. <a href="https://doi.org/10.1371/journal.pone.0081148" class="uri">https://doi.org/10.1371/journal.pone.0081148</a>.</p>
+</div>
+</div>
 </div>
 
 

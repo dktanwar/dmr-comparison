@@ -33,3 +33,5 @@ Comparison of statistical methods for the detection of differentially methylated
 
 ### Final report
 [Project report](https://github.com/sta426hs2018/sta426-project-dmr-comparison/blob/master/report/project_report.html)
+
+**NOTE:** Please download the whole repository, as there are several softlinks and links.
