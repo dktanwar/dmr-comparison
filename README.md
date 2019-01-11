@@ -12,19 +12,23 @@
 # STA426-project
 
 ### Title
-Comparison of new methods for detection of differentially methylated regions.
+Comparison of statistical methods for the detection of differentially methylated regions.
 
 
 ### Methods to be compared
 
-- [dmrseq](https://academic.oup.com/biostatistics/advance-article/doi/10.1093/biostatistics/kxy007/4899074) : R
-- [MethGO](https://methgo.readthedocs.io/en/latest/) : Python
-- [MethPipe](http://smithlabresearch.org/software/methpipe/) : C
-- [CGmapTools](https://cgmaptools.github.io/) : Python + C
-- [methylKit](https://www.bioconductor.org/packages/devel/bioc/vignettes/methylKit/inst/doc/methylKit.html) : R
-- [bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq.html) : R
+- [bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq.html)
+- [CGmapTools](https://cgmaptools.github.io/)
+- [defiant](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2037-1)
+- [DMRcaller](https://bioconductor.org/packages/release/bioc/html/DMRcaller.html)
+- [dmrseq](https://academic.oup.com/biostatistics/advance-article/doi/10.1093/biostatistics/kxy007/4899074)
+- [MethPipe](http://smithlabresearch.org/software/methpipe/)
+- [methylKit](https://www.bioconductor.org/packages/devel/bioc/vignettes/methylKit/inst/doc/methylKit.html)
 
 
 ### Data:
 - negative control data - two groups, each of three samples, from normal human dendritic cells ([data in GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177))
 - simulated data - simulated DMRs added to negative control by `simDMRS` function from `dmrseq` package ([docs](https://bioconductor.org/packages/release/bioc/vignettes/dmrseq/inst/doc/dmrseq.html#6_simulating_dmrs))
+
+### Final report
+link
