@@ -6,6 +6,7 @@
     - [Title](#title)
     - [Methods to be compared](#methods-to-be-compared)
     - [Data:](#data)
+    - [Final report:](#final-report)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
