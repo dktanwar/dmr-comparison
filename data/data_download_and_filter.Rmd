@@ -43,10 +43,10 @@ library(GEOquery)
 
 # Data
 
-For comparison, we are using the same data-set that was used in [`dmrseq` paper](http://dx.doi.org/10.1093/biostatistics/kxy007) from [Pacis _et. al._, 2015](https://genome.cshlp.org/content/25/12/1801). For our analysis, we are using only controls (n = 6). Sequenced data was submitted to Gene Expression Omnibus (GEO) as supplemental information and contains coverage and methylated counts for CpGs [GSE64177](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177). To be consistent with `dmrseq` paper, we also selected **Chr18** data for our analysis in this project.
+For comparison, we are using the same data-set that was used in [`dmrseq` paper](http://dx.doi.org/10.1093/biostatistics/kxy007) from [Pacis _et. al._, 2015](https://genome.cshlp.org/content/25/12/1801). For our analysis, we are using only controls (n = 6). Sequenced data was submitted to Gene Expression Omnibus (GEO) as supplemental information and contains coverage and methylated counts for CpGs [GSE64177](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177). We only selected data from **Chr18** for our analysis in this project.
 
 # Data download from GEO
-```{r}
+```{r }
 sfiles <- getGEOSuppFiles("GSE64177", makeDirectory = F)
 ```
 
@@ -54,14 +54,14 @@ sfiles <- getGEOSuppFiles("GSE64177", makeDirectory = F)
 # Extracting data
 
 ## Controls (Not Infected)
-```{r}
+```{r }
 # Extract the "Not Infected (NI)" files from `tar` and remove the `tar` file
 system("tar -xvf GSE64177_RAW.tar  --wildcards --no-anchored '*NI*' && rm -rf GSE64177_RAW.tar")
 ```
 
 
 ## Control data at Chr18
-```{r}
+```{r }
 files <- list.files(path = ".", pattern = ".gz", full.names = T)
 
 tmp <- lapply(files, function(x) {
@@ -76,7 +76,7 @@ tmp <- lapply(files, function(x) {
 
 
 # PhenoData table
-```{r}
+```{r }
 raw.files <- list.files(path = "./raw", pattern = ".gz", full.names = T)
 pData <- data.frame(files = basename(raw.files), 
                     files_sl = paste0("NC_rep", 1:length(raw.files), ".bed.gz"),
@@ -91,7 +91,7 @@ write.table(pData, gzfile("phenoData.txt.gz"), quote = F, sep = "\t")
 
 
 # Soft links of data
-```{r}
+```{r }
 system("mkdir -p soft_links")
 for(i in 1:nrow(pData)){
   f <- paste0("./raw/", pData$files[i])

@@ -44,14 +44,14 @@ link-citations: yes
 # Introduction{#introduction}
 ## DNA methylation{#dna_methylation}
 
-DNA methylation (DNAme) is a process by which methyl groups are added to the DNA molecule. Methylation could change the activity of the DNA without changing its code. It serves as a critical phenomenon to several biological functions and has a role in certain disease states. Further, DNAme is a privileged candidate for epigenetic inheritance due to its plasticity and stability across mitosis and meiosis. It is one of the major mechanisms of epigenetic modification and has a fundamental influence on gene expression, genomic stability and cellular activity [@Leek2010; @Lavie2004].
+DNA methylation (DNAme) is a process by which methyl groups are added to the DNA molecule. Methylation can change the activity of the DNA without changing its code. It serves as a critical phenomenon to several biological functions and has a role in certain disease states. Further, DNAme is a privileged candidate for epigenetic inheritance due to its plasticity and stability across mitosis and meiosis. It is one of the major mechanisms of epigenetic modification and has a fundamental influence on gene expression, genomic stability and cellular activity [@Lavie2004; @Leek2010]. The most commonly methylated bases are cytosines, methylated at the C5 position (resulting in 5-methylcytosine, 5-mC).
 
-With the advancement of next-generation (NGS) sequencing techniques, there are several methods for studying DNA methylation, but, few offer a better resolution of methylation status such as bisulfite sequencing (also known as Bisulfite-Seq, BS-Seq, Methyl-Seq or WGBS). The key idea of the method is combining the power of high-throughput DNA sequencing with the treatment of DNA with sodium bisulfite.
+With the advancement of next-generation sequencing (NGS) techniques, there are several methods for studying DNA methylation, the most prominent being bisulfite sequencing (also known as Bisulfite-Seq, BS-Seq, Methyl-Seq or WGBS). The key idea of the method is combining the power of high-throughput DNA sequencing with the treatment of DNA with sodium bisulfite.
 
 
 ## Whole Genome Bisulphite Sequencing{#whole_genome_bisulphite_sequencing}
 
-Whole Genome Bisulphite Sequencing (WGBS) is a gold standard NGS technique for studying DNAme in the genome of mammals. WGBS combines sodium bisulfite conversion of the DNA sequence with high throughput DNA sequencing. The sodium bisulfite reaction converts the unmethylated cytosines (C) to uracils (U), whereas, methylated C remains unchanged. These U are further converted to thymine (T) after the polymerase chain reaction (PCR). Although, no change occurs for methylated C. Methylcytosines are the methylated versions of the cytosine bases. This is done by transferring a methyl group onto the C5 position of the cytosine.
+Whole Genome Bisulphite Sequencing (WGBS) is a gold standard NGS technique for studying DNAme in the genome of mammals. WGBS combines sodium bisulfite conversion of the DNA sequence with high throughput DNA sequencing. The sodium bisulfite reaction converts the unmethylated cytosines (C) to uracils (U), which are further converted to thymine (T) after the polymerase chain reaction (PCR). However, no change occurs for methylated cytosines. 
 
 The aim of NGS-based DNA methylation analysis is to investigate genomic DNA and find out whether single cytosines or entire regions in the genome are methylated or not. WGBS is the most comprehensive sequencing for DNA methylation profiling, allowing single-base resolution of 5-mC within the whole genome. By comparing treated and untreated sequences, the location of the methylated cytosines is determined.
 
@@ -60,7 +60,7 @@ The aim of NGS-based DNA methylation analysis is to investigate genomic DNA and 
 
 - detection of differentially methylated regions (DMRs)
 
-- detection of differentially methylated locis (DMLs)
+- detection of differentially methylated loci (DMLs)
 
 - detection of copy number variations (CNVs)
 
@@ -70,7 +70,7 @@ The aim of NGS-based DNA methylation analysis is to investigate genomic DNA and 
 
 - detecting methylation level or distribution (globally, single nucleotide, chromosome-wide and gene-centric)
 
-Sequencing the whole genome is generally quite expensive. Therefore, although it has been applied to large genomes such as the human genome, large numbers of individual samples are seldom sequenced. Reduced representation bisulfite sequencing (RRBS) has been developed for this reason, in which the bisulfite reaction occurs but the sequencing is limited to around 1% of the genome. This enables the sequencing of the genome of several individuals.
+Sequencing the whole genome is generally quite expensive. Therefore, although it has been applied to large genomes such as the human genome, large numbers of individual samples are seldom sequenced. Reduced representation bisulfite sequencing (RRBS) has been developed for this reason, in which the bisulfite reaction occurs but the sequencing is limited to only about 1% of the genome. This enables the sequencing of the genome of several individuals.
 
 
 ## Basic pipeline for WGBS data analysis{#basic_pipeline_for_wgbs_data_analysis}
@@ -114,13 +114,13 @@ D->G[label = '  DMRs: identify regions']
 
 - Methods are greatly hindered by low sample size. Most of the methods depend on large sample sizes.
 
-- The number of tests performed = the number of loci analyzed. Example: Human genome has ~30 million CpGs [@Smith2013].
+- The number of tests performed = the number of loci analyzed. For example, human genome has ~30 million CpGs [@Smith2013].
 
 - Measurements are spatially correlated across the genome [@Leek2010], but in most methods measurements from all loci are treated independently.
 
 - Multiple testing corrections without considering the spatial correlation can result in a loss of power.
 
-- DMRs more biologically relevant than DMLs.
+- DMRs are more biologically relevant than DMLs.
 
 - DML approaches may construct DMRs by chaining together neighboring significant loci, but this type of approach will not yield a proper assessment of the statistical significance of the constructed regions, nor will the FDR be properly controlled [@Robinson2014].
 
@@ -132,7 +132,7 @@ D->G[label = '  DMRs: identify regions']
 
 - defining region boundaries
 
-- methods ignore correlation across loci
+- taking into account correlation across loci
 
 - biological variability from sample to sample
 
@@ -145,9 +145,9 @@ D->G[label = '  DMRs: identify regions']
 
 **Two data sets were used in this project.**
 
-**First**, representing negative control (with no expected DMRs), contained six methylation profiling samples from normal human dendritic cells ([data in GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177)). The samples were artificially divided into two groups of three samples, **Group1** consisting of samples [GSM1565940](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565940), [GSM1565944](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565944), and [GSM1565948](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565948), **Group2** consisting of samples [GSM1565942](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565942), [GSM1565946](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565946), and [GSM1565950](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565950). To obtain reasonable running times, only methylation data from chromosome 18 were used, similar to the `dmrseq` paper [@Korthauer2018].
+First, representing **negative control** (with no expected DMRs), contained six methylation profiling samples from normal human dendritic cells ([data in GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE64177)). The samples were artificially divided into two groups of three samples, **Group1** consisting of samples [GSM1565940](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565940), [GSM1565944](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565944), and [GSM1565948](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565948), **Group2** consisting of samples [GSM1565942](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565942), [GSM1565946](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565946), and [GSM1565950](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1565950). To obtain reasonable running times, only methylation data from chromosome 18 were used.
 
-The **second** set of data was created from the negative control by adding 100 simulated DMRs using `simDMRS` function from the R package `dmrseq`.
+The second set of data was created from the negative control by adding **100 simulated DMRs** using `simDMRS` function from the R package `dmrseq`.
 
 The reported DMRs were (if possible) filtered for only those that contain **at least 10 CpGs** and the **mean difference between the two groups is at least 0.1** (the simulated regions had **effect sizes between 0.163 and 0.450**).
 
@@ -155,7 +155,7 @@ The reported DMRs were (if possible) filtered for only those that contain **at l
 
 ## The methods used for comparison{#the_methods_used_for_comparison}
 
-In total **7 different methods** were used for the comparison. Their main features, as well as links to the analysis files are summarized in the [Table 1](#the_methods_used_for_comparison):
+In total **7 different methods** were used for the comparison. Their main features, as well as links to the analysis files are summarized in [Table 1](#the_methods_used_for_comparison):
 
 | **Methods**     | **Preprocessing + statistical test used** | **p-value estimate given** | **CpG / non CpG** | **Implementation** | **Reference** | **Availability** | **Analysis file** |
 |------------|-----------------------------------------------------------------------------------------|------------------------|---------------|-------------------------|-------------------------------|------------------------------------------------------------------------------------------------------|----------------|
@@ -176,7 +176,9 @@ In total **7 different methods** were used for the comparison. Their main featur
 # Results and discussion{#results_and_discussion}
 
 ## Diagnostic plots{#diagnostic_plots}
-Distribution of the coverage and beta values of all the samples, shown in [Figure 2A and Figure 2B](#coverage) and [Figure 3A and Figure 3B](#beta_values), respectively, depicts that there is not much difference between individual samples. Also, the PCA plot, [Figure 4A and Figure 4B](#pca_plots), shows that there is no clustering of the two artificially created groups.
+Distributions of the coverage and beta values of all the samples, shown in [Figure 2A and Figure 2B](#coverage) and [Figure 3A and Figure 3B](#beta_values), respectively, show the expected shape and confirm that there is not much difference between individual samples. Also the PCA plot, [Figure 4A and Figure 4B](#pca_plots), shows that there is no clustering of the two artificially created groups.
+
+The code together with other diagnostic plots can be found [here](./input/reports/coverage_plots.html).
 
 ### Coverage {#coverage .tabset .tabset-pills}
 
@@ -224,14 +226,14 @@ Distribution of the coverage and beta values of all the samples, shown in [Figur
 <center><div id="center">Figure 4B. PCA plot of simulated data.</div></center>
 
 
-More diagnostic plots can be found [here](./input/reports/coverage_plots.html).
+
 
 
 
 ## DMRs identified by the methods{#dmrs_identified_by_the_methods}
-There was no single region that would all methods overlap by at least 1bp. 
+There was no single simulated DMR that would be identified by all methods (with overlap at least 1 bp between the identified and true DMR being considered as correct identification). 
 
-[Figure 5](#dmrs_identified_by_the_methods) shows one simulated DMR, generated as described in the [Data section](#data). This region has the highest delta (methylation difference) value in the list of all generated DMRs (0.447). This region was identified as DMR by 6 methods (not identified by methpipe; also not identified by DMRcaller bins method).
+[Figure 5](#dmrs_identified_by_the_methods) shows one example of a simulated DMR, generated as described in the [Data section](#data). This region has the highest delta (methylation difference) value in the list of all generated DMRs (0.447). This region was identified as DMR by 6 out of 7 methods (not identified by methpipe; also not identified by DMRcaller bins sub-method).
 
 
 <figure>
@@ -247,11 +249,11 @@ There was no single region that would all methods overlap by at least 1bp.
 Similar plots for all 100 simulated DMRS are shown in [this report](./input/reports/regions_plot.html#5_regions_plot_simulated_data).
 
 ## Comparison of different methods{#comparison_of_different_methods}
-We considered any overlap between the simulated and identified DMRs to be sufficient for the region to be classified as true positive.Details of computing true positives and false positives are described in [this report](./input/reports/comparison_plots.html#422_ways_of_computing_tps_and_fps).
+We considered any overlap between the simulated and identified DMRs to be sufficient for the region to be classified as true positive. Details of computing true positives and false positives, as well as reasons for choosing any overlap to be sufficient, are described in [this report](./input/reports/comparison_plots.html#422_ways_of_computing_tps_and_fps).
 
 
 ### Negative Control{#negative_control .tabset .tabset-dropdown}
-As per negative control, we do not expect any true DMRs, all the identified regions are thus false positives. dmrseq and defiant methods did not find any DMRs in the negative control data, whereas others did, as shown in [Figure 6 and Table 2](#negative_control).
+As per negative control, we do not expect any true DMRs, all the identified regions are thus false positives. `dmrseq` and `defiant` methods did not find any DMRs in the negative control data, whereas others did, as shown in [Figure 6 and Table 2](#negative_control).
 
 #### Barplot
 <iframe src="./input/figures/barplot_num_regions_NC.html" width="100%" height="750" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
@@ -270,7 +272,9 @@ As per negative control, we do not expect any true DMRs, all the identified regi
 ### Simulated Data{#simulated_data}
 
 #### FDR vs Power{#fdr_vs_power}
-[Figure 7](#fdr_vs_power) shows that dmrseq performs better than the other methods. On x axis is the observed FDR, on y axis the power, both for different specified FDR cut-offs. The computation of FDR and power is described [here](./input/reports/comparison_plots.html#422_ways_of_computing_tps_and_fps).
+[Figure 7](#fdr_vs_power) shows the plot of observed FDR (on x axis) vs power (on y axis), computed for several specified FDR cut-offs. We see that `dmrseq` performs the best of all the methods. 
+
+The computation of FDR and power as well as the code for generating the plot is described [here](./input/reports/comparison_plots.html#422_ways_of_computing_tps_and_fps).
 
 
 <iframe src="./input/figures/fdr_power_any.html" width="110%" height="700" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
@@ -280,8 +284,11 @@ As per negative control, we do not expect any true DMRs, all the identified regi
 <br>
 
 #### FDR: Specified vs Observed{#fdr:_specified_vs_observed}
-We have also checked how well the methods control FDR, [Figure 8](#fdr:_specified_vs_observed). For this, we plotted the observed FDR (the proportion of false discoveries) and the specified FDR (cutoff after multiple testing correction by BH). We can see that dmrseq again outperforms the other methods.
+We have also checked how well the methods control FDR, [Figure 8](#fdr:_specified_vs_observed). For this, we plotted the observed FDR (the proportion of false discoveries) and the specified FDR (cutoff after multiple testing correction by BH). Ideally, the lines should follow the diagonal or be below it. We can see that `dmrseq` again outperforms the other methods. `DMRcaller` noise-filtering methods (`epanechnicov`, `gaussian`, `triangular` and `uniform`) are also under the diagonal most of the time, however, the observed FDR does not change for different specified FDRs. Most of the methods do not react to changes in specified FDR for higher values, which may be just because the authors did not expect the user to require as high FDR values (in our case, specified FDR values were up to 0.9).
  
+BSseq and methpipe do not allow user control of FDR, and are thus not depicted in [Figure 8](#fdr:_specified_vs_observed). 
+ 
+More comparison plots as well as the code can be found [in this report](./input/reports/comparison_plots.html). 
  
 <iframe src="./input/figures/fdr_obs_specified.html" width="110%" height="700" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 <center><div id="center">Figure 8. FDR: Specified vs Observed.</div></center>
@@ -289,15 +296,15 @@ We have also checked how well the methods control FDR, [Figure 8](#fdr:_specifie
 <br>
 <br>
  
-BSseq and methpipe do not allow user control of FDR, and are thus not depicted in the Figureure. 
- 
-More comparison plots as well as the code can be found [in this report](./input/reports/comparison_plots.html).
+
 
 
 # Conclusion{#conclusion}
-In this project, we wanted to compare the methods for identification of DMRs, which were not compared in the **dmrseq paper** [@Korthauer2018]. We used nearly all methods available, except the ones which do not have a proper statistical description or have not been updated for a long time. We found that dmrseq outperforms all the methods that we compared. This is especially important when we take into acccount that we used just 3 samples per group, which is the most one can hope for in the real experiments (due to the high cost of WGBS). But, it has to be mentioned that the data we used were the same as in the original **dmrseq paper** [@Korthauer2018] and that the simulated DMRs were created using a function which is a part of the dmrseq method. It would be nice and useful to repeat the experiment with some independently generated data.
+In this project, we wanted to compare the methods for identification of DMRs, which were not compared in the dmrseq paper [@Korthauer2018]. We used nearly all methods available, except the ones which do not have a proper statistical description or have not been updated for a long time. All the methods were well documented and were easy to use for a non-experienced user, except for `CGmapTools`, where the documentation was not clear. 
 
-All the methods were well documented and were easy to use for a non-experienced user, except for CGmapTools, where the documentation was not clear. 
+We have found that `dmrseq` outperforms all the methods that we compared. This is especially important when we take into acccount that we used just 3 samples per group, which is the most one can hope for in the real experiments (due to the high cost of WGBS). But, it has to be mentioned that the data we used were the same as in the original dmrseq paper [@Korthauer2018] and that the simulated DMRs were created using a function which is a part of the `dmrseq` package. It would be nice and useful to repeat the experiment with some independently generated data.
+
+
 
 
 # References

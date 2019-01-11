@@ -191,11 +191,12 @@ meta_GR_overlap <- function(gr1, gr2) {
 
 ### Ways of computing TPs and FPs
 Three different ways of computing true positive, false positive and false negative DMRs were used:
+
 1. **Any overlap:** A detected DMR is considered to be true positive ($TP_d$) if it has any overlap with any simulated DMR. A detected DMR is considered to be false positive ($FP_d$) if it has no overlap with any simulated DMR. A simulated DMR is considered correctly identified ($TP_s$) if it has any overlap with any detected DMR.
 
 2. **Threshold:** A detected DMR is classified as $TP_d$ if it is overlapped by at least $x$ % of its length by one or more simulated regions, $x$ is a selected threshold (80 % in our case). Otherwise it is classified as $FP_d$. Similarly, a simulated DMR is classified as $TP_s$ it is covered by at least $x$ % by one or more detected DMRs.
 
-3. **Proportional:** If a detected DMR is covered by $x*100$ % of its length by a simulated DMR (and by $(1-x)*100 $ % it is not covered by any simulated DMR), then it adds $x$ to $TP_d$ and $1-x$ to $FP_d$. Similarly, if a simulated DMR is detected from $x*100$ %, then it adds $x$ to $TP_s$.
+3. **Proportional:** If a detected DMR is covered by $x*100$ % of its length by a simulated DMR (and by (1-x)$*$100 % it is not covered by any simulated DMR), then it adds $x$ to $TP_d$ and $1-x$ to $FP_d$. Similarly, if a simulated DMR is detected from $x*100$ %, then it adds $x$ to $TP_s$.
 
 Observed false discovery rate (FDR) is then computed as $FDR = FP_d / (FP_d + TP_d)$, power is computed as $p = TP_s / 100$ (because there is 100 simulated DMRs in total).
 
@@ -600,6 +601,7 @@ ggplotly(ggplot(data.nuc, aes(x=obs.fdr, y=power, color=method, group=method)) +
   xlim(0,1) + ylim(0,1))
 ```
 
+Also when looking at individual nucleotides, the results of `dmrseq` are the best from all methods. Thus, the fact that `dmrseq` tends to report longer regions than the other methods does not seem to be the reason of its good performance.
 
 # Move html figures to output
 
