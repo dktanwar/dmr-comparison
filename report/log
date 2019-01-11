@@ -5,34 +5,23 @@ output file: project_report.knit.md
 
 
 Output created: project_report.html
-   |                                                                 |   0%  |                                                                         |...........                                                      |  17%
+   |                                                                 |   0%  |                                                                         |................                                                 |  25%
    inline R code fragments
 
-  |                                                                         |......................                                           |  33%
-label: unnamed-chunk-1 (with options) 
-List of 3
- $ warning: symbol F
- $ message: logi FALSE
- $ echo   : logi FALSE
-
   |                                                                         |................................                                 |  50%
-  ordinary text without R code
+label: unnamed-chunk-1 (with options) 
+List of 6
+ $ echo      : symbol T
+ $ message   : symbol F
+ $ fig.align : chr "center"
+ $ fig.height: num 5
+ $ fig.width : num 6
+ $ fig.cap   : chr "Figure 1. Basic pipeline for WGBS data analysis."
 
-  |                                                                         |...........................................                      |  67%
-label: unnamed-chunk-2 (with options) 
-List of 7
- $ echo         : symbol F
- $ message      : symbol F
- $ Figureure    : symbol T
- $ Figure.align : chr "center"
- $ Figure.height: num 5
- $ Figure.width : num 6
- $ Figure.cap   : chr "Figure 1. Basic pipeline for WGBS data analysis."
-
-  |                                                                         |......................................................           |  83%
+  |                                                                         |.................................................                |  75%
   ordinary text without R code
 
   |                                                                         |.................................................................| 100%
-label: unnamed-chunk-3
+label: unnamed-chunk-2
 
-/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS project_report.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output project_report.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 5 --variable toc_float=1 --variable toc_selectors=h1,h2,h3,h4,h5 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --variable 'theme:spacelab' --include-in-header /tmp/RtmphVRYhN/rmarkdown-str68dc7e76eb76.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS project_report.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output project_report.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 5 --variable toc_float=1 --variable toc_selectors=h1,h2,h3,h4,h5 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --variable 'theme:spacelab' --include-in-header /tmp/RtmpV07983/rmarkdown-str6a802619ac28.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 

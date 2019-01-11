@@ -23,9 +23,6 @@ output:
   documentclass: article
 ---
 
-```{r, warning=F, message=FALSE, echo=FALSE}
-```
-
 
 # Introduction{#introduction}
 ## DNA methylation{#dna_methylation}
