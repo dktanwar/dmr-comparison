@@ -1,0 +1,27 @@
+
+
+processing file: project_report.Rmd
+output file: project_report.knit.md
+
+
+Output created: project_report.html
+Warning message:
+MathJax doesn't work with self_contained when not using the rmarkdown "default" template. 
+                                             |......................                                           |  33%
+   inline R code fragments
+
+  |                                                                         |...........................................                      |  67%
+label: unnamed-chunk-1 (with options) 
+List of 6
+ $ echo      : symbol T
+ $ message   : symbol F
+ $ fig.align : chr "center"
+ $ fig.height: num 5
+ $ fig.width : num 6
+ $ fig.cap   : chr "Figure 1. Basic pipeline for WGBS data analysis."
+
+  |                                                                         |.................................................................| 100%
+  ordinary text without R code
+
+
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS project_report.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output project_report.html --email-obfuscation none --self-contained --mathjax --variable 'mathjax-url:https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable 'lightbox:true' --variable 'thumbnails:true' --variable 'gallery:false' --standalone --section-divs --table-of-contents --toc-depth 2 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmdformats/templates/readthedown/readthedown.html --highlight-style tango --variable 'theme:bootstrap' --include-in-header /tmp/RtmpuUACxR/rmarkdown-str76b531f98030.html --variable code_folding=show --variable code_menu=1 --filter /home/ubuntu/softwares/miniconda2/bin/pandoc-citeproc 
