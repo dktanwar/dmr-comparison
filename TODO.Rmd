@@ -1,0 +1,63 @@
+---
+title: "TODO"
+output: html_notebook
+---
+
+
+# Simulations
+1. WGBSuite
+2. [omics simla](https://omicssimla.sourceforge.io/WGBSinput.html)
+3. Other data to simulate
+
+
+# Methods
+1. BiSeq
+2. MOABS
+3. QDMR
+4. CpG_MPs
+5. SMART
+6. [informME](https://github.com/GarrettJenkinson/informME)
+7. Other tools as well which were already compared with dmrseq
+
+
+# Reproducibility
+1. Docker container if possible
+2. Outside tools with the repo in a new tools/ softwares folder
+
+
+# RRBS
+1. Simulated RRBS data
+2. Same tools on RRBS
+3. Same plots
+
+# Mark
+- New paper he is reviewing
+
+
+# Manuscript
+
+## Title
+Evaluation of tools to identify differentially methylated regions
+
+## Abstract
+
+## Introduction
+
+#### WGBS
+#### RRBS
+#### 
+
+## Data
+
+## Methods
+
+## Results
+
+## Discussion
+
+## Conclusion
+
+# Authors
+1. Deepak Tanwar
+2. Hana Parizkova
+3. Mark Robinson
