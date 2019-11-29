@@ -1,37 +1,52 @@
 ---
 title: "TODO"
 output: html_notebook
+author: Deepak Tanwar
+editor_options: 
+  chunk_output_type: inline
 ---
 
 
 # Simulations
-1. WGBSuite
+1. [WGBSuite](http://www.wgbssuite.org.uk/)
 2. [omics simla](https://omicssimla.sourceforge.io/WGBSinput.html)
-3. Other data to simulate
+3. [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html)
+4. [Sherman](https://github.com/FelixKrueger/Sherman/blob/master/Sherman_User_Manual.md)
 
 
 # Methods
-1. BiSeq
-2. MOABS
-3. QDMR
-4. CpG_MPs
-5. SMART
+1. [BiSeq](https://bioconductor.org/packages/release/bioc/html/BiSeq.html)
+2. [MOABS](https://github.com/sunnyisgalaxy/moabs)
+3. [QDMR](http://bioinfo.hrbmu.edu.cn/qdmr/)
+4. [CpG_MPs](https://github.com/Kinspact/CpG_MPs)
+5. [SMART2](http://fame.edbc.org/smart/index.html)
 6. [informME](https://github.com/GarrettJenkinson/informME)
-7. Other tools as well which were already compared with dmrseq
+7. [DSS](http://bioconductor.org/packages/release/bioc/html/DSS.html)
+8. [metilene](https://www.bioinf.uni-leipzig.de/Software/metilene/)
+9. [bsseq](https://bioconductor.org/packages/release/bioc/html/bsseq.html)
+10. [CGmapTools](https://cgmaptools.github.io/)
+11. [defiant](https://github.com/hhg7/defiant)
+12. [DMRcaller](https://bioconductor.org/packages/release/bioc/html/DMRcaller.html)
+13. [methPipe](http://smithlabresearch.org/software/methpipe/)
+14. [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html)
+15. [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html)
 
 
 # Reproducibility
-1. Docker container if possible
-2. Outside tools with the repo in a new tools/ softwares folder
+Docker container
 
 
-# RRBS
-1. Simulated RRBS data
-2. Same tools on RRBS
-3. Same plots
+# Templates/ References
 
-# Mark
-- New paper he is reviewing
+1. Mark was reviewing a paper in September with 
+2. [10.1093/bib/bbx013](./references/papers/bbx013.pdf)
+3. [10.1186/s13059-019-1811-3](./references/papers/s13059-019-1811-3.pdf)
+4. [10.1186/s13059-019-1738-8](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1738-8)
+
+<!-- # RRBS -->
+<!-- 1. Simulated RRBS data -->
+<!-- 2. Same tools on RRBS -->
+<!-- 3. Same plots -->
 
 
 # Manuscript
@@ -44,8 +59,6 @@ Evaluation of tools to identify differentially methylated regions
 ## Introduction
 
 #### WGBS
-#### RRBS
-#### 
 
 ## Data
 
@@ -57,7 +70,7 @@ Evaluation of tools to identify differentially methylated regions
 
 ## Conclusion
 
-# Authors
-1. Deepak Tanwar
-2. Hana Parizkova
-3. Mark Robinson
+# Contributors
+1. **Deepak Tanwar**: Data analysis
+2. **Hana Parizkova**: Data analysis
+3. **Mark Robinson**: Advisor
