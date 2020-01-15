@@ -1,5 +1,5 @@
 ---
-title: "TODO"
+title: "Notebook"
 output: html_notebook
 author: Deepak Tanwar
 editor_options: 
@@ -30,6 +30,9 @@ editor_options:
 13. [methPipe](http://smithlabresearch.org/software/methpipe/)
 14. [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html)
 15. [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html)
+16. [MethylSeekR](https://bioconductor.org/packages/release/bioc/html/MethylSeekR.html)
+17. [RnBeads 2.0](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1664-9)?
+18. [DMAP](https://academic.oup.com/bioinformatics/article/30/13/1814/2422202)
 
 
 # Reproducibility
@@ -71,6 +74,11 @@ Evaluation of tools to identify differentially methylated regions
 ## Conclusion
 
 # Contributors
-1. **Deepak Tanwar**: Data analysis
-2. **Hana Parizkova**: Data analysis
-3. **Mark Robinson**: Advisor
+1. **Deepak Tanwar**
+2. **Stefan Milosavljevic**
+3. **Hana Parizkova**
+4. **Stephany Orjuela**
+5. **Izaskun Mallona**
+6. **Kentaro Shimizu**
+7. **Isabelle Mansuy**
+8. **Mark Robinson**
