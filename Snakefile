@@ -15,7 +15,7 @@ sim_data = os.path.normpath(config["SIM_DATA"]) + "/"
 
 rule all:
     input:
-        data + "data_download_and_filter.html"
+        sim_data + "20181125-01-filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html"
 
 ############################### Workflow rules ###############################
 
