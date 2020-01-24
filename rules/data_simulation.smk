@@ -5,7 +5,7 @@ rule simulate_filter_data:
     output:
         sim_data + "20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html"
     log:
-        sim_data + "20181125-01-filter_simulated_data/log"
+        sim_data + "20181125-01_filter_simulated_data/log"
     conda:
         "../envs/environment_R.yaml"
     shell:
