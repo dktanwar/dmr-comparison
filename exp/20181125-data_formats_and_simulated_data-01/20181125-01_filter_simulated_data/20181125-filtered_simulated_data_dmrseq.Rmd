@@ -125,7 +125,7 @@ write.table(sim.dmr,
 ```
 
 
-## Saving data in same format as of Negatie Control
+## Saving data in same format as of Negative Control
 ```{r}
 # Re-arrange the data
 sim <- bs.sim$bs

@@ -1,4 +1,5 @@
 
 ######################### Important paths #########################
 
-DATA: /Users/ste/OneDrive/PhD/dmr-comparison/data
+DATA: data/
+SIM_DATA: exp/20181125-data_formats_and_simulated_data-01/
