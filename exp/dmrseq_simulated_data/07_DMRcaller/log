@@ -1,26 +1,7 @@
 
 
-processing file: dmrcaller.Rmd
-
-Attaching package: 'dplyr'
-
-The following objects are masked from 'package:stats':
-
-    filter, lag
-
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: 'data.table'
-
-The following objects are masked from 'package:dplyr':
-
-    between, first, last
-
-Loading required package: GenomicRanges
-Loading required package: stats4
+processing file: 20181125-filtered_simulated_data_dmrseq.Rmd
+Loading required package: bsseq
 Loading required package: BiocGenerics
 Loading required package: parallel
 
@@ -32,126 +13,153 @@ The following objects are masked from 'package:parallel':
     clusterExport, clusterMap, parApply, parCapply, parLapply,
     parLapplyLB, parRapply, parSapply, parSapplyLB
 
-The following objects are masked from 'package:dplyr':
-
-    combine, intersect, setdiff, union
-
 The following objects are masked from 'package:stats':
 
     IQR, mad, sd, var, xtabs
 
 The following objects are masked from 'package:base':
 
-    anyDuplicated, append, as.data.frame, basename, cbind,
-    colMeans, colnames, colSums, dirname, do.call, duplicated,
-    eval, evalq, Filter, Find, get, grep, grepl, intersect,
-    is.unsorted, lapply, lengths, Map, mapply, match, mget, order,
-    paste, pmax, pmax.int, pmin, pmin.int, Position, rank, rbind,
-    Reduce, rowMeans, rownames, rowSums, sapply, setdiff, sort,
-    table, tapply, union, unique, unsplit, which, which.max,
-    which.min
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which, which.max, which.min
 
+Loading required package: GenomicRanges
+Loading required package: stats4
 Loading required package: S4Vectors
 
 Attaching package: 'S4Vectors'
-
-The following objects are masked from 'package:data.table':
-
-    first, second
-
-The following objects are masked from 'package:dplyr':
-
-    first, rename
 
 The following object is masked from 'package:base':
 
     expand.grid
 
 Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Loading required package: SummarizedExperiment
+Loading required package: Biobase
+Welcome to Bioconductor
 
-Attaching package: 'IRanges'
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
 
-The following object is masked from 'package:data.table':
+Loading required package: DelayedArray
+Loading required package: matrixStats
+
+Attaching package: 'matrixStats'
+
+The following objects are masked from 'package:Biobase':
+
+    anyMissing, rowMedians
+
+Loading required package: BiocParallel
+
+Attaching package: 'DelayedArray'
+
+The following objects are masked from 'package:matrixStats':
+
+    colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
+
+The following objects are masked from 'package:base':
+
+    aperm, apply, rowsum
+
+
+Attaching package: 'data.table'
+
+The following object is masked from 'package:SummarizedExperiment':
 
     shift
 
-The following objects are masked from 'package:dplyr':
+The following object is masked from 'package:GenomicRanges':
 
-    collapse, desc, slice
+    shift
 
-Loading required package: GenomeInfoDb
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 516095 records
-Read 575485 records
-Read 575485 records
-Read 575485 records
-Read 575485 records
-Read 575485 records
-Read 575485 records
-output file: dmrcaller.knit.md
+The following object is masked from 'package:IRanges':
+
+    shift
+
+The following objects are masked from 'package:S4Vectors':
+
+    first, second
+
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+✔ tibble  2.1.3     ✔ dplyr   0.8.4
+✔ tidyr   1.0.2     ✔ stringr 1.4.0
+✔ readr   1.3.1     ✔ forcats 0.4.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::between()    masks data.table::between()
+✖ dplyr::collapse()   masks IRanges::collapse()
+✖ dplyr::combine()    masks bsseq::combine(), Biobase::combine(), BiocGenerics::combine()
+✖ dplyr::count()      masks matrixStats::count()
+✖ dplyr::desc()       masks IRanges::desc()
+✖ tidyr::expand()     masks S4Vectors::expand()
+✖ dplyr::filter()     masks stats::filter()
+✖ dplyr::first()      masks data.table::first(), S4Vectors::first()
+✖ dplyr::lag()        masks stats::lag()
+✖ dplyr::last()       masks data.table::last()
+✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
+✖ purrr::reduce()     masks GenomicRanges::reduce(), IRanges::reduce()
+✖ dplyr::rename()     masks S4Vectors::rename()
+✖ purrr::simplify()   masks DelayedArray::simplify()
+✖ dplyr::slice()      masks IRanges::slice()
+✖ purrr::transpose()  masks data.table::transpose()
+Warning: stack imbalance in 'for', 42 then 41
+Warning: stack imbalance in 'withVisible', 36 then 35
+output file: 20181125-filtered_simulated_data_dmrseq.knit.md
 
 
-Output created: dmrcaller.html
-                       |  18%
-label: unnamed-chunk-2
-  |                                                                         |...............                                                  |  23%
+Output created: 20181125-filtered_simulated_data_dmrseq.html
+                                                   |.............                                                         |  18%
+label: 20181125-filtered-simulated-data-dmrseq-2
+  |                                                                              |................                                                      |  23%
   ordinary text without R code
 
-  |                                                                         |..................                                               |  27%
-label: unnamed-chunk-3
-  |                                                                         |.....................                                            |  32%
+  |                                                                              |...................                                                   |  27%
+label: 20181125-filtered-simulated-data-dmrseq-3
+  |                                                                              |......................                                                |  32%
   ordinary text without R code
 
-  |                                                                         |........................                                         |  36%
-label: unnamed-chunk-4
-  |                                                                         |...........................                                      |  41%
+  |                                                                              |.........................                                             |  36%
+label: 20181125-filtered-simulated-data-dmrseq-4
+  |                                                                              |.............................                                         |  41%
   ordinary text without R code
 
-  |                                                                         |..............................                                   |  45%
-label: unnamed-chunk-5
-  |                                                                         |................................                                 |  50%
+  |                                                                              |................................                                      |  45%
+label: 20181125-filtered-simulated-data-dmrseq-5
+  |                                                                              |...................................                                   |  50%
   ordinary text without R code
 
-  |                                                                         |...................................                              |  55%
-label: unnamed-chunk-6
-  |                                                                         |......................................                           |  59%
+  |                                                                              |......................................                                |  55%
+label: 20181125-filtered-simulated-data-dmrseq-6
+  |                                                                              |.........................................                             |  59%
   ordinary text without R code
 
-  |                                                                         |.........................................                        |  64%
-label: unnamed-chunk-7 (with options) 
-List of 2
- $ echo   : logi FALSE
- $ include: logi FALSE
-
-  |                                                                         |............................................                     |  68%
+  |                                                                              |.............................................                         |  64%
+label: 20181125-filtered-simulated-data-dmrseq-7
+  |                                                                              |................................................                      |  68%
   ordinary text without R code
 
-  |                                                                         |...............................................                  |  73%
-label: unnamed-chunk-8 (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |..................................................               |  77%
+  |                                                                              |...................................................                   |  73%
+label: 20181125-filtered-simulated-data-dmrseq-8
+  |                                                                              |......................................................                |  77%
   ordinary text without R code
 
-  |                                                                         |.....................................................            |  82%
-label: unnamed-chunk-9 (with options) 
-List of 1
- $ results: chr "asis"
-
-  |                                                                         |........................................................         |  86%
+  |                                                                              |.........................................................             |  82%
+label: 20181125-filtered-simulated-data-dmrseq-9
+  |                                                                              |............................................................          |  86%
   ordinary text without R code
 
-  |                                                                         |...........................................................      |  91%
-label: unnamed-chunk-10
-  |                                                                         |..............................................................   |  95%
+  |                                                                              |................................................................      |  91%
+label: 20181125-filtered-simulated-data-dmrseq-10
+  |                                                                              |...................................................................   |  95%
   ordinary text without R code
 
-  |                                                                         |.................................................................| 100%
-label: unnamed-chunk-11
+  |                                                                              |......................................................................| 100%
+label: 20181125-filtered-simulated-data-dmrseq-11
 
-/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS dmrcaller.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output dmrcaller.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmplwTZ15/rmarkdown-str4e401e4bc287.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 
+/home/ubuntu/softwares/anaconda3/bin/pandoc +RTS -K512m -RTS 20181125-filtered_simulated_data_dmrseq.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output 20181125-filtered_simulated_data_dmrseq.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /mnt/IM/tmp//RtmpRutIj9/rmarkdown-str3de738e3e3ea.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
