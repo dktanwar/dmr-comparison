@@ -15,24 +15,61 @@ editor_options:
 
 
 # Methods
-1. [BiSeq](https://bioconductor.org/packages/release/bioc/html/BiSeq.html)
-2. [MOABS](https://github.com/sunnyisgalaxy/moabs)
-3. [QDMR](http://bioinfo.hrbmu.edu.cn/qdmr/)
-4. [CpG_MPs](https://github.com/Kinspact/CpG_MPs)
-5. [SMART2](http://fame.edbc.org/smart/index.html)
-6. [informME](https://github.com/GarrettJenkinson/informME)
-7. [DSS](http://bioconductor.org/packages/release/bioc/html/DSS.html)
-8. [metilene](https://www.bioinf.uni-leipzig.de/Software/metilene/)
-9. [bsseq](https://bioconductor.org/packages/release/bioc/html/bsseq.html)
-10. [CGmapTools](https://cgmaptools.github.io/)
-11. [defiant](https://github.com/hhg7/defiant)
-12. [DMRcaller](https://bioconductor.org/packages/release/bioc/html/DMRcaller.html)
-13. [methPipe](http://smithlabresearch.org/software/methpipe/)
-14. [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html)
-15. [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html)
-16. [MethylSeekR](https://bioconductor.org/packages/release/bioc/html/MethylSeekR.html)
-17. [RnBeads 2.0](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1664-9)?
-18. [DMAP](https://academic.oup.com/bioinformatics/article/30/13/1814/2422202)
+
+## Fitting the benchmark
+
+|        | Language | Paper | Last update |
+|:-----:|:------------:|:-----:|:-----------:|
+| [ABBA](http://abba.systems-genetics.net/) | Perl, R | [Rackham et al. (2017)](https://doi.org/10.1534/genetics.116.195008) | March 2017 | 
+| [BiSeq](https://bioconductor.org/packages/release/bioc/html/BiSeq.html) | R  | -  | |
+| [bsseq](https://bioconductor.org/packages/release/bioc/html/bsseq.html) | | | |
+| [bumphunter](https://bioconductor.org/packages/release/bioc/html/bumphunter.html)? | R | [Jaffe et al. (2012)](https://doi.org/10.1093/ije/dyr238) | October 2019 |
+| [CGmapTools](https://cgmaptools.github.io/) | | | |
+| [CpG_MPs](https://github.com/Kinspact/CpG_MPs) | | | | 
+| [defiant](https://github.com/hhg7/defiant) | | | |
+| [DSS](http://bioconductor.org/packages/release/bioc/html/DSS.html) | | | |
+| [DMAP](https://academic.oup.com/bioinformatics/article/30/13/1814/2422202) | | | |
+| [DMRcaller](https://bioconductor.org/packages/release/bioc/html/DMRcaller.html) | | | |
+| [DMRfinder](https://github.com/jsh58/DMRfinder#misc) | R | [Gaspar et al. (2017)](https://doi.org/10.1186/s12859-017-1909-0) | April 2019 |
+| [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html) | | | |
+| [eDMR](https://github.com/ShengLi/edmr) | R | [Li et al. (2013)](https://doi.org/10.1186/1471-2105-14-S5-S10) | February 2017 |
+| [GetisDMR](https://github.com/DMU-lilab/GetisDMR) | C++ | [Wen et al. (2016)](https://doi.org/10.1093/bioinformatics/btw497) | April 2016 |
+| [HMM-DM](https://github.com/xxy39/HMM-DM)| R | [Yu et al. (2016)](https://doi.org/10.1515/sagmb-2015-0077) | March 2016 |
+| [HMM-Fisher](https://github.com/xxy39/HMM-Fisher) | R | [Yu et al. 2016](https://doi.org/10.1515/sagmb-2015-0076) | February 2016 |
+| [informME](https://github.com/GarrettJenkinson/informME) | | | |
+| [M3D](https://bioconductor.org/packages/release/bioc/html/M3D.html) | R | - | October 2019 |
+| [MethCP](https://github.com/boyinggong/MethCP) | R | [Gong et al. (2019)](https://doi.org/10.1101/265116 ) | October 2019 |
+| [methPipe](http://smithlabresearch.org/software/methpipe/) | | | |
+| [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html) | | | |
+| [methylPy](https://github.com/yupenghe/methylpy) | Python | [Schultz et al. (2015)](https://doi.org/10.1038/nature14465) | January 2020 |
+| [MethylSeekR](https://bioconductor.org/packages/release/bioc/html/MethylSeekR.html) | | | |
+| [methylSig](https://github.com/sartorlab/methylSig) | R | [Park et al. (2014)](https://doi.org/10.1093/bioinformatics/btu339) | January 2019 |
+| [metilene](https://www.bioinf.uni-leipzig.de/Software/metilene/) | | | |
+| [MOABS](https://github.com/sunnyisgalaxy/moabs) | | | |
+| [RnBeads 2.0](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1664-9)? | | | |
+| [SMAP](https://github.com/hellbelly/SMAPdigger) | Perl | [Gao et al. (2015)](https://doi.org/10.1186/s13742-015-0070-9) | July 2018 |
+| [SMART2](http://fame.edbc.org/smart/index.html) | | | |
+| [swDMR](https://github.com/xflicsu/swdmr) | Perl | [Wang et al. (2015)]( https://doi.org/10.1371/journal.pone.0132866) | March 2017 |
+| [QDMR](http://bioinfo.hrbmu.edu.cn/qdmr/) | | | |
+
+## Not fitting the benchmark
+
+|      |  Reasons why package was not included | Last update |
+|:-----:|:------------------------------------------:|:----------------------:|
+| [bisulfighter](https://github.com/yutaka-saito/Bisulfighter) | Pipeline includes `bsf-diff` to spot DMRs but the author say they're not going to provide details about it, also looks abandoned | September 2015 |
+| [COHCAP](http://www.bioconductor.org/packages/release/bioc/html/COHCAP.html)| Focuses on CpGs island analysis, doesn't support all methylation contexts | October 2019 |
+| [EBADIMEX](https://github.com/TobiasMadsen/ebadimex) | Detects both differential methylation and differential expression together | September 2018 |
+| [gemBS](https://github.com/heathsc/gemBS) | Pipeline that doesn't include any DMR detection algorithm | December 2019 |
+| [MACAU](http://www.xzlab.org/software.html) | Needs kinship matrix to find DMRs | September 2019 |
+| [MethGO](http://paoyangchen-laboratory.github.io/methgo/) | Doesn't include DMR detection algorithm | April 2017 |
+| [MethylMnM](http://www.bioconductor.org/packages/release/bioc/html/methylMnM.html) | Supports only MeDIP-seq and MRE-seq data | October 2019 |
+| [RefFreeDMA](https://github.com/jklughammer/RefFreeDMA) | Supports only RRBS protocol | November 2019 |
+
+
+
+
+
+
 
 
 # Reproducibility
