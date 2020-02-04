@@ -23,7 +23,7 @@ output:
 ---
 
 # Packages required
-```{r, message=F, warning=F}
+```{r 20181125-filtered-simulated-data-dmrseq-1, message=F, warning=F}
 library(dmrseq)
 library(data.table)
 library(tidyverse)
@@ -32,7 +32,7 @@ library(dplyr)
 
 
 # Negative control
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-2}
 # Files from 6 replicates
 files <- list.files(path = "./input", pattern = "rep", full.names = T)
 anno <- read.table("./input/phenoData.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
@@ -57,12 +57,12 @@ tab <- Reduce(function(x, y) {
 # BSseq object
 
 ## BSseq object creation and filtering
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-3}
 # Generate BSseq object
 bs <- BSseq(
   chr = tab$chr, pos = tab$pos,
-  M = tab[, grep(pattern = ".M", x = colnames(tab))],
-  Cov = tab[, grep(pattern = ".cov", x = colnames(tab))],
+  M = data.matrix(tab[, grep(pattern = ".M", x = colnames(tab))]),
+  Cov = data.matrix(tab[, grep(pattern = ".cov", x = colnames(tab))]),
   pData = anno, sampleNames = anno$names
 )
 
@@ -78,7 +78,7 @@ save(bs.nc, file = "./output/bsseq_neg_control.RData", compress = T)
 
 
 ## Saving filtered data
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-4}
 # Extract information from the object
 chr.nc <- as.character(seqnames(bs.nc))
 pos.nc <- start(bs.nc)
@@ -98,7 +98,7 @@ for (i in 1:ncol(cov.nc)) {
 - 100 simulated DMRs added to negative control data
 - simulated data created by `simDMRs` function from `dmrseq` package
 
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-5}
 # reorder samples to create a null comparison
 bs.null <- bs[, c(1, 3, 5, 2, 4, 6)]
 
@@ -115,7 +115,7 @@ save(bs.sim, file = "./output/bsseq_sim_100.RData", compress = T)
 ```
 
 ## Simulated DMRs
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-6}
 dmr.ranges <- data.frame(bs.sim$gr.dmrs, stringsAsFactors = F)
 sim.dmr <- data.frame(dmr.ranges, mean.cov = bs.sim$dmr.mncov, effect.size = bs.sim$delta, stringsAsFactors = F)
 write.table(sim.dmr,
@@ -125,8 +125,8 @@ write.table(sim.dmr,
 ```
 
 
-## Saving data in same format as of Negative Control
-```{r}
+## Saving data in same format as of Negatie Control
+```{r 20181125-filtered-simulated-data-dmrseq-7}
 # Re-arrange the data
 sim <- bs.sim$bs
 
@@ -147,14 +147,14 @@ for (i in 1:ncol(cov.sim)) {
 # phenoData tables
 
 ## Negative control
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-8}
 anno.nc <- anno[, 3:4]
 
 write.table(anno.nc, "./output/anno_neg_control.txt", sep = "\t", quote = F)
 ```
 
 ## Simulated DMRs
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-9}
 anno.sim <- anno.nc %>%
   mutate_all(funs(str_replace(., "NC", "sim")))
 rownames(anno.sim) <- anno.sim$names
@@ -164,13 +164,13 @@ write.table(anno.sim, "./output/anno_sim_data.txt", sep = "\t", quote = F)
 
 
 # Compress all text outputs in output
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-10}
 system("pigz -11 -p 16 ./output/*.txt")
 system("pigz -11 -p 16 ./output/*.bed")
 ```
 
 
 # SessionInfo
-```{r}
+```{r 20181125-filtered-simulated-data-dmrseq-11}
 devtools::session_info()
 ```
