@@ -1,6 +1,0 @@
-
-######################### Important paths #########################
-
-DATA: data/
-SIM_DATA: exp/20181125-data_formats_and_simulated_data-01/
-ANALYSIS: exp/20181125-differential_analysis_regions-02/

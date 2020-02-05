@@ -19,12 +19,14 @@ The following objects are masked from 'package:stats':
 
 The following objects are masked from 'package:base':
 
-    Filter, Find, Map, Position, Reduce, anyDuplicated, append,
-    as.data.frame, basename, cbind, colnames, dirname, do.call,
-    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
-    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
-    pmin.int, rank, rbind, rownames, sapply, setdiff, sort, table,
-    tapply, union, unique, unsplit, which, which.max, which.min
+    anyDuplicated, append, as.data.frame, basename, cbind,
+    colMeans, colnames, colSums, dirname, do.call, duplicated,
+    eval, evalq, Filter, Find, get, grep, grepl, intersect,
+    is.unsorted, lapply, lengths, Map, mapply, match, mget, order,
+    paste, pmax, pmax.int, pmin, pmin.int, Position, rank, rbind,
+    Reduce, rowMeans, rownames, rowSums, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which, which.max,
+    which.min
 
 Welcome to Bioconductor
 
@@ -39,36 +41,38 @@ Content type 'application/x-tar' length 1301841920 bytes (1241.5 MB)
 ==================================================
 downloaded 1241.5 MB
 
-x GSM1565940_DC81_NI_5mC.txt.gz
-x GSM1565942_DC82_NI_5mC.txt.gz
-x GSM1565944_DC83_NI_5mC.txt.gz
-x GSM1565946_DC87_NI_5mC.txt.gz
-x GSM1565948_DC89_NI_5mC.txt.gz
-x GSM1565950_DC91_NI_5mC.txt.gz
-zcat: can't stat: ./GSM1565940_DC81_NI_5mC.txt.gz (./GSM1565940_DC81_NI_5mC.txt.gz.Z): No such file or directory
-zcat: can't stat: ./GSM1565942_DC82_NI_5mC.txt.gz (./GSM1565942_DC82_NI_5mC.txt.gz.Z): No such file or directory
-zcat: can't stat: ./GSM1565944_DC83_NI_5mC.txt.gz (./GSM1565944_DC83_NI_5mC.txt.gz.Z): No such file or directory
-zcat: can't stat: ./GSM1565946_DC87_NI_5mC.txt.gz (./GSM1565946_DC87_NI_5mC.txt.gz.Z): No such file or directory
-zcat: can't stat: ./GSM1565948_DC89_NI_5mC.txt.gz (./GSM1565948_DC89_NI_5mC.txt.gz.Z): No such file or directory
-zcat: can't stat: ./GSM1565950_DC91_NI_5mC.txt.gz (./GSM1565950_DC91_NI_5mC.txt.gz.Z): No such file or directory
+ln: failed to create symbolic link './soft_links/NC_rep1.bed.gz': File exists
+ln: failed to create symbolic link './soft_links/NC_rep2.bed.gz': File exists
+ln: failed to create symbolic link './soft_links/NC_rep3.bed.gz': File exists
+ln: failed to create symbolic link './soft_links/NC_rep4.bed.gz': File exists
+ln: failed to create symbolic link './soft_links/NC_rep5.bed.gz': File exists
+ln: failed to create symbolic link './soft_links/NC_rep6.bed.gz': File exists
 output file: data_download_and_filter.knit.md
 
 
 Output created: data_download_and_filter.html
-................................................                      |  69%
+6_DC87_NI_5mC.txt.gz
+GSM1565948_DC89_NI_5mC.txt.gz
+GSM1565950_DC91_NI_5mC.txt.gz
+  |                                                                         |.....................................                            |  56%
   ordinary text without R code
 
-  |                                                                              |....................................................                  |  75%
+  |                                                                         |.........................................                        |  62%
+label: unnamed-chunk-5
+  |                                                                         |.............................................                    |  69%
+  ordinary text without R code
+
+  |                                                                         |.................................................                |  75%
 label: unnamed-chunk-6
-  |                                                                              |.........................................................             |  81%
+  |                                                                         |.....................................................            |  81%
   ordinary text without R code
 
-  |                                                                              |.............................................................         |  88%
+  |                                                                         |.........................................................        |  88%
 label: unnamed-chunk-7
-  |                                                                              |..................................................................    |  94%
+  |                                                                         |.............................................................    |  94%
   ordinary text without R code
 
-  |                                                                              |......................................................................| 100%
+  |                                                                         |.................................................................| 100%
 label: unnamed-chunk-8
 
-/Users/ste/OneDrive/PhD/dmr-comparison/.snakemake/conda/71f687a3/bin/pandoc +RTS -K512m -RTS data_download_and_filter.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output data_download_and_filter.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /Users/ste/OneDrive/PhD/dmr-comparison/.snakemake/conda/71f687a3/lib/R/library/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /var/folders/ny/rgfjhql534qg89t7yfmq8gz40000gn/T//RtmpGQtSqf/rmarkdown-str5aaf2281fa4b.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /Users/ste/OneDrive/PhD/dmr-comparison/.snakemake/conda/71f687a3/lib/R/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Users/ste/OneDrive/PhD/dmr-comparison/.snakemake/conda/71f687a3/lib/R/library/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
+/home/ubuntu/softwares/miniconda2/bin/pandoc +RTS -K512m -RTS data_download_and_filter.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash+smart --output data_download_and_filter.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_print=1 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.5/rmarkdown/rmd/h/default.html --highlight-style pygments --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpjOksok/rmarkdown-str774653294e28.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable code_folding=show --variable code_menu=1 

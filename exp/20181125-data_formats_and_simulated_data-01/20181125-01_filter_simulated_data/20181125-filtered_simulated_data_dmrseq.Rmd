@@ -125,7 +125,6 @@ write.table(sim.dmr,
 ```
 
 
-
 ## Saving data in same format as of Negatie Control
 ```{r 20181125-filtered-simulated-data-dmrseq-7}
 # Re-arrange the data
