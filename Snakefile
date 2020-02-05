@@ -10,6 +10,7 @@ else:
 
 data = os.path.normpath(config["DATA"]) + "/"
 sim_data = os.path.normpath(config["SIM_DATA"]) + "/"
+analysis = os.path.normpath(config["ANALYSIS"]) + "/"
 
 ############################## Run the workflow ##############################
 
@@ -20,6 +21,6 @@ rule all:
 ############################### Workflow rules ###############################
 
 include: "rules/data_download.smk"
-#include: "rules/data_simulation.smk"
-#include: "rules/differential_analysis.smk"
+include: "rules/data_simulation.smk"
+include: "rules/differential_analysis.smk"
 #include: "rules/plotting.smk"
