@@ -25,10 +25,10 @@ rule input_data_format:
         script = sim_data + "20181125-02_samples_table_individual/20181125-generate_input_datasets.Rmd"
     output:
         sim_data + "20181125-02_samples_table_individual/20181125-generate_input_datasets.html",
-        sim_data + "20181125-02_samples_table_individual/output/bismark/",
-        sim_data + "20181125-02_samples_table_individual/output/cgmaptools/",
-        sim_data + "20181125-02_samples_table_individual/output/dmrcaller/",
-        sim_data + "20181125-02_samples_table_individual/output/methpipe/",
+        directory(sim_data + "20181125-02_samples_table_individual/output/bismark/"),
+        directory(sim_data + "20181125-02_samples_table_individual/output/cgmaptools/"),
+        directory(sim_data + "20181125-02_samples_table_individual/output/dmrcaller/"),
+        directory(sim_data + "20181125-02_samples_table_individual/output/methpipe/"),
     log:
         sim_data + "20181125-02_samples_table_individual/log"
     conda:

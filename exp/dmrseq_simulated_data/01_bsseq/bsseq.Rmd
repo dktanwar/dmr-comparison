@@ -44,8 +44,7 @@ pheno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t"
 
 files.nc <- list.files("./input", pattern = "NC_rep", full.names = T)
 bs.nc <- read.bismark(
-  files = files.nc, sampleNames = pheno.nc$names, strandCollapse = F,
-  mc.cores = detectCores() - 1
+  files = files.nc, strandCollapse = F
 )
 
 pData(bs.nc) <- pheno.nc
@@ -57,8 +56,7 @@ pheno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", 
 
 files.sim <- list.files("./input", pattern = "sim_rep", full.names = T)
 bs.sim <- read.bismark(
-  files = files.sim, sampleNames = pheno.sim$names, strandCollapse = F,
-  mc.cores = detectCores() - 1
+  files = files.sim, strandCollapse = F
 )
 
 pData(bs.sim) <- pheno.sim
@@ -68,8 +66,8 @@ pData(bs.sim) <- pheno.sim
 # Smoothing
 The first step of the analysis is smoothing of the data.
 ```{r}
-bs.smoothed.nc <- BSmooth(BSseq = bs.nc, mc.cores = detectCores() - 1)
-bs.smoothed.sim <- BSmooth(BSseq = bs.sim, mc.cores = detectCores() - 1)
+bs.smoothed.nc <- BSmooth(BSseq = bs.nc)
+bs.smoothed.sim <- BSmooth(BSseq = bs.sim)
 ```
 
 
@@ -79,7 +77,7 @@ In the vignette, CpGs with no or little coverage are removed at this point. We h
 We now compute t-statistics.
 ```{r}
 bs.tstat.nc <- BSmooth.tstat(bs.smoothed.nc,
-  mc.cores = detectCores() - 1, estimate.var = "same",
+  estimate.var = "same",
   group1 = pheno.nc$names[pheno.nc$Group == "Group1"],
   group2 = pheno.nc$names[pheno.nc$Group == "Group2"],
   local.correct = TRUE,
@@ -87,7 +85,7 @@ bs.tstat.nc <- BSmooth.tstat(bs.smoothed.nc,
 )
 
 bs.tstat.sim <- BSmooth.tstat(bs.smoothed.sim,
-  mc.cores = detectCores() - 1, estimate.var = "same",
+  estimate.var = "same",
   group1 = pheno.sim$names[pheno.sim$Group == "Group1"],
   group2 = pheno.sim$names[pheno.sim$Group == "Group2"],
   local.correct = TRUE,
