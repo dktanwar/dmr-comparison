@@ -16,7 +16,7 @@ analysis = os.path.normpath(config["ANALYSIS"]) + "/"
 
 rule all:
     input:
-        sim_data + "20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html"
+        analysis + "20181206-01_bsseq/bsseq.html"
 
 ############################### Workflow rules ###############################
 
