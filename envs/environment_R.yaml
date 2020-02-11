@@ -3,7 +3,6 @@ channels:
   - bioconda
   - defaults
   - r
-  - freenome
 dependencies:
   - r-base=3.6.2
   - bioconductor-geoquery=2.54.0
@@ -18,5 +17,3 @@ dependencies:
   - r-dplyr=0.8.3
   - bioconductor-bsseq=1.22.0
   - r-dt=0.12
-  - r-plyr=1.8.5
-  - methpipe=3.4.3

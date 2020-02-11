@@ -1,0 +1,10 @@
+channels:
+  - conda-forge
+  - freenome
+dependencies:
+  - r-base=3.6.2
+  - r-dt=0.12
+  - r-plyr=1.8.5
+  - methpipe=3.4.3
+  - pigz=2.3.4
+  - r-devtools=2.0.2

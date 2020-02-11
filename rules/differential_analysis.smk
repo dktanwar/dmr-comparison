@@ -22,6 +22,7 @@ rule methpipe:
         sim_data + "20181125-02_samples_table_individual/output/methpipe/",
         script = analysis + "20181206-02_MethPipe/methpipe.Rmd"
     output:
+        analysis + "20181206-02_MethPipe/methpipe.html",
         analysis + "20181206-02_MethPipe/output/methpipe_dmr_sim_data.txt.gz",
         analysis + "20181206-02_MethPipe/output/methpipe_dmr_neg_control.txt.gz"
     log:
