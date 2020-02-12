@@ -12,7 +12,7 @@ usePackage <- function(pkgs) {
     isInstalled <- pkgs %in% installed.packages(lib.loc = .libPaths()[1])[, 1]
     BiocManager::install(pkgs[!isInstalled],
                          update = FALSE, dependencies = TRUE,
-                         lib = .libPaths()[1], Ncpus = as.integer(ncores))
+                         lib = .libPaths()[1])
 
     pkg.load <- lapply(pkgs, FUN = function(x) {
         x[!(x %in% installed.packages(.libPaths()[1])[, "Package"])]
