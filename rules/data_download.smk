@@ -13,3 +13,18 @@ rule dmrseq_data_download:
         """
         Rscript -e 'rmarkdown::render("{input}", "html_document")' 2> {log} >> {log}
         """
+
+## Install R packages
+rule install_R_pkg:
+	input:
+        "scripts/install_pkgs.R"
+	output:
+        "exp/pkginstall_state.txt"
+	conda:
+		"envs/environment_R.yaml"
+	log:
+		"exp/pkginstall_state.log"
+	shell:
+		"""
+        Rscript {input} 2> {log} >> {log}
+        """
