@@ -28,7 +28,7 @@ rule methpipe:
     log:
         analysis + "20181206-02_MethPipe/log"
     conda:
-        "../envs/environment_methPipe.yaml"
+        "../envs/environment_R.yaml"
     shell:
         """
         Rscript -e 'rmarkdown::render("{input.script}", "html_document")' 2> {log} >> {log}
