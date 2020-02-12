@@ -16,6 +16,7 @@ analysis = os.path.normpath(config["ANALYSIS"]) + "/"
 
 rule all:
     input:
+        "exp/pkginstall_state.txt",
         analysis + "20181206-01_bsseq/bsseq.html",
         analysis + "20181206-02_MethPipe/methpipe.html"
 
