@@ -11,6 +11,7 @@ else:
 data = os.path.normpath(config["DATA"]) + "/"
 sim_data = os.path.normpath(config["SIM_DATA"]) + "/"
 analysis = os.path.normpath(config["ANALYSIS"]) + "/"
+cores = config["CORES"]
 
 ############################## Run the workflow ##############################
 

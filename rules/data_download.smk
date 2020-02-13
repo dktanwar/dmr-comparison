@@ -1,3 +1,5 @@
+cgmaptools_prefix = "cgmaptools/"
+
 # Download the starting dataset
 
 rule dmrseq_data_download:
@@ -24,7 +26,20 @@ rule install_R_pkg:
         "exp/pkginstall_state.log"
     conda:
         "../envs/environment_R.yaml"
+    threads:
+        cores
     shell:
         """
-        Rscript {input} 2> {log} >> {log}
+        Rscript {input} {cores} 2> {log} >> {log}
+        """
+
+rule cgmaptools_install:
+    output:
+        cgmaptools_prefix
+    log:
+        cgmaptools_prefix + "log"
+    shell:
+        """
+        git clone https://github.com/guoweilong/cgmaptools
+        cd cgmaptools; sh install.sh; cd ..
         """
