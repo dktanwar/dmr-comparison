@@ -1,0 +1,149 @@
+
+
+processing file: 20200213-generate_input_datasets.Rmd
+Loading required package: bsseq
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: 'BiocGenerics'
+
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from 'package:stats':
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from 'package:base':
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which, which.max, which.min
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: S4Vectors
+
+Attaching package: 'S4Vectors'
+
+The following objects are masked from 'package:data.table':
+
+    first, second
+
+The following object is masked from 'package:base':
+
+    expand.grid
+
+Loading required package: IRanges
+
+Attaching package: 'IRanges'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+Loading required package: GenomeInfoDb
+Loading required package: SummarizedExperiment
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+Loading required package: DelayedArray
+Loading required package: matrixStats
+
+Attaching package: 'matrixStats'
+
+The following objects are masked from 'package:Biobase':
+
+    anyMissing, rowMedians
+
+Loading required package: BiocParallel
+
+Attaching package: 'DelayedArray'
+
+The following objects are masked from 'package:matrixStats':
+
+    colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
+
+The following objects are masked from 'package:base':
+
+    aperm, apply, rowsum
+
+pigz: skipping: ./output/bismark is a directory
+pigz: skipping: ./output/cgmaptools is a directory
+pigz: skipping: ./output/dmrcaller is a directory
+pigz: skipping: ./output/methpipe is a directory
+output file: 20200213-generate_input_datasets.knit.md
+
+
+Output created: 20200213-generate_input_datasets.html
+Warning messages:
+1: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+2: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+3: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+4: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+5: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+6: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+7: In merge.data.frame(x, y, by = c("chr", "pos")) :
+  column names 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y', 'M.x', 'cov.x', 'M.y', 'cov.y' are duplicated in the result
+8: MathJax doesn't work with self_contained when not using the rmarkdown "default" template. 
+                                                              |..............................                                        |  42%
+  ordinary text without R code
+
+  |                                                                              |................................                                      |  46%
+label: 20200213-generate-input-datasets-6
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  54%
+label: 20200213-generate-input-datasets-7
+  |                                                                              |........................................                              |  58%
+  ordinary text without R code
+
+  |                                                                              |...........................................                           |  62%
+label: 20200213-generate-input-datasets-8
+  |                                                                              |..............................................                        |  65%
+  ordinary text without R code
+
+  |                                                                              |................................................                      |  69%
+label: 20200213-generate-input-datasets-9
+  |                                                                              |...................................................                   |  73%
+  ordinary text without R code
+
+  |                                                                              |......................................................                |  77%
+label: 20200213-generate-input-datasets-10
+  |                                                                              |.........................................................             |  81%
+  ordinary text without R code
+
+  |                                                                              |...........................................................           |  85%
+label: 20200213-generate-input-datasets-11 (with options) 
+List of 1
+ $ warning: symbol F
+
+  |                                                                              |..............................................................        |  88%
+  ordinary text without R code
+
+  |                                                                              |.................................................................     |  92%
+label: 20200213-generate-input-datasets-12
+  |                                                                              |...................................................................   |  96%
+  ordinary text without R code
+
+  |                                                                              |......................................................................| 100%
+label: 20200213-generate-input-datasets-13
+
+/home/ubuntu/softwares/anaconda3/bin/pandoc +RTS -K512m -RTS 20200213-generate_input_datasets.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output 20200213-generate_input_datasets.html --email-obfuscation none --self-contained --mathjax --variable 'mathjax-url:https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable 'lightbox:true' --variable 'thumbnails:true' --variable 'gallery:false' --standalone --section-divs --table-of-contents --toc-depth 2 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmdformats/templates/readthedown/readthedown.html --highlight-style tango --variable 'theme:bootstrap' --include-in-header /mnt/IM/tmp//RtmpdTZMmQ/rmarkdown-str189a7dd71122.html --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
