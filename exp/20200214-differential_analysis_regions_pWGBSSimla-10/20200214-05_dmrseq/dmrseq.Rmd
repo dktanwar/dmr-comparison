@@ -1,0 +1,102 @@
+---
+title: "pWGBSSimla: dmrseq DMRs"
+author: "Deepak Tanwar"
+date: "<b>Created on:</b> 2020-02-14 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    keep_md: no
+    number_sections: no
+    fig_width: 8
+    fig_height: 8
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+# bibliography: references.bib
+link-citations: yes
+---
+# Packages required
+
+```{r, warning=F, message=F}
+library(dmrseq)
+library(DT)
+```
+
+# Method description
+In dmrseq, the methylation data are smoothed and then analyzes using generalized least squares model. Biological variability and correlation between neighbouring loci is taken into account.
+
+# Input files
+Read in input files and create a `BSseq` object.
+
+## Simulated data
+```{r}
+pheno.sim <- read.table("./input/anno_sim_data.txt.gz",
+  header = T,
+  sep = "\t", stringsAsFactors = F
+)
+
+files.sim <- list.files("./input", pattern = "sim_rep", full.names = T)
+files.sim <- files.sim[c(2:10, 1)]
+
+bs.sim <- read.bismark(
+  files = files.sim, strandCollapse = F,
+  colData = pheno.sim, nThread = detectCores() - 1,
+)
+
+bismarkBSseq.sim <- bs.sim
+```
+
+# DMRs analysis
+
+## Simulated data
+```{r}
+dmr.sim <- dmrseq(
+  bs = bismarkBSseq.sim,
+  testCovariate = "Group",
+  BPPARAM = BiocParallel::MulticoreParam(workers = 16),
+  minNumRegion = 10
+)
+
+dmr.sim <- data.frame(dmr.sim, stringsAsFactors = F)
+
+write.table(dmr.sim, file = gzfile("./output/dmrseq_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
+```
+
+
+# DMR Tables
+Identified DMRs with q-value not higher than 0.05.
+
+## Simulated data
+
+```{r}
+# c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)
+# %>%
+#   formatStyle(
+#     "qval",
+#     backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
+#   )
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```
