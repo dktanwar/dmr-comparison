@@ -1,0 +1,117 @@
+---
+title: "pWGBSSimla: methylKit DMRs"
+author: "Deepak Tanwar"
+date: "<b>Created on:</b> 2020-02-14 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    keep_md: no
+    number_sections: no
+    fig_width: 8
+    fig_height: 8
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+# bibliography: references.bib
+link-citations: yes
+---
+
+# Packages required
+
+```{r, message=FALSE, warning=FALSE}
+library(methylKit)
+library(data.table)
+library(DT)
+```
+
+# Method description
+In MethylKit, genome is fractioned into bins and the methylation levels within each bin are compared using logistic regression (or Fisher's exact test, if there is only one replicate in each group). 
+
+# Input files
+Read in input files.
+
+## Simulated data
+
+```{r}
+files.sim <- list.files("./input", pattern = "sim_r", full.names = T)
+files.sim <- files.sim[c(2:10, 1)]
+files.list.sim <- as.list(files.sim)
+
+anno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+myobj.sim <- methRead(
+  location = files.list.sim, sample.id = as.list(anno.sim$samples),
+  assembly = "hg19", pipeline = "bismarkCoverage", header = F, skip = 0,
+  dbtype = "tabix", treatment = c(rep(1, 5), rep(0, 5)), dbdir = "./output/methylDB"
+)
+
+
+# Merging samples
+meth.sim <- unite(myobj.sim)
+```
+
+
+# DMR analysis
+
+## Simulated data
+```{r}
+tiles.sim <- tileMethylCounts(myobj.sim, win.size = 1000, step.size = 1000)
+meth.sim <- unite(tiles.sim)
+myDiff.sim <- calculateDiffMeth(meth.sim, mc.cores = detectCores() - 1, overdispersion = "MN")
+# filter regions with mean methylation difference at least 1 %
+myDiff.sim <- getMethylDiff(myDiff.sim, difference = 1)
+
+myDiff.GR.sim <- as(myDiff.sim, "GRanges")
+dmr.sim <- data.frame(myDiff.GR.sim)
+
+dmr.sim <- dmr.sim[order(dmr.sim$qvalue), ]
+
+colnames(dmr.sim)[7] <- "qval"
+
+# filter regions with mean methylation difference at least 10 % and at least 10 CpGs long
+dmr.sim <- dmr.sim[abs(dmr.sim$meth.diff) >= 10 && dmr.sim$width >= 10, ]
+
+
+write.table(dmr.sim,
+  file = gzfile("./output/methylKit_dmr_sim_data.txt.gz"),
+  sep = "\t", row.names = F, quote = F
+)
+```
+
+
+# DMR Tables
+Identified DMRs with q-value not higher than 0.05.
+
+## Simulated data
+
+```{r}
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
+  )
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```
