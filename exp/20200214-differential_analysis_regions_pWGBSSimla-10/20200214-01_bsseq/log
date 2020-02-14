@@ -1,0 +1,116 @@
+
+
+processing file: bsseq.Rmd
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: 'BiocGenerics'
+
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from 'package:stats':
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from 'package:base':
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which, which.max, which.min
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: S4Vectors
+
+Attaching package: 'S4Vectors'
+
+The following object is masked from 'package:base':
+
+    expand.grid
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Loading required package: SummarizedExperiment
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+Loading required package: DelayedArray
+Loading required package: matrixStats
+
+Attaching package: 'matrixStats'
+
+The following objects are masked from 'package:Biobase':
+
+    anyMissing, rowMedians
+
+Loading required package: BiocParallel
+
+Attaching package: 'DelayedArray'
+
+The following objects are masked from 'package:matrixStats':
+
+    colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
+
+The following objects are masked from 'package:base':
+
+    aperm, apply, rowsum
+
+output file: bsseq.knit.md
+
+
+Output created: bsseq.html
+Warning message:
+MathJax doesn't work with self_contained when not using the rmarkdown "default" template. 
+rdinary text without R code
+
+  |                                                                              |..................                                                    |  25%
+label: unnamed-chunk-2
+  |                                                                              |......................                                                |  31%
+  ordinary text without R code
+
+  |                                                                              |..........................                                            |  38%
+label: unnamed-chunk-3
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |...................................                                   |  50%
+label: unnamed-chunk-4
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |............................................                          |  62%
+label: unnamed-chunk-5 (with options) 
+List of 4
+ $ fig.align : chr "center"
+ $ fig.width : num 11
+ $ fig.height: num 8.5
+ $ fig.cap   : chr "Distribution of `t-statistic`."
+
+  |                                                                              |................................................                      |  69%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: unnamed-chunk-6
+  |                                                                              |.........................................................             |  81%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  88%
+label: unnamed-chunk-7
+  |                                                                              |..................................................................    |  94%
+  ordinary text without R code
+
+  |                                                                              |......................................................................| 100%
+label: unnamed-chunk-8
+
+/home/ubuntu/softwares/anaconda3/bin/pandoc +RTS -K512m -RTS bsseq.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output bsseq.html --email-obfuscation none --self-contained --mathjax --variable 'mathjax-url:https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable 'lightbox:true' --variable 'thumbnails:true' --variable 'gallery:false' --standalone --section-divs --table-of-contents --toc-depth 2 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmdformats/templates/readthedown/readthedown.html --highlight-style tango --variable 'theme:bootstrap' --include-in-header /mnt/IM/tmp//RtmpFmgtwD/rmarkdown-str1a9347e8af17.html --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
