@@ -1,0 +1,40 @@
+./OmicsSIMLA -folder output/data -batch 5 -cc 5,5 -profile_path ./input -mregion 1:1-20000 -mtype liver --WGBS -beta_var 0.01 -min_block_cor 0.3 -p_diff_phase_meth 0 -p_diff_phase_unmeth 0 -p_diff_phase_fuzzy 0 -methy_theta 0 -max_diff_block_size 50 -p_AS 0 -r_methylated_father 1 -r_methylated_mother 1 
+Simulation started: Fri Feb 14 08:34:53 2020
+
+OmicsSIMLA version:		 0.5 25June2019
+Reference file:			 
+Recombination file:		 
+Family file:			 
+Proband file:			 
+Disease sites:			 
+Disease mode:			 prevalence
+Number of default cases:	 5
+Number of default controls:	 5
+
+Reading the reference file...
+Odds ratios:			 
+Minor allele frequencies for the selected disease sites:
+
+
+
+A total of 0 recombination rates >= 0.1 were read...
+Launched 1 threads successfully.
+Finished generating batch 1
+This batch took 0.59876
+Launched 1 threads successfully.
+Finished generating batch 2
+This batch took 0.658579
+Launched 1 threads successfully.
+Finished generating batch 3
+This batch took 0.488245
+Launched 1 threads successfully.
+Finished generating batch 4
+This batch took 0.442934
+Launched 1 threads successfully.
+Finished generating batch 5
+This batch took 0.535277
+
+Simulation ended: Fri Feb 14 08:34:58 2020
+
+The simulation took 3 seconds
+The IO time is 24% of total time
