@@ -1,0 +1,57 @@
+
+
+processing file: cgmaptools.Rmd
+running: bash  -c 'mkdir -p ./output/01_merged_tables
+
+cgmaptools mergelist tosingle -i <(zcat ./input/sim_rep1.cov.gz),<(zcat ./input/sim_rep2.cov.gz),<(zcat ./input/sim_rep3.cov.gz),<(zcat ./input/sim_rep4.cov.gz),<(zcat ./input/sim_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merged_tables/sim_data_grp1.merge.gz'
+running: bash  -c 'cgmaptools mergelist tosingle -i <(zcat ./input/sim_rep6.cov.gz),<(zcat ./input/sim_rep7.cov.gz),<(zcat ./input/sim_rep8.cov.gz),<(zcat ./input/sim_rep9.cov.gz),<(zcat ./input/sim_rep10.cov.gz) | pigz -11 -p 16 > ./output/01_merged_tables/sim_data_grp2.merge.gz'
+running: bash  -c 'mkdir -p ./output/02_intersect_grp1_grp2
+
+cgmaptools intersect -1 <(zcat ./output/01_merged_tables/sim_data_grp1.merge.gz) -2 <(zcat ./output/01_merged_tables/sim_data_grp2.merge.gz) | pigz -11 -p 16 > ./output/02_intersect_grp1_grp2/sim_data.intersect.gz'
+running: bash  -c 'mkdir -p ./output/03_dmr
+
+cgmaptools dmr -i <(zcat ./output/02_intersect_grp1_grp2/sim_data.intersect.gz) -n 10 | pigz -11 -p 16 > ./output/03_dmr/sim_data.dmr.gz'
+output file: cgmaptools.knit.md
+
+
+Output created: cgmaptools.html
+Warning message:
+MathJax doesn't work with self_contained when not using the rmarkdown "default" template. 
+                                                                         |..........................                                            |  38%
+label: unnamed-chunk-3 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |...................................                                   |  50%
+label: unnamed-chunk-4 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |............................................                          |  62%
+label: unnamed-chunk-5 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |................................................                      |  69%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: unnamed-chunk-6
+  |                                                                              |.........................................................             |  81%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  88%
+label: unnamed-chunk-7
+  |                                                                              |..................................................................    |  94%
+  ordinary text without R code
+
+  |                                                                              |......................................................................| 100%
+label: unnamed-chunk-8
+
+/home/ubuntu/softwares/anaconda3/bin/pandoc +RTS -K512m -RTS cgmaptools.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output cgmaptools.html --email-obfuscation none --self-contained --mathjax --variable 'mathjax-url:https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable 'lightbox:true' --variable 'thumbnails:true' --variable 'gallery:false' --standalone --section-divs --table-of-contents --toc-depth 2 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmdformats/templates/readthedown/readthedown.html --highlight-style tango --variable 'theme:bootstrap' --include-in-header /mnt/IM/tmp//RtmpV8yKJN/rmarkdown-str35c76f757452.html --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
