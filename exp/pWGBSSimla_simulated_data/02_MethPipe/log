@@ -1,0 +1,85 @@
+
+
+processing file: methpipe.Rmd
+running: bash  -c 'mkdir -p ./output/01_merge_methcounts
+
+merge-methcounts <(zcat ./input/sim_rep1.cov.gz) <(zcat ./input/sim_rep2.cov.gz) <(zcat ./input/sim_rep3.cov.gz) <(zcat ./input/sim_rep4.cov.gz) <(zcat ./input/sim_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp1.meth.gz'
+running: bash  -c 'merge-methcounts <(zcat ./input/sim_rep6.cov.gz) <(zcat ./input/sim_rep7.cov.gz) <(zcat ./input/sim_rep8.cov.gz) <(zcat ./input/sim_rep9.cov.gz) <(zcat ./input/sim_rep10.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp2.meth.gz'
+running: bash  -c 'mkdir -p ./output/02_methdiff
+
+methdiff <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) <(zcat ./output/01_merge_methcounts/sim_data_grp2.meth.gz) | pigz -11 -p 16 > ./output/02_methdiff/sim_data.methdiff.gz'
+running: bash  -c 'mkdir -p ./output/03_hmr
+
+hmr <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp1.hmr.gz'
+running: bash  -c 'hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp2.hmr.gz'
+running: bash  -c 'mkdir -p ./output/04_dmr
+
+dmr <(zcat ./output/02_methdiff/sim_data.methdiff.gz) <(zcat ./output/03_hmr/sim_data_grp1.hmr.gz) <(zcat ./output/03_hmr/sim_data_grp2.hmr.gz) ./output/04_dmr/sim_data_grp1.dmr ./output/04_dmr/sim_data_grp2.dmr
+
+pigz -11 -p 16 ./output/04_dmr/*.dmr'
+running: bash  -c "mkdir -p ./output/05_fltered_dmr
+
+for i in ./output/04_dmr/*.dmr.gz
+  do
+  bname=\`basename \$i .dmr.gz\`
+  fname=./output/05_fltered_dmr/\${bname}.filt.dmr.gz
+  
+  awk -F '[:\\t]' '\$5 >= 10 && \$6>=5 {print \$0}' <(zcat \$i) | pigz -11 -p 16 > \$fname
+done"
+output file: methpipe.knit.md
+
+
+Output created: methpipe.html
+Warning message:
+MathJax doesn't work with self_contained when not using the rmarkdown "default" template. 
+sh"
+
+  |                                                                              |.............................                                         |  41%
+  ordinary text without R code
+
+  |                                                                              |................................                                      |  45%
+label: unnamed-chunk-4 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  55%
+label: unnamed-chunk-5 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |.........................................                             |  59%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: unnamed-chunk-6 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |................................................                      |  68%
+  ordinary text without R code
+
+  |                                                                              |...................................................                   |  73%
+label: unnamed-chunk-7 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |......................................................                |  77%
+  ordinary text without R code
+
+  |                                                                              |.........................................................             |  82%
+label: unnamed-chunk-8
+  |                                                                              |............................................................          |  86%
+  ordinary text without R code
+
+  |                                                                              |................................................................      |  91%
+label: unnamed-chunk-9
+  |                                                                              |...................................................................   |  95%
+  ordinary text without R code
+
+  |                                                                              |......................................................................| 100%
+label: unnamed-chunk-10
+
+/home/ubuntu/softwares/anaconda3/bin/pandoc +RTS -K512m -RTS methpipe.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output methpipe.html --email-obfuscation none --self-contained --mathjax --variable 'mathjax-url:https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --variable 'lightbox:true' --variable 'thumbnails:true' --variable 'gallery:false' --standalone --section-divs --table-of-contents --toc-depth 2 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmdformats/templates/readthedown/readthedown.html --highlight-style tango --variable 'theme:bootstrap' --include-in-header /mnt/IM/tmp//RtmpTpFVes/rmarkdown-str34632c81106f.html --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 

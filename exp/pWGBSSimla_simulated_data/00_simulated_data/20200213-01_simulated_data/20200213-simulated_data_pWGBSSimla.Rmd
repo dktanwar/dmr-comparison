@@ -1,0 +1,115 @@
+---
+title: "Simulated data from pWGBSSimla"
+author: "Deepak Tanwar"
+date: "<b>Created on:</b> 2020-02-13 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    keep_md: no
+    number_sections: no
+    fig_width: 8
+    fig_height: 8
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+# bibliography: references.bib
+link-citations: yes
+---
+
+
+# Libraries required
+```{r 20200213-simulated-data-pWGBSSimla-1, warning=FALSE, message=FALSE}
+library(pWGBSSimla)
+library(dmrseq)
+library(data.table)
+library(tidyverse)
+library(dplyr)
+```
+
+
+# Simulating data using pWGBSSimla
+```{r 20200213-simulated-data-pWGBSSimla-2 }
+if (!dir.exists("output/data")) {
+  pWGBSSimla(
+    folder = "output/data", batch = 5, cc = "5,5", profile_path = "./input",
+    data_type = "WGBS", mtype = "liver"
+    # , mregion = "21:1-20000"
+  )
+} else {
+  message("Skipping as the data exists!")
+}
+```
+
+# Reading simulated data
+```{r 20200213-simulated-data-pWGBSSimla-3 }
+bs <- read_sim_data(folder = "output/data")
+
+colnames(bs) <- str_replace(colnames(bs), "DCASES", "Case")
+colnames(bs) <- str_replace(colnames(bs), "DCONTROLS", "Control")
+
+pData(bs) <- data.frame(samples = colnames(bs))
+rownames(pData(bs)) <- pData(bs)[, 1]
+pData(bs)$Group <- c(rep("Group2", 5), rep("Group1", 5))
+
+# Keeping loci with with coverage at least 5 in at least two samples in each group
+
+loci.idx <- which(
+  rowSums(
+    getCoverage(
+      bs[, pData(bs)$Group == "Group1"],
+      type = "Cov"
+    ) >= 5
+  ) >= 2 &
+    rowSums(
+      getCoverage(
+        bs[, pData(bs)$Group == "Group2"],
+        type = "Cov"
+      ) >= 5
+    ) >= 2
+)
+
+bs.sim <- bs[loci.idx, ]
+
+save(bs.sim, file = "./output/pWGBSSimla_bs.rds", compress = T)
+```
+
+## Saving data
+```{r 20200213-simulated-data-pWGBSSimla-4 }
+# Extract information from the object
+chr.sim <- as.character(paste0("chr", seqnames(bs.sim)))
+pos.sim <- start(bs.sim)
+cov.sim <- data.frame(getCoverage(bs.sim, type = "Cov"))
+M.sim <- data.frame(getCoverage(bs.sim, type = "M"))
+
+for (i in 1:ncol(cov.sim)) {
+  n <- paste0("./output/sim_rep", i, ".bed")
+  df <- data.frame(chr.sim, pos.sim, M.sim[, i], cov.sim[, i])
+  fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F)
+}
+```
+
+
+# phenoData tables
+```{r 20200213-simulated-data-pWGBSSimla-5 }
+anno.sim <- data.frame(pData(bs.sim))
+write.table(anno.sim, "./output/anno_sim_data.txt", sep = "\t", quote = F)
+```
+
+
+# Compress all text outputs in output
+```{r 20200213-simulated-data-pWGBSSimla-6 }
+system("pigz -11 -p 16 ./output/*.txt")
+system("pigz -11 -p 16 ./output/*.bed")
+```
+
+# SessionInfo
+```{r 20200213-simulated-data-pWGBSSimla-7 }
+devtools::session_info()
+```

@@ -1,0 +1,153 @@
+---
+title: "pWGBSSimla: BSseq DMRs"
+author: "Deepak Tanwar"
+date: "<b>Created on:</b> 2020-02-14 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    keep_md: no
+    number_sections: no
+    fig_width: 8
+    fig_height: 8
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+# bibliography: references.bib
+link-citations: yes
+---
+
+Analysis following the [MethPipe manual](http://smithlabresearch.org/downloads/methpipe-manual.pdf).
+
+# Packages required
+```{r lib, warning=F, message=FALSE}
+library(DT)
+library(plyr)
+```
+
+# Method description
+Differential methylation scores are first computed at individual CpG sites in a way similar to one-directional version of Fisher’s test. HMRs (hypomethylated regions) are detected using Hidden Markov Model individually in each sample (group). Non-overlapping intervals of HMRs are then checked if they contain sufficient number of DMLs.
+
+
+# Merging results from the replicates
+The methylation data within each group first need to be combined into a single file using `merge-methcounts`.
+
+## Simulated data
+
+### Group1
+```{r, engine='bash'}
+mkdir -p ./output/01_merge_methcounts
+
+merge-methcounts <(zcat ./input/sim_rep1.cov.gz) <(zcat ./input/sim_rep2.cov.gz) <(zcat ./input/sim_rep3.cov.gz) <(zcat ./input/sim_rep4.cov.gz) <(zcat ./input/sim_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp1.meth.gz
+```
+
+### Group2
+```{r, engine='bash'}
+merge-methcounts <(zcat ./input/sim_rep6.cov.gz) <(zcat ./input/sim_rep7.cov.gz) <(zcat ./input/sim_rep8.cov.gz) <(zcat ./input/sim_rep9.cov.gz) <(zcat ./input/sim_rep10.cov.gz) | pigz -11 -p 16 > ./output/01_merge_methcounts/sim_data_grp2.meth.gz
+```
+
+
+# Differential methylation score of each CpG site
+Differential methylation score of each CpG site is computed. This gives us probability that the methylation level at the particular CpG site is lower in the first group than in the second.
+
+## Simulated data
+```{r, engine='bash'}
+mkdir -p ./output/02_methdiff
+
+methdiff <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) <(zcat ./output/01_merge_methcounts/sim_data_grp2.meth.gz) | pigz -11 -p 16 > ./output/02_methdiff/sim_data.methdiff.gz
+```
+
+
+# Identifying hypomethylated regions (HMRs)
+Hypomethylated regions (HMRs) need to be computed.
+
+
+## Simulated data
+
+### Group1
+```{r, engine='bash'}
+mkdir -p ./output/03_hmr
+
+hmr <(zcat ./output/01_merge_methcounts/sim_data_grp1.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp1.hmr.gz
+```
+
+### Group2
+```{r, engine='bash'}
+hmr <(zcat ./output/01_merge_methcounts/neg_control_grp2.meth.gz) | pigz -11 -p 16 > ./output/03_hmr/sim_data_grp2.hmr.gz
+```
+
+
+# Computing DMRs
+Finally, DMRs can be detected using the `methdiff` and `hmr` files.
+
+## Simulated data
+
+```{r, engine='bash'}
+mkdir -p ./output/04_dmr
+
+dmr <(zcat ./output/02_methdiff/sim_data.methdiff.gz) <(zcat ./output/03_hmr/sim_data_grp1.hmr.gz) <(zcat ./output/03_hmr/sim_data_grp2.hmr.gz) ./output/04_dmr/sim_data_grp1.dmr ./output/04_dmr/sim_data_grp2.dmr
+
+pigz -11 -p 16 ./output/04_dmr/*.dmr
+```
+
+
+# Filtering
+MethPipe does not provide the user with the effect size in the identified region, it only provides the total number of CpGs within the region and how many of them were significantly differently methylated. Thus, as suggested by the documentation, we have decided to filter out only those regions that are at least 10 CpGs long and provide at least 5 significantly differently methylated CpGs.
+
+```{r, engine='bash'}
+mkdir -p ./output/05_fltered_dmr
+
+for i in ./output/04_dmr/*.dmr.gz
+  do
+  bname=`basename $i .dmr.gz`
+  fname=./output/05_fltered_dmr/${bname}.filt.dmr.gz
+  
+  awk -F '[:\t]' '$5 >= 10 && $6>=5 {print $0}' <(zcat $i) | pigz -11 -p 16 > $fname
+done
+```
+
+
+
+# DMR Tables
+
+## Simulated data
+```{r}
+files.sim <- list.files("./output/05_fltered_dmr", pattern = "sim", full.names = T)
+dmr.sim <- lapply(files.sim, function(x) read.table(x,
+    sep = "\t", header = F, stringsAsFactors = F,
+    col.names = c("chr", "start", "end", "nCpG", "sig.CpG", "strand")
+  ))
+
+dmr.sim <- ldply(dmr.sim, data.frame)
+
+write.table(
+  x = dmr.sim, file = gzfile("./output/methpipe_dmr_sim_data.txt.gz"),
+  sep = "\t", quote = F, row.names = F
+)
+```
+
+```{r}
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```

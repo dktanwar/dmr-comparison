@@ -1,0 +1,122 @@
+---
+title: "pWGBSSimla: BSseq DMRs"
+author: "Deepak Tanwar"
+date: "<b>Created on:</b> 2020-02-14 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    keep_md: no
+    number_sections: no
+    fig_width: 8
+    fig_height: 8
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+# bibliography: references.bib
+link-citations: yes
+---
+
+Analysis following the [Analyzing WGBS data with bsseq](https://bioconductor.org/packages/release/bioc/vignettes/bsseq/inst/doc/bsseq_analysis.html) vignette.
+
+# Packages required
+```{r, warning=F, message=FALSE}
+library(bsseq)
+library(DT)
+```
+
+# Method description
+In BSseq, the genome is partitioned into windows and the methylation proportions in each window are approximated by a second degree polynomial. To find DMRs, signal-to-noise statistc on the smoothed data, similar to t-test, is computed.
+
+
+# Input files and phenoData
+Read in input files.
+
+## Simulated data
+```{r}
+pheno.sim <- read.table("./input/anno_sim_data.txt.gz", header = T, sep = "\t", stringsAsFactors = F)
+
+files.sim <- list.files("./input", pattern = "sim_rep", full.names = T)
+files.sim <- files.sim[c(2:10, 1)]
+
+bs.sim <- read.bismark(
+  files = files.sim, strandCollapse = F,
+  colData = pheno.sim, nThread = detectCores() - 1,
+)
+```
+
+
+# Smoothing
+The first step of the analysis is smoothing of the data.
+```{r}
+bs.smoothed.sim <- BSmooth(
+  BSseq = bs.sim,
+  BPPARAM = MulticoreParam(workers = detectCores() - 1)
+)
+```
+
+
+# Computing t-statistics
+In the vignette, CpGs with no or little coverage are removed at this point. We have already filtered the data in the Data download and filtering step.
+
+We now compute t-statistics.
+```{r}
+bs.tstat.sim <- BSmooth.tstat(bs.smoothed.sim,
+  mc.cores = detectCores() - 1, estimate.var = "same",
+  group1 = pheno.sim$samples[pheno.sim$Group == "Group1"],
+  group2 = pheno.sim$samples[pheno.sim$Group == "Group2"],
+  local.correct = TRUE,
+  verbose = TRUE
+)
+```
+
+
+## Marginal distribution of the `t-statistic`
+We can have a look at the marginal distribution of the t-statistics.
+```{r, fig.align='center', fig.width=11, fig.height=8.5, fig.cap="Distribution of `t-statistic`."}
+par(pty = "s")
+plot(bs.tstat.sim)
+title("Simulated data")
+```
+
+
+# DMRs
+We can now compute DMRs by thresholding the t-statistics. Default values are used. The resulting DMRs are filtered for only those that are at least 10 CpGs long and the mean difference between the two groups is at least 0.1.
+```{r}
+
+# Simulated data
+dmr.sim <- dmrFinder(bs.tstat.sim)
+dmr.sim <- subset(dmr.sim, n >= 10 & abs(meanDiff) >= 0.1)
+write.table(dmr.sim,
+  file = gzfile("./output/bsseq_dmr_sim_data.txt.gz"), sep = "\t",
+  quote = F, row.names = F
+)
+```
+
+# DMR Tables
+
+## Simulated data
+```{r}
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+)
+```
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```

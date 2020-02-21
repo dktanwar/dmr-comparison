@@ -1,0 +1,36 @@
+
+
+processing file: defiant.Rmd
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+running: bash  -c 'mkdir -p ./output/sim_data && cd ./output/sim_data
+
+DEFIANT=/home/ubuntu/softwares/downloads/defiant/defiant
+
+$DEFIANT -c 1 -f -v -CpN 10 -p 0.9 -i <(zcat ../../input/sim_rep1.bed.gz),<(zcat ../../input/sim_rep3.bed.gz),<(zcat ../../input/sim_rep5.bed.gz) <(zcat ../../input/sim_rep2.bed.gz),<(zcat ../../input/sim_rep4.bed.gz),<(zcat ../../input/sim_rep6.bed.gz) 2> log >> log
+
+cd ../../'
+Quitting from lines 56-69 (defiant.Rmd) 
+Error in file(file, "rt") : cannot open the connection
+Calls: <Anonymous> ... withVisible -> eval -> eval -> read.delim -> read.table -> file
+Execution halted
+                                                                        |............................                                          |  40%
+label: unnamed-chunk-2 (with options) 
+List of 1
+ $ engine: chr "bash"
+
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |..........................................                            |  60%
+label: unnamed-chunk-3
+

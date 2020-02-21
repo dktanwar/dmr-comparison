@@ -1,0 +1,120 @@
+---
+title: "pWGBSSimla: CGmapTools DMRs"
+author: "Deepak Tanwar"
+date: "<b>Created on:</b> 2020-02-14 <br> <b>Updated on:</b> `r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    keep_md: no
+    number_sections: no
+    fig_width: 8
+    fig_height: 8
+    fig_caption: true
+    df_print: paged
+    code_folding: show
+  fontsize: 12pt
+  geometry: margin=1in
+  documentclass: article
+# bibliography: references.bib
+link-citations: yes
+---
+
+# Packages required
+```{r, warning=F, message=FALSE}
+library(DT)
+library(data.table)
+```
+
+# Method description
+CGmapTools uses ‘dynamic-fragment finding method’. First, background fragments are defined using several criteria (contain a minimum number of CpGs, at most maximal distance between two adjacent CpGs, etc.). An unpaired t-test is then carried out to compare the methylation levels of CpG sites shared between fragments in the two groups. DMRs are then selected from these background fragments by p-values. 
+
+
+# Merge groups into one table
+First, the data from each group need to be merged into a single file.
+
+## Simulated data
+
+### Group1
+```{r, engine='bash'}
+mkdir -p ./output/01_merged_tables
+
+cgmaptools mergelist tosingle -i <(zcat ./input/sim_rep1.cov.gz),<(zcat ./input/sim_rep2.cov.gz),<(zcat ./input/sim_rep3.cov.gz),<(zcat ./input/sim_rep4.cov.gz),<(zcat ./input/sim_rep5.cov.gz) | pigz -11 -p 16 > ./output/01_merged_tables/sim_data_grp1.merge.gz
+```
+
+### Group2
+```{r, engine='bash'}
+cgmaptools mergelist tosingle -i <(zcat ./input/sim_rep6.cov.gz),<(zcat ./input/sim_rep7.cov.gz),<(zcat ./input/sim_rep8.cov.gz),<(zcat ./input/sim_rep9.cov.gz),<(zcat ./input/sim_rep10.cov.gz) | pigz -11 -p 16 > ./output/01_merged_tables/sim_data_grp2.merge.gz
+```
+
+
+# Tables to perform DMRs analysis
+The files with data from group 1 and group 2 are then also merged using `intersect` function.
+
+
+## Simulated data
+```{r, engine='bash'}
+mkdir -p ./output/02_intersect_grp1_grp2
+
+cgmaptools intersect -1 <(zcat ./output/01_merged_tables/sim_data_grp1.merge.gz) -2 <(zcat ./output/01_merged_tables/sim_data_grp2.merge.gz) | pigz -11 -p 16 > ./output/02_intersect_grp1_grp2/sim_data.intersect.gz
+```
+
+
+# DMRs analysis
+We compute DMRs.
+
+## Simulated data
+```{r, engine='bash'}
+mkdir -p ./output/03_dmr
+
+cgmaptools dmr -i <(zcat ./output/02_intersect_grp1_grp2/sim_data.intersect.gz) -n 10 | pigz -11 -p 16 > ./output/03_dmr/sim_data.dmr.gz
+```
+
+
+# DMR Tables
+The provided p-values are adjusted for multiple testing by Benjamini-Hochberg correction.
+
+
+## Simulated data
+```{r}
+dmr.sim <- read.table("./output/03_dmr/sim_data.dmr.gz",
+  header = F, sep = "\t", stringsAsFactors = F,
+  col.names = c("chr", "start", "end", "t", "pVal", "mGrp1", "mGrp2", "N_site")
+)
+
+# adjust p-values
+dmr.sim$qval <- p.adjust(p = dmr.sim$pVal, method = "BH")
+dmr.sim <- dmr.sim[order(dmr.sim$qval), ]
+# select only regions with methylation difference at least 0.1
+dmr.sim <- dmr.sim[abs(dmr.sim$mGrp1-dmr.sim$mGrp2) >= 0.1,]
+write.table(dmr.sim, file = gzfile("./output/cgmaptools_dmr_sim_data.txt.gz"), sep = "\t", quote = F, row.names = F)
+```
+
+
+```{r}
+c2 <- dmr.sim$qval[dmr.sim$qval <= 0.05]
+datatable(
+  dmr.sim,
+  rownames = F,
+  filter = "top", extensions = c("Buttons", "ColReorder"), options = list(
+    pageLength = 10,
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    colReorder = list(realtime = FALSE),
+    dom = "fltBip"
+  )
+) %>%
+  formatStyle(
+    "qval",
+    backgroundColor = styleEqual(c2, rep("#66C2A5", length(c2)))
+  )
+```
+
+
+# SessionInfo
+
+```{r}
+devtools::session_info()
+```
