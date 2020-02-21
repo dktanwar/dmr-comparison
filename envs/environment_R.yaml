@@ -3,6 +3,7 @@ channels:
   - bioconda
   - freenome
 dependencies:
-  - r-base=3.6.2
+  - r-base=3.6.1
   - java-jdk=8.0.112
   - pigz=2.3.4
+  - methpipe=3.4.3
