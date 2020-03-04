@@ -2,7 +2,6 @@
 
 rule dmrseq_data_download:
     input:
-        "exp/pkginstall_state.txt",
         data + "data_download_and_filter.Rmd"
     output:
         data + "data_download_and_filter.html"
