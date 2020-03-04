@@ -68,6 +68,7 @@ loci.idx <- which(rowSums(getCoverage(bs[, pData(bs)$Group == "Group1"], type = 
 
 bs.nc <- bs[loci.idx, ]
 
+system("touch ./output/bsseq_neg_control.RData")
 save(bs.nc, file = "./output/bsseq_neg_control.RData", compress = T)
 
 # Extract information from the object
@@ -94,6 +95,7 @@ bs.sim <- simDMRs(bs = bs.null, num.dmrs = 100)
 bs.sim$bs <- bs.sim$bs[, c(1, 4, 2, 5, 3, 6)]
 
 colnames(bs.sim$bs) <- str_replace(colnames(bs.nc) , "NC", "sim")
+system("touch ./output/bsseq_sim_100.RData")
 save(bs.sim, file = "./output/bsseq_sim_100.RData", compress = T)
 
 dmr.ranges <- data.frame(bs.sim$gr.dmrs, stringsAsFactors = F)
