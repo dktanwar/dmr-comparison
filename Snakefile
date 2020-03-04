@@ -11,6 +11,7 @@ if len(config) == 0:
 data = os.path.normpath(config["DATA"]) + "/"
 sim_data_dmrseq = os.path.normpath(config["SIM_DATA_DMRSEQ"]) + "/"
 sim_data_wgbssimla = os.path.normpath(config["SIM_DATA_WGBSSimla"]) + "/"
+cores = config["CORES"]
 
 ############################## Run the workflow ##############################
 
@@ -18,7 +19,8 @@ include: "rules/input_functions.smk"
 
 rule all:
 	input:
-		config_input
+		sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/simulated_DMRS.txt.gz"
+		#config_input
 
 ############################### Workflow rules ###############################
 
