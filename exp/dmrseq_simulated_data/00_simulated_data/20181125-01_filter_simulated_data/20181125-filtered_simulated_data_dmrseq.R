@@ -98,6 +98,7 @@ save(bs.sim, file = "./output/bsseq_sim_100.RData", compress = T)
 
 dmr.ranges <- data.frame(bs.sim$gr.dmrs, stringsAsFactors = F)
 sim.dmr <- data.frame(dmr.ranges, mean.cov = bs.sim$dmr.mncov, effect.size = bs.sim$delta, stringsAsFactors = F)
+system("touch ./output/simulated_DMRS.txt.gz")
 write.table(sim.dmr,
             file = gzfile("./output/simulated_DMRS.txt.gz", compression = 3),
             sep = "\t", quote = FALSE, row.names = FALSE
