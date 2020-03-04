@@ -1,8 +1,22 @@
+######################### General parameters ############################
 
-CORES: 10
+# Simulations to be done
 
-######################### Important paths #########################
+DMRSEQ_SIMULATION: True
+WGBSSimla_SIMULATION: False
+
+# Packages to tests in alphabetical order
+
+BSSEQ: True
+CGMAPTOOLS: False
+DEFIANT: False
+DMRCALLER: False
+DMRSEQ: False
+METHPIPE: False
+METHYLKIT: False
+
+######################### Important paths ##############################
 
 DATA: data/
-SIM_DATA: exp/20181125-data_formats_and_simulated_data-01/
-ANALYSIS: exp/20181125-differential_analysis_regions-02/
+SIM_DATA_DMRSEQ: exp/dmrseq_simulated_data/
+SIM_DATA_WGBSSimla: exp/pWGBSSimla_simulated_data/

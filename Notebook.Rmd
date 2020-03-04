@@ -1,8 +1,10 @@
 ---
 title: "Notebook"
-output: html_notebook
-author: Deepak Tanwar
-editor_options: 
+author: "Deepak Tanwar"
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -65,11 +67,94 @@ editor_options:
 | [MethylMnM](http://www.bioconductor.org/packages/release/bioc/html/methylMnM.html) | Supports only MeDIP-seq and MRE-seq data | October 2019 |
 | [RefFreeDMA](https://github.com/jklughammer/RefFreeDMA) | Supports only RRBS protocol | November 2019 |
 
+## Qualitative evaluation
 
+The following qualitative aspects together with their category, description and weight were taken from _Saelens et al. (2019)_, Supplementary Table 3 and readapted here. The aspects were split in two tables, the first with a summary of the aspects for six categories (availablility, code quality, code assurance, documentation, behaviour and paper) and the second showing how these variables were considered for three aspects: developer friendly, user friendly and future proof.
 
+|  Name   |  Category | Aspect | Weight | Description |
+|:--------:|:---------:|:-------------:|:-----:|:--------------------------:|
+| Open source | Availability |Is the code freely available? | 0.5 | Method's code is freely available | 
+|  |  | | 0.5 | The code can be run on a freely available platform | 
+| Version control  | Availability |Is the code version controlled?| 1 | The code is available on a public version controlled repository, such as Github| 
+| Packaging | Availability |Is the code contained into an easy to install package? Is it discoverable? | 0.5  |The code is provided as a "package", exposing functionality through functions or shell commands | 
+|  |  | | 0.5  | The code can be easily installed through a repository such as CRAN, Bioconductor, PyPI, CPAN, debian packages, ... | 
+| Dependencies | Availability |Are dependencies clearly stated and available? | 0.5|Dependencies are clearly stated in the tutorial or in the code | 
+|  |  | | 0.5|Dependencies are automatically installed | 
+| License | Availability |Is the license of the code clear? Does this license permit academic use?| 0.5 | The code is licensed | 
+|  |  || 0.5 | License allows academic use | 
+| Interface | Availability  | Does the tool have a graphical user interface?| 0.5| The tool can be run using a graphical user interface, either locally or on a web server| 
+|  |   | | 0.5| The tool can be run through the command line or through a programming language| 
+| Function and object naming | Code quality | Do the functions and objects have a consistent naming?| 0.67|Functions/commands have well chosen names |
+|  |  | | 0.33| Arguments/parameters have well chosen names|
+| Code style | Code quality | Do the functions have a consistent style?| 0.5| Code has a consistent style | 
+|  |  | | 0.5| Code follows (basic) good practices in the programming language of choice, for example PEP8 or the tidyverse style guide | 
+| Code duplication | Code quality | Is code frequently duplicated?| 1| Duplicated code is minimal| 
+| Self-contained functions | Code quality | Does the code expose certain steps in the method as self-contained functions or commands?| 1|The method is exposed to the user as self-contained functions or commands | 
+| Plotting | Code quality | Does the code expose certain steps in the method as self-contained functions or commands?| 1 |Plotting functions are provided for the final and/or intermediate results | 
+| Dummy proofing | Code quality | Does the package include dummy proofing?| 1 | Package contains dummy proofing, i.e. testing whether the parameters and data supplied by the user make sense and are useful |
+| Unit testing | Code assurance | Does the package include some testing?| 0.5 | Method is tested using unit tests | 
+| Unit testing | Code assurance | Does the package include some testing?| 0.5 | Tests are run automatically using functionality from the programming language | 
+| Continuous integration | Code assurance | Does the package include some continuous integration?| 1 | The method uses continuous integration, for example on Travis CI |
+| Code coverage | Code assurance | Is the code coverage assessed? | 1 | The code coverage of the repository is assessed. | 
+|  |  |  | 1 | What is the percentage of code coverage | 
+| Support  | Code assurance | Does the package include a system to ask for support? | 0.5 | There is a support ticket system, for example on Github | 
+|  |  |  | 0.5 | The authors respond to tickets and issues are resolved within a reasonable time frame | 
+| Development model  | Code assurance | Does the repository follow a development model, such as GitFlow?| 0.4 | The repository separates the development code from master code, for example using git master en developer branches | 
+|  |  | | 0.4 | The repository has created releases, or several branches corresponding to major releases.| 
+|  |  | | 0.2 | The repository has branches for the development of separate features. | 
+| Tutorial  | Documentation | Is there a tutorial available for the method? Does this tutorial show everything the user needs? | 0.25 | A tutorial or vignette is available | 
+|   |  |  | 0.25 | A tutorial or vignette is available | 
+|   |  |  | 0.25 | The tutorial has real example data | 
+|   |  |  | 0.25 | The tutorial showcases the method on several datasets (1=0, 2=0.5, >2=1)| 
+| Function documentation  | Documentation | Is the purpose and usage of each function documented? | 0.33 | The purpose and usage of functions/commands is documented | 
+|  |  | | 0.33 | The parameters of functions/commands are documented |
+|   |  |  | 0.33 | The output of functions/commands is documented |
+| Inline documentation  | Documentation | Is the code documented inline?| 1| Inline documentation is present in the code| 
+| Parameter transparency  | Documentation | Are all important parameters available to the user?| 1 | All important parameters are exposed to the user | 
+| Seed setting  | Behaviour | Are no seeds set during the execution of the method?| 1 |The method does not artificially become deterministic, for example by setting some (0.5) or a lot (1) of seeds |
+| Unexpected output  | Behaviour | Is unexpected output generated by the method? | 0.25 | No unexpected output messages are generated by the method | 
+|  |  | | 0.25 | No unexpected files, folders or plots are generated | 
+|  |  | | 0.5 | No unexpected warnings during runtime or compilation are generated | 
+| Output format  | Behaviour | Was postprocessing necessary to get the output of the method into a useful format?| 1 | The postprocessing necessary to extract the relevant output from the method is minimal (1), moderate (0.5) or extensive (0) | 
+| Prior information  | Behaviour | Does the method require prior information?| 1 | Prior information is required (0), optional (1) or not required (1) | 
+| Publishing  | Paper | Is the method published?| 1 | The method is published | 
+| Peer review  | Paper | Is the method published in a peer-reviewed journal?| 1 | The paper is published in a peer-reviewed journal| 
+| Evaluation on real data  | Paper | Is the methods usefulness shown in the paper?| 0.5 | The paper shows the method's usefulness on several (1), one (0.25) or no real datasets.| 
+|  |  | | 0.5 | The paper quantifies the accuracy of the method given a gold or silver standard trajectory | 
+| Evaluation of robustness  | Paper | Does the paper assess method robustness?| 1 | The paper assessed method robustness (to eg. noise, subsampling, parameter changes, stability) in one (0.5) or several (1) ways| 
 
-
-
+|  Name   |Developer Friendly | User friendly | Future proof |
+|:---------:|:------:|:------:|:-------:|
+| Open source | Yes | Yes | Yes | 
+| Version control  | Yes | No | No | 
+| Packaging | No | Yes | No | 
+| Dependencies | Yes | Yes | No | 
+| License | Yes | Yes | Yes | 
+| Interface | Yes | Yes | No | 
+| Function and object naming | No | Yes | No | 
+| Code style | Yes | No | No | 
+| Code duplication | Yes | No | No |
+| Self-contained functions | No | Yes | No | 
+| Plotting | No | Yes | No | 
+| Dummy proofing | No | Yes | No | 
+| Unit testing | Yes | No | Yes | 
+| Unit testing | Yes | No | Yes | 
+| Continuous integration | Yes | No | No |
+| Code coverage | Yes | No | No |
+| Support  | Yes | Yes | Yes | 
+| Development model | Yes | No | No |
+| Tutorial  | No | Yes | Yes | 
+| Function documentation  | No | Yes | No | 
+| Inline documentation  | Yes | No | No |
+| Parameter transparency  | No | Yes | Yes | 
+| Seed setting  | No | No | Yes | 
+| Unexpected output  | Yes | Yes | No |
+| Output format  | No | Yes | No | 
+| Prior information  | No | Yes | Yes | 
+| Publishing  | No | No | Yes | 
+| Peer review  | No | No | Yes | 
+| Evaluation on real data  | No | No | Yes | 
+| Evaluation of robustness  | No | Yes | Yes | 
 
 
 # Reproducibility
@@ -82,6 +167,7 @@ Docker container
 2. [10.1093/bib/bbx013](./references/papers/bbx013.pdf)
 3. [10.1186/s13059-019-1811-3](./references/papers/s13059-019-1811-3.pdf)
 4. [10.1186/s13059-019-1738-8](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1738-8)
+5. [10.1038/s41587-019-0071-9](https://doi.org/10.1038/s41587-019-0071-9)
 
 <!-- # RRBS -->
 <!-- 1. Simulated RRBS data -->

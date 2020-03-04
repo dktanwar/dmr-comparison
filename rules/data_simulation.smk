@@ -1,15 +1,15 @@
 # Filter and simulate data from downloaded data
 
-rule simulate_filter_data:
+rule simulate_filter_data_dmrseq:
     input:
         data + "data_download_and_filter.html",
-        script = sim_data + "20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.Rmd"
+        script = sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.Rmd"
     output:
-        sim_data + "20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html",
-        sim_data + "20181125-01_filter_simulated_data/output/anno_neg_control.txt.gz",
-        sim_data + "20181125-01_filter_simulated_data/output/anno_sim_data.txt.gz"
+        sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html",
+        sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/anno_neg_control.txt.gz",
+        sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/anno_sim_data.txt.gz"
     log:
-        sim_data + "20181125-01_filter_simulated_data/log"
+        sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/log"
     conda:
         "../envs/environment_R.yaml"
     shell:
@@ -19,18 +19,18 @@ rule simulate_filter_data:
 
 # Adjust filtered and simulated data to different formats
 
-rule input_data_format:
+rule input_data_format_dmrseq:
     input:
-        sim_data + "20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html",
-        script = sim_data + "20181125-02_samples_table_individual/20181125-generate_input_datasets.Rmd"
+        sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/20181125-filtered_simulated_data_dmrseq.html",
+        script = sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/20181125-generate_input_datasets.Rmd"
     output:
-        sim_data + "20181125-02_samples_table_individual/20181125-generate_input_datasets.html",
-        directory(sim_data + "20181125-02_samples_table_individual/output/bismark/"),
-        directory(sim_data + "20181125-02_samples_table_individual/output/cgmaptools/"),
-        directory(sim_data + "20181125-02_samples_table_individual/output/dmrcaller/"),
-        directory(sim_data + "20181125-02_samples_table_individual/output/methpipe/"),
+        sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/20181125-generate_input_datasets.html",
+        directory(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/bismark/"),
+        directory(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/cgmaptools/"),
+        directory(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/dmrcaller/"),
+        directory(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/methpipe/"),
     log:
-        sim_data + "20181125-02_samples_table_individual/log"
+        sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/log"
     conda:
         "../envs/environment_R.yaml"
     shell:
