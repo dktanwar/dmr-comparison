@@ -68,8 +68,7 @@ loci.idx <- which(rowSums(getCoverage(bs[, pData(bs)$Group == "Group1"], type = 
 
 bs.nc <- bs[loci.idx, ]
 
-system("touch ./output/bsseq_neg_control.RData")
-save(bs.nc, file = "./output/bsseq_neg_control.RData", compress = T)
+save(bs.nc, file = "./bsseq_neg_control.RData", compress = T)
 
 # Extract information from the object
 chr.nc <- as.character(seqnames(bs.nc))
@@ -78,7 +77,7 @@ cov.nc <- data.frame(getCoverage(bs.nc, type = "Cov"))
 M.nc <- data.frame(getCoverage(bs.nc, type = "M"))
 
 for (i in 1:ncol(cov.nc)) {
-  n <- paste0("./output/NC_rep", i, ".bed")
+  n <- paste0("./NC_rep", i, ".bed")
   df <- data.frame(chr.nc, pos.nc, M.nc[, i], cov.nc[, i])
   fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F)
 }
@@ -95,14 +94,13 @@ bs.sim <- simDMRs(bs = bs.null, num.dmrs = 100)
 bs.sim$bs <- bs.sim$bs[, c(1, 4, 2, 5, 3, 6)]
 
 colnames(bs.sim$bs) <- str_replace(colnames(bs.nc) , "NC", "sim")
-system("touch ./output/bsseq_sim_100.RData")
-save(bs.sim, file = "./output/bsseq_sim_100.RData", compress = T)
+save(bs.sim, file = "./bsseq_sim_100.RData", compress = T)
 
 dmr.ranges <- data.frame(bs.sim$gr.dmrs, stringsAsFactors = F)
 sim.dmr <- data.frame(dmr.ranges, mean.cov = bs.sim$dmr.mncov, effect.size = bs.sim$delta, stringsAsFactors = F)
-system("touch ./output/simulated_DMRS.txt.gz")
+system("touch ./simulated_DMRS.txt.gz")
 write.table(sim.dmr,
-            file = gzfile("./output/simulated_DMRS.txt.gz", compression = 3),
+            file = gzfile("./simulated_DMRS.txt.gz", compression = 3),
             sep = "\t", quote = FALSE, row.names = FALSE
 )
 
@@ -116,20 +114,20 @@ cov.sim <- data.frame(getCoverage(sim, type = "Cov"))
 M.sim <- data.frame(getCoverage(sim, type = "M"))
 
 for (i in 1:ncol(cov.sim)) {
-  n <- paste0("./output/sim_rep", i, ".bed")
+  n <- paste0("./sim_rep", i, ".bed")
   df <- data.frame(chr.sim, pos.sim, M.sim[, i], cov.sim[, i])
   fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F)
 }
 
 anno.nc <- anno[, 3:4]
 
-write.table(anno.nc, "./output/anno_neg_control.txt", sep = "\t", quote = F)
+write.table(anno.nc, "./anno_neg_control.txt", sep = "\t", quote = F)
 
 anno.sim <- anno.nc %>%
   mutate_all(funs(str_replace(., "NC", "sim")))
 rownames(anno.sim) <- anno.sim$names
 
-write.table(anno.sim, "./output/anno_sim_data.txt", sep = "\t", quote = F)
+write.table(anno.sim, "./anno_sim_data.txt", sep = "\t", quote = F)
 
-system(paste0("pigz -11 -p ", cores, " ./output/*.txt"))
-system(paste0("pigz -11 -p ", cores, " ./output/*.bed"))
+system(paste0("pigz -11 -p ", cores, " ./*.txt"))
+system(paste0("pigz -11 -p ", cores, " ./*.bed"))
