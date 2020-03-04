@@ -11,7 +11,7 @@ if len(config) == 0:
 data = os.path.normpath(config["DATA"]) + "/"
 sim_data_dmrseq = os.path.normpath(config["SIM_DATA_DMRSEQ"]) + "/"
 sim_data_wgbssimla = os.path.normpath(config["SIM_DATA_WGBSSimla"]) + "/"
-cores = config["CORES"]
+cores = workflow.cores
 
 ############################## Run the workflow ##############################
 

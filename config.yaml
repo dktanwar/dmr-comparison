@@ -15,8 +15,6 @@ DMRSEQ: False
 METHPIPE: False
 METHYLKIT: False
 
-CORES: 10
-
 ######################### Important paths ##############################
 
 DATA: data/

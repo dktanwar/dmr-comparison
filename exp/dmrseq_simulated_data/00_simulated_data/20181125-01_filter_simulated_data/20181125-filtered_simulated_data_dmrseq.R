@@ -1,6 +1,13 @@
 ## This script simulates and filters data for the benchmark with dmrseq,
 ## for more details check 20181125-filtered_simulated_data_dmrseq.Rmd
 
+## Load required libraries
+
+library(dmrseq)
+library(data.table)
+library(tidyverse)
+library(dplyr)
+
 comm_args <- commandArgs(trailingOnly = TRUE)
 
 # First command line argument: the path to the data folder
