@@ -46,6 +46,8 @@ read.files <- lapply(files, function(x) {
   return(a)
 })
 
+anno <- read.table(phenoData, header = T, sep = "\t", stringsAsFactors = F)
+
 # Make one dataframe fromlist of files
 tab <- Reduce(function(x, y) {
   merge(x, y, by = c("chr", "pos"))
