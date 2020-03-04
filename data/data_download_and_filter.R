@@ -1,6 +1,14 @@
 ## Script to download the data used for the benchmark,
 ## for more details check data_download_and_filter.html
 
+comm_args <- commandArgs(trailingOnly = TRUE)
+
+# Only one argument needed: the path to the data folder
+
+data_folder <- comm_args[1]
+
+setwd(data_folder)
+
 ## Load required libraries
 
 library(GEOquery)

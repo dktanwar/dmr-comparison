@@ -11,9 +11,11 @@ rule dmrseq_data_download:
         data + "raw/GSM1565948_DC89_NI_5mC.chr18.txt.gz",
         data + "raw/GSM1565950_DC91_NI_5mC.chr18.txt.gz",
         data + "phenoData.txt.gz"
+    params:
+        data
     log:
         data + "log"
     conda:
         "../envs/environment_R.yaml"
     shell:
-        "Rscript {input} 2> {log} >> {log}"
+        "Rscript {input} {params} 2> {log} >> {log}"
