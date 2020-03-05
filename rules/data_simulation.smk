@@ -35,7 +35,7 @@ rule input_data_format_dmrseq:
         nc = expand(sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/NC_rep{n}.bed.gz", n = ['1', '2', '3', '4', '5', '6']),
         sim = expand(sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/sim_rep{n}.bed.gz", n = ['1', '2', '3', '4', '5', '6'])
     output:
-        expand(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/{tool}/NC_rep{n}.cov.gz", tool = ['bismark', 'cgmaptools', 'dmrcaller', 'methpipe'], n = ['1', '2', '3', '4', '5', '6'])
+        expand(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/{tool}/NC_rep{n}.cov.gz", tool = ['bismark', 'cgmaptools', 'dmrcaller', 'methpipe'], n = ['1', '2', '3', '4', '5', '6']),
         expand(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/{tool}/sim_rep{n}.cov.gz", tool = ['bismark', 'cgmaptools', 'dmrcaller', 'methpipe'], n = ['1', '2', '3', '4', '5', '6']),
         sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/neg_control.cov.gz",
         sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/neg_control.M.gz",
