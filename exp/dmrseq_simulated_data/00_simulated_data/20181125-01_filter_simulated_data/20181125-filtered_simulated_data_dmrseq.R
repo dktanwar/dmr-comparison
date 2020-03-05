@@ -104,7 +104,7 @@ M.nc <- data.frame(getCoverage(bs.nc, type = "M"))
 for (i in 1:ncol(cov.nc)) {
   n <- paste0("./NC_rep", i, ".bed")
   df <- data.frame(chr.nc, pos.nc, M.nc[, i], cov.nc[, i])
-  fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F)
+  fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F, nThread = cores)
 }
 
 # reorder samples to create a null comparison
@@ -140,25 +140,11 @@ M.sim <- data.frame(getCoverage(sim, type = "M"))
 
 # Separate simulated data
 
-n1 <- "./sim_rep1.bed"
-n2 <- "./sim_rep2.bed"
-n3 <- "./sim_rep3.bed"
-n4 <- "./sim_rep4.bed"
-n5 <- "./sim_rep5.bed"
-n6 <- "./sim_rep6.bed"
-df1 <- data.frame(chr.sim, pos.sim, M.sim[, 1], cov.sim[, 1])
-df2 <- data.frame(chr.sim, pos.sim, M.sim[, 2], cov.sim[, 2])
-df3 <- data.frame(chr.sim, pos.sim, M.sim[, 3], cov.sim[, 3])
-df4 <- data.frame(chr.sim, pos.sim, M.sim[, 4], cov.sim[, 4])
-df5 <- data.frame(chr.sim, pos.sim, M.sim[, 5], cov.sim[, 5])
-df6 <- data.frame(chr.sim, pos.sim, M.sim[, 6], cov.sim[, 6])
-
-fwrite(x = df1, file = n1, sep = "\t", row.names = F, col.names = F, quote = F)
-fwrite(x = df2, file = n2, sep = "\t", row.names = F, col.names = F, quote = F)
-fwrite(x = df3, file = n3, sep = "\t", row.names = F, col.names = F, quote = F)
-fwrite(x = df4, file = n4, sep = "\t", row.names = F, col.names = F, quote = F)
-fwrite(x = df5, file = n5, sep = "\t", row.names = F, col.names = F, quote = F)
-fwrite(x = df6, file = n6, sep = "\t", row.names = F, col.names = F, quote = F)
+for (i in 1:ncol(cov.sim)) {
+  n <- paste0("./output/sim_rep", i, ".bed")
+  df <- data.frame(chr.sim, pos.sim, M.sim[, i], cov.sim[, i])
+  fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F, nThread = cores)
+}
 
 anno.nc <- anno[, 3:4]
 
