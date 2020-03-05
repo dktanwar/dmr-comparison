@@ -31,8 +31,9 @@ rule simulate_filter_data_dmrseq:
 
 rule input_data_format_dmrseq:
     input:
-        expand(sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/NC_rep{n}.bed.gz", n = ['1', '2', '3', '4', '5', '6']),
-        expand(sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/sim_rep{n}.bed.gz", n = ['1', '2', '3', '4', '5', '6'])
+        script = sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/20181125-generating_input_datasets.R",
+        nc = expand(sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/NC_rep{n}.bed.gz", n = ['1', '2', '3', '4', '5', '6']),
+        sim = expand(sim_data_dmrseq + "00_simulated_data/20181125-01_filter_simulated_data/output/sim_rep{n}.bed.gz", n = ['1', '2', '3', '4', '5', '6'])
     output:
         expand(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/{tool}/NC_rep{n}.cov.gz", tool = ['bismark', 'cgmaptools', 'dmrcaller', 'methpipe'], n = ['1', '2', '3', '4', '5', '6'])
         expand(sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/{tool}/sim_rep{n}.cov.gz", tool = ['bismark', 'cgmaptools', 'dmrcaller', 'methpipe'], n = ['1', '2', '3', '4', '5', '6']),
@@ -40,11 +41,13 @@ rule input_data_format_dmrseq:
         sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/neg_control.M.gz",
         sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/simulated_data.cov.gz",
         sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/simulated_data.M.gz"
+    params:
+        sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/output/"
+    threads:
+        cores
     log:
         sim_data_dmrseq + "00_simulated_data/20181125-02_samples_table_individual/log"
     conda:
         "../envs/environment_R.yaml"
     shell:
-        """
-        Rscript -e 'rmarkdown::render("{input.script}", "html_document")' 2> {log} >> {log}
-        """
+        "Rscript {input.script} {params} {threads} {input.nc} {input.sim} 2> {log} >> {log}"
