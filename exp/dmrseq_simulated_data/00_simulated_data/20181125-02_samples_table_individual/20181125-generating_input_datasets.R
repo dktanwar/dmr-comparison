@@ -83,3 +83,138 @@ for(i in 1:length(read.nc)){
   fwrite(x = bismark.sim[[i]], file = paste0("./bismark/", names(read.sim)[i], ".cov"),
          sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
 }
+
+# Creating methpipe input data
+
+methpipe.nc <- lapply(read.nc, function(x){
+  a <- x
+  a$strand <- "*"
+  a$CG <- "CpG"
+  a$percent <- (a$M/a$cov)
+  return(a[, c("chr", "pos", "strand", "CG", "percent", "cov")])
+})
+
+
+methpipe.sim <- lapply(read.sim, function(x){
+  a <- x
+  a$strand <- "*"
+  a$CG <- "CpG"
+  a$percent <- (a$M/a$cov)
+  return(a[, c("chr", "pos", "strand", "CG", "percent", "cov")])
+})
+
+# Save methpipe data
+
+system("mkdir -p ./methpipe")
+for(i in 1:length(read.nc)){
+  fwrite(x = methpipe.nc[[i]], file = paste0("./methpipe/", names(read.nc)[i], ".cov"), 
+         sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
+  
+  fwrite(x = methpipe.sim[[i]], file = paste0("./methpipe/", names(read.sim)[i], ".cov"),
+         sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
+}
+
+# Creating cgmaptools input data
+
+cgmap.nc <- lapply(read.nc, function(x){
+  a <- x
+  a$nuc <- "C"
+  a$cont <- "CG"
+  a$dinuc <- "CG"
+  a$meth <- a$M/a$cov
+  return(a[, c("chr", "nuc", "pos", "cont", "dinuc", "meth", "M", "cov")])
+})
+
+
+cgmap.sim <- lapply(read.sim, function(x){
+  a <- x
+  a$nuc <- "C"
+  a$cont <- "CG"
+  a$dinuc <- "CG"
+  a$meth <- a$M/a$cov
+  return(a[, c("chr", "nuc", "pos", "cont", "dinuc", "meth", "M", "cov")])
+})
+
+# Save cgmaptoolsdata
+
+system("mkdir -p ./cgmaptools")
+for(i in 1:length(read.nc)){
+  fwrite(x = cgmap.nc[[i]], file = paste0("./cgmaptools/", names(read.nc)[i], ".cov"), 
+         sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
+  
+  fwrite(x = cgmap.sim[[i]], file = paste0("./cgmaptools/", names(read.sim)[i], ".cov"),
+         sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
+}
+
+
+# Creating dmrcaller input data
+
+dmrcaller.nc <- lapply(read.nc, function(x){
+  a <- x
+  a$strand <- "+"
+  a$cont <- "CG"
+  a$dinuc <- "XCG"
+  a$Un <- a$cov - a$M
+  return(a[, c("chr", "pos", "strand", "M", "Un", "cont", "dinuc")])
+})
+
+
+dmrcaller.sim <- lapply(read.sim, function(x){
+  a <- x
+  a$strand <- "+"
+  a$cont <- "CG"
+  a$dinuc <- "XCG"
+  a$Un <- a$cov - a$M
+  return(a[, c("chr", "pos", "strand", "M", "Un", "cont", "dinuc")])
+})
+
+# Save dmrcaller data
+
+system("mkdir -p ./dmrcaller")
+for(i in 1:length(read.nc)){
+  fwrite(x = dmrcaller.nc[[i]], file = paste0("./dmrcaller/", names(read.nc)[i], ".cov"), 
+         sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
+  
+  fwrite(x = dmrcaller.sim[[i]], file = paste0("./dmrcaller/", names(read.sim)[i], ".cov"),
+         sep = "\t", quote = F, row.names = F, col.names = F, nThread = cores)
+}
+
+# making one table with coverage and methylation values
+# first for negative control
+
+tab.nc <- Reduce(function(x, y) {
+  merge(x, y, by = c("chr", "pos"))
+}, read.nc)
+
+tab.nc <- tab.nc[order(tab.nc$pos),]
+
+tab.nc.M <- tab.nc[, grep(pattern = "chr|pos|M", x = colnames(tab.nc))]
+colnames(tab.nc.M)[3:ncol(tab.nc.M)] <- names(read.nc)
+fwrite(x = tab.nc.M, file = "./neg_control.M", quote = F, sep = "\t", row.names = F)
+
+
+tab.nc.cov <- tab.nc[, grep(pattern = "chr|pos|cov", x = colnames(tab.nc))]
+colnames(tab.nc.cov)[3:ncol(tab.nc.cov)] <- names(read.nc)
+fwrite(x = tab.nc.cov, file = "./neg_control.cov", quote = F, sep = "\t", row.names = F)
+
+# then for simulated data
+
+tab.sim <- Reduce(function(x, y) {
+  merge(x, y, by = c("chr", "pos"))
+}, read.sim)
+
+tab.sim <- tab.sim[order(tab.sim$pos),]
+
+tab.sim.M <- tab.sim[, grep(pattern = "chr|pos|M", x = colnames(tab.sim))]
+colnames(tab.sim.M)[3:ncol(tab.sim.M)] <- names(read.sim)
+fwrite(x = tab.sim.M, file = "./simulated_data.M", quote = F, sep = "\t", row.names = F)
+
+
+tab.sim.cov <- tab.sim[, grep(pattern = "chr|pos|cov", x = colnames(tab.sim))]
+colnames(tab.sim.cov)[3:ncol(tab.sim.cov)] <- names(read.sim)
+fwrite(x = tab.sim.cov, file = "./simulated_data.cov", quote = F, sep = "\t", row.names = F)
+
+# As a final step we compress everything 
+
+system("pigz -11 -p ", cores, " ./*")
+system("pigz -11 -p ", cores, " ./*/*")
