@@ -35,23 +35,48 @@ files <- c(file1, file2, file3, file4, file5, file6)
 # phenoData
 phenoData <- comm_args[9]
 
-# read all the data in a loop
+# read all the data
 
-read.files <- lapply(files, function(x) {
-  a <- fread(
-    input = x, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
-    col.names = c("chr", "pos", "M", "cov")
-  )
-  colnames(a)[3:4] <- paste(strsplit(x, "\\.|/")[[1]][4], colnames(a)[3:4], sep = ".")
-  return(a)
-})
+file1_read <- fread(
+  input = file1, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+  col.names = c("chr", "pos", "1.M", "1.cov")
+)
+
+file2_read <- fread(
+  input = file2, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+  col.names = c("chr", "pos", "2.M", "2.cov")
+)
+
+file3_read <- fread(
+  input = file3, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+  col.names = c("chr", "pos", "3.M", "3.cov")
+)
+
+file4_read <- fread(
+  input = file4, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+  col.names = c("chr", "pos", "4.M", "4.cov")
+)
+
+file5_read <- fread(
+  input = file5, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+  col.names = c("chr", "pos", "5.M", "5.cov")
+)
+
+file6_read <- fread(
+  input = file6, sep = "\t", data.table = F, header = F, stringsAsFactors = F,
+  col.names = c("chr", "pos", "6.M", "6.cov")
+)
 
 anno <- read.table(phenoData, header = T, sep = "\t", stringsAsFactors = F)
 
-# Make one dataframe fromlist of files
-tab <- Reduce(function(x, y) {
-  merge(x, y, by = c("chr", "pos"))
-}, read.files)
+# Make one dataframe from list of files
+
+tab <- merge(file1_read, file2_read, by = c("chr", "pos"))
+tab <- merge(tab, file3_read, by = c("chr", "pos"))
+tab <- merge(tab, file4_read, by = c("chr", "pos"))
+tab <- merge(tab, file5_read, by = c("chr", "pos"))
+tab <- merge(tab, file6_read, by = c("chr", "pos"))
+
 
 # Generate BSseq object
 bs <- BSseq(
