@@ -141,7 +141,7 @@ M.sim <- data.frame(getCoverage(sim, type = "M"))
 # Separate simulated data
 
 for (i in 1:ncol(cov.sim)) {
-  n <- paste0("./output/sim_rep", i, ".bed")
+  n <- paste0("./sim_rep", i, ".bed")
   df <- data.frame(chr.sim, pos.sim, M.sim[, i], cov.sim[, i])
   fwrite(x = df, file = n, sep = "\t", row.names = F, col.names = F, quote = F, nThread = cores)
 }
