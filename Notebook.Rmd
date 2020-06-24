@@ -1,56 +1,65 @@
 ---
 title: "Notebook"
-output: html_notebook
-author: Deepak Tanwar
-editor_options: 
+author: "Deepak Tanwar"
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
+# Goals
+
+The goal of this benchmark is to offer guidelines on which differential methylation analysis tools are more appropriate in a variety of situations. On top of this, we will offer a comprehensive review of all the currently available tools. 
+The evaluation will include both quantiative and qualitative aspects and our final results will take into consideration both of these aspects. The whole benchmark will be provided on an infrastructure ensuring reproducibility.
+
+# Methods
 
 # Simulations
+
+Several simulation tools exist to create artificial bisulfite sequencing data (either in form of reads or count table):
+
 1. [WGBSuite](http://www.wgbssuite.org.uk/)
 2. [omics simla](https://omicssimla.sourceforge.io/WGBSinput.html)
 3. [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html)
 4. [Sherman](https://github.com/FelixKrueger/Sherman/blob/master/Sherman_User_Manual.md)
 
 
-# Methods
-
 ## Fitting the benchmark
 
 |        | Language | Paper | Last update |
 |:-----:|:------------:|:-----:|:-----------:|
 | [ABBA](http://abba.systems-genetics.net/) | Perl, R | [Rackham et al. (2017)](https://doi.org/10.1534/genetics.116.195008) | March 2017 | 
-| [BiSeq](https://bioconductor.org/packages/release/bioc/html/BiSeq.html) | R  | -  | |
-| [bsseq](https://bioconductor.org/packages/release/bioc/html/bsseq.html) | | | |
-| [bumphunter](https://bioconductor.org/packages/release/bioc/html/bumphunter.html)? | R | [Jaffe et al. (2012)](https://doi.org/10.1093/ije/dyr238) | October 2019 |
-| [CGmapTools](https://cgmaptools.github.io/) | | | |
-| [CpG_MPs](https://github.com/Kinspact/CpG_MPs) | | | | 
-| [defiant](https://github.com/hhg7/defiant) | | | |
-| [DSS](http://bioconductor.org/packages/release/bioc/html/DSS.html) | | | |
-| [DMAP](https://academic.oup.com/bioinformatics/article/30/13/1814/2422202) | | | |
-| [DMRcaller](https://bioconductor.org/packages/release/bioc/html/DMRcaller.html) | | | |
+| [BiSeq](https://bioconductor.org/packages/release/bioc/html/BiSeq.html) | R  | -  | October 2019* |
+| [bsseq](https://bioconductor.org/packages/release/bioc/html/bsseq.html) | R |  [Hansen et al. (2012)](https://doi.org/10.1186/gb-2012-13-10-r83)  | October 2019 |
+| [bumphunter](https://bioconductor.org/packages/release/bioc/html/bumphunter.html)? | R | [Jaffe et al. (2012)](https://doi.org/10.1093/ije/dyr238) | October 2019* |
+| [CGmapTools](https://cgmaptools.github.io/) | C and Python | [Guo et al. (2018)](https://doi.org/10.1093/bioinformatics/btx595) | March 2020 |
+| [CpG_MPs](https://github.com/Kinspact/CpG_MPs) | Perl | [Su et al. (2012)](https://doi.org/10.1093/nar/gks829) | September 2015 | 
+| [defiant](https://github.com/hhg7/defiant) | R | [Condon et al. (2018)](https://doi.org/10.1186/s12859-018-2037-1) | April 2020 |
+| [DSS](http://bioconductor.org/packages/release/bioc/html/DSS.html) | R | [Park et al. (2016)](https://doi.org/10.1093/bioinformatics/btw026) | October 2019* |
+| [DMAP](https://academic.oup.com/bioinformatics/article/30/13/1814/2422202) | C | [Stockwell et al. (2014)](https://doi.org/10.1093/bioinformatics/btu126) | ? |
+| [DMRcaller](https://bioconductor.org/packages/release/bioc/html/DMRcaller.html) | R | [Catoni et al. (2018)](https://doi.org/10.1093/nar/gky602) | October 2019* |
 | [DMRfinder](https://github.com/jsh58/DMRfinder#misc) | R | [Gaspar et al. (2017)](https://doi.org/10.1186/s12859-017-1909-0) | April 2019 |
-| [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html) | | | |
+| [dmrseq](https://bioconductor.org/packages/release/bioc/html/dmrseq.html) | R | [Korthauer et al. (2018)](https://doi.org/10.1093/biostatistics/kxy007)| October 2019* |
 | [eDMR](https://github.com/ShengLi/edmr) | R | [Li et al. (2013)](https://doi.org/10.1186/1471-2105-14-S5-S10) | February 2017 |
 | [GetisDMR](https://github.com/DMU-lilab/GetisDMR) | C++ | [Wen et al. (2016)](https://doi.org/10.1093/bioinformatics/btw497) | April 2016 |
 | [HMM-DM](https://github.com/xxy39/HMM-DM)| R | [Yu et al. (2016)](https://doi.org/10.1515/sagmb-2015-0077) | March 2016 |
 | [HMM-Fisher](https://github.com/xxy39/HMM-Fisher) | R | [Yu et al. 2016](https://doi.org/10.1515/sagmb-2015-0076) | February 2016 |
-| [informME](https://github.com/GarrettJenkinson/informME) | | | |
-| [M3D](https://bioconductor.org/packages/release/bioc/html/M3D.html) | R | - | October 2019 |
+| [informME](https://github.com/GarrettJenkinson/informME) | MATLAB, C++ and R | [Jenkinson et al. (2018)](https://doi.org/10.1186/s12859-018-2086-5) | April 2019 |
+| [M3D](https://bioconductor.org/packages/release/bioc/html/M3D.html) | R | - | October 2019* |
 | [MethCP](https://github.com/boyinggong/MethCP) | R | [Gong et al. (2019)](https://doi.org/10.1101/265116 ) | October 2019 |
-| [methPipe](http://smithlabresearch.org/software/methpipe/) | | | |
-| [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html) | | | |
+| [methPipe](http://smithlabresearch.org/software/methpipe/) | C++ | [Song et al. (2013)](https://doi.org/10.1371/journal.pone.0081148) | April 2020 |
+| [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html) | R | [Akalin et al. (2012)](https://doi.org/10.1186/gb-2012-13-10-r87) | October 2019* |
 | [methylPy](https://github.com/yupenghe/methylpy) | Python | [Schultz et al. (2015)](https://doi.org/10.1038/nature14465) | January 2020 |
-| [MethylSeekR](https://bioconductor.org/packages/release/bioc/html/MethylSeekR.html) | | | |
+| [MethylSeekR](https://bioconductor.org/packages/release/bioc/html/MethylSeekR.html) | R | [Burger et al. (2013)](https://doi.org/10.1038/10.1093/nar/gkt599) | October 2019 |
 | [methylSig](https://github.com/sartorlab/methylSig) | R | [Park et al. (2014)](https://doi.org/10.1093/bioinformatics/btu339) | January 2019 |
-| [metilene](https://www.bioinf.uni-leipzig.de/Software/metilene/) | | | |
-| [MOABS](https://github.com/sunnyisgalaxy/moabs) | | | |
-| [RnBeads 2.0](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1664-9)? | | | |
+| [metilene](https://www.bioinf.uni-leipzig.de/Software/metilene/) | C? | [Jühling et al. (2016)](https://doi.org/10.1101/gr.196394.115) | ? |
+| [MOABS](https://github.com/sunnyisgalaxy/moabs) | C and C++ | [Sun et al. (2014)](https://doi.org/10.1186/gb-2014-15-2-r38) | February 2020 |
+| [RnBeads 2.0](https://rnbeads.org/) | R | [Müller et al. (2019)](https://doi.org/10.1186/s13059-019-1664-9) | October 2019* |
 | [SMAP](https://github.com/hellbelly/SMAPdigger) | Perl | [Gao et al. (2015)](https://doi.org/10.1186/s13742-015-0070-9) | July 2018 |
-| [SMART2](http://fame.edbc.org/smart/index.html) | | | |
+| [SMART2](http://fame.edbc.org/smart/index.html) | Python | [Hongbo et al. (2016)](https://doi.org/10.1093/nar/gkv1332)  | April 2018 |
 | [swDMR](https://github.com/xflicsu/swdmr) | Perl | [Wang et al. (2015)]( https://doi.org/10.1371/journal.pone.0132866) | March 2017 |
-| [QDMR](http://bioinfo.hrbmu.edu.cn/qdmr/) | | | |
+| [QDMR](http://bioinfo.hrbmu.edu.cn/qdmr/) | Java | [Zhang et al. (2011)](https://doi.org/10.1093/nar/gkr053) | October 2012 |
 
 ## Not fitting the benchmark
 
@@ -66,11 +75,99 @@ editor_options:
 | [RefFreeDMA](https://github.com/jklughammer/RefFreeDMA) | Supports only RRBS protocol | November 2019 |
 
 
+## Qualitative evaluation
+
+The following qualitative aspects together with their category, description and weight were taken from _Saelens et al. (2019)_, Supplementary Table 3 and readapted here. The aspects were split in two tables, the first with a summary of the aspects for six categories (availablility, code quality, code assurance, documentation, behaviour and paper) and the second showing how these variables were considered for three aspects: developer friendly, user friendly and future proof.
+
+|  Name   |  Category | Aspect | Weight | Description |
+|:--------:|:---------:|:-------------:|:-----:|:--------------------------:|
+| Open source | Availability |Is the code freely available? | 0.5 | Method's code is freely available | 
+|  |  | | 0.5 | The code can be run on a freely available platform | 
+| Version control  | Availability |Is the code version controlled?| 1 | The code is available on a public version controlled repository, such as Github| 
+| Packaging | Availability |Is the code contained into an easy to install package? Is it discoverable? | 0.5  |The code is provided as a "package", exposing functionality through functions or shell commands | 
+|  |  | | 0.5  | The code can be easily installed through a repository such as CRAN, Bioconductor, PyPI, CPAN, debian packages, ... | 
+| Dependencies | Availability |Are dependencies clearly stated and available? | 0.5|Dependencies are clearly stated in the tutorial or in the code | 
+|  |  | | 0.5|Dependencies are automatically installed | 
+| License | Availability |Is the license of the code clear? Does this license permit academic use?| 0.5 | The code is licensed | 
+|  |  || 0.5 | License allows academic use | 
+| Interface | Availability  | Does the tool have a graphical user interface?| 0.5| The tool can be run using a graphical user interface, either locally or on a web server| 
+|  |   | | 0.5| The tool can be run through the command line or through a programming language| 
+| Function and object naming | Code quality | Do the functions and objects have a consistent naming?| 0.67|Functions/commands have well chosen names |
+|  |  | | 0.33| Arguments/parameters have well chosen names|
+| Code style | Code quality | Do the functions have a consistent style?| 0.5| Code has a consistent style | 
+|  |  | | 0.5| Code follows (basic) good practices in the programming language of choice, for example PEP8 or the tidyverse style guide | 
+| Code duplication | Code quality | Is code frequently duplicated?| 1| Duplicated code is minimal| 
+| Self-contained functions | Code quality | Does the code expose certain steps in the method as self-contained functions or commands?| 1|The method is exposed to the user as self-contained functions or commands | 
+| Plotting | Code quality | Does the code expose certain steps in the method as self-contained functions or commands?| 1 |Plotting functions are provided for the final and/or intermediate results | 
+| Dummy proofing | Code quality | Does the package include dummy proofing?| 1 | Package contains dummy proofing, i.e. testing whether the parameters and data supplied by the user make sense and are useful |
+| Unit testing | Code assurance | Does the package include some testing?| 0.5 | Method is tested using unit tests | 
+| Unit testing | Code assurance | Does the package include some testing?| 0.5 | Tests are run automatically using functionality from the programming language | 
+| Continuous integration | Code assurance | Does the package include some continuous integration?| 1 | The method uses continuous integration, for example on Travis CI |
+| Code coverage | Code assurance | Is the code coverage assessed? | 1 | The code coverage of the repository is assessed. | 
+|  |  |  | 1 | What is the percentage of code coverage | 
+| Support  | Code assurance | Does the package include a system to ask for support? | 0.5 | There is a support ticket system, for example on Github | 
+|  |  |  | 0.5 | The authors respond to tickets and issues are resolved within a reasonable time frame | 
+| Development model  | Code assurance | Does the repository follow a development model, such as GitFlow?| 0.4 | The repository separates the development code from master code, for example using git master en developer branches | 
+|  |  | | 0.4 | The repository has created releases, or several branches corresponding to major releases.| 
+|  |  | | 0.2 | The repository has branches for the development of separate features. | 
+| Tutorial  | Documentation | Is there a tutorial available for the method? Does this tutorial show everything the user needs? | 0.25 | A tutorial or vignette is available | 
+|   |  |  | 0.25 | A tutorial or vignette is available | 
+|   |  |  | 0.25 | The tutorial has real example data | 
+|   |  |  | 0.25 | The tutorial showcases the method on several datasets (1=0, 2=0.5, >2=1)| 
+| Function documentation  | Documentation | Is the purpose and usage of each function documented? | 0.33 | The purpose and usage of functions/commands is documented | 
+|  |  | | 0.33 | The parameters of functions/commands are documented |
+|   |  |  | 0.33 | The output of functions/commands is documented |
+| Inline documentation  | Documentation | Is the code documented inline?| 1| Inline documentation is present in the code| 
+| Parameter transparency  | Documentation | Are all important parameters available to the user?| 1 | All important parameters are exposed to the user | 
+| Seed setting  | Behaviour | Are no seeds set during the execution of the method?| 1 |The method does not artificially become deterministic, for example by setting some (0.5) or a lot (1) of seeds |
+| Unexpected output  | Behaviour | Is unexpected output generated by the method? | 0.25 | No unexpected output messages are generated by the method | 
+|  |  | | 0.25 | No unexpected files, folders or plots are generated | 
+|  |  | | 0.5 | No unexpected warnings during runtime or compilation are generated | 
+| Output format  | Behaviour | Was postprocessing necessary to get the output of the method into a useful format?| 1 | The postprocessing necessary to extract the relevant output from the method is minimal (1), moderate (0.5) or extensive (0) | 
+| Prior information  | Behaviour | Does the method require prior information?| 1 | Prior information is required (0), optional (1) or not required (1) | 
+| Publishing  | Paper | Is the method published?| 1 | The method is published | 
+| Peer review  | Paper | Is the method published in a peer-reviewed journal?| 1 | The paper is published in a peer-reviewed journal| 
+| Evaluation on real data  | Paper | Is the methods usefulness shown in the paper?| 0.5 | The paper shows the method's usefulness on several (1), one (0.25) or no real datasets.| 
+|  |  | | 0.5 | The paper quantifies the accuracy of the method given a gold or silver standard trajectory | 
+| Evaluation of robustness  | Paper | Does the paper assess method robustness?| 1 | The paper assessed method robustness (to eg. noise, subsampling, parameter changes, stability) in one (0.5) or several (1) ways| 
+
+|  Name   |Developer Friendly | User friendly | Future proof |
+|:---------:|:------:|:------:|:-------:|
+| Open source | Yes | Yes | Yes | 
+| Version control  | Yes | No | No | 
+| Packaging | No | Yes | No | 
+| Dependencies | Yes | Yes | No | 
+| License | Yes | Yes | Yes | 
+| Interface | Yes | Yes | No | 
+| Function and object naming | No | Yes | No | 
+| Code style | Yes | No | No | 
+| Code duplication | Yes | No | No |
+| Self-contained functions | No | Yes | No | 
+| Plotting | No | Yes | No | 
+| Dummy proofing | No | Yes | No | 
+| Unit testing | Yes | No | Yes | 
+| Unit testing | Yes | No | Yes | 
+| Continuous integration | Yes | No | No |
+| Code coverage | Yes | No | No |
+| Support  | Yes | Yes | Yes | 
+| Development model | Yes | No | No |
+| Tutorial  | No | Yes | Yes | 
+| Function documentation  | No | Yes | No | 
+| Inline documentation  | Yes | No | No |
+| Parameter transparency  | No | Yes | Yes | 
+| Seed setting  | No | No | Yes | 
+| Unexpected output  | Yes | Yes | No |
+| Output format  | No | Yes | No | 
+| Prior information  | No | Yes | Yes | 
+| Publishing  | No | No | Yes | 
+| Peer review  | No | No | Yes | 
+| Evaluation on real data  | No | No | Yes | 
+| Evaluation of robustness  | No | Yes | Yes | 
 
 
+# Quantitative evaluation
 
-
-
+For this evaluation we will use real, simulated and half-simulated datasets. With real and simulated data we will look at overlap, stability, stochasticity, robustness, runtime, scalability and memory requirements of all the methods. With real and half-simulated data we will have discrete targets that will be used to check TPR, FPR, FDR, sensitivity and specificity and precision and recall.
 
 # Reproducibility
 Docker container
@@ -114,8 +211,7 @@ Evaluation of tools to identify differentially methylated regions
 1. **Deepak Tanwar**
 2. **Stefan Milosavljevic**
 3. **Hana Parizkova**
-4. **Stephany Orjuela**
-5. **Izaskun Mallona**
-6. **Kentaro Shimizu**
-7. **Isabelle Mansuy**
-8. **Mark Robinson**
+4. **Izaskun Mallona**
+5. **Rie Shimizu-Inatsugi**
+6. **Isabelle Mansuy**
+7. **Mark Robinson**
