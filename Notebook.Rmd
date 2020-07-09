@@ -1,8 +1,10 @@
 ---
 title: "Notebook"
-output: html_notebook
-author: Deepak Tanwar & Stefan Milosavljevic
-editor_options: 
+author: "Deepak Tanwar & Stefan Milosavljevic"
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
