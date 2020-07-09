@@ -1,7 +1,6 @@
 ---
 title: "Notebook"
 author: "Deepak Tanwar & Stefan Milosavljevic"
-author: "Deepak Tanwar"
 output:
   html_document:
     df_print: paged
@@ -76,14 +75,10 @@ Several simulation tools exist to create artificial bisulfite sequencing data (e
 | [RefFreeDMA](https://github.com/jklughammer/RefFreeDMA) | Supports only RRBS protocol | November 2019 |
 
 
-# Template for Qualitative benchmarking
+# Quantitative evaluation
 
-| Tools| Languages | Input format accepted | User interface	Implementation | Last release |	Last update	| Year published | Documentation quality | User friendly | Open source | Unit testing | Parallel analysis| Platform independent |
-| - | - | - | - | - | - | - | - | - | - | - | - | - |
-| dmrseq | R | bismark | CLI | 2020 | 2020 | 2018 | Good | Yes | Yes | Yes | Yes | Yes |
-| bsseq | R | bismark | CLI | 2020 | 2020 | 2013 | Good | Yes | Yes | Yes | Yes | Yes |
+For this evaluation we will use real, simulated and half-simulated datasets. With real and simulated data we will look at overlap, stability, stochasticity, robustness, runtime, scalability and memory requirements of all the methods. With real and half-simulated data we will have discrete targets that will be used to check TPR, FPR, FDR, sensitivity and specificity and precision and recall.
 
-## Qualitative evaluation
 
 The following qualitative aspects together with their category, description and weight were taken from _Saelens et al. (2019)_, Supplementary Table 3 and readapted here. The aspects were split in two tables, the first with a summary of the aspects for six categories (availablility, code quality, code assurance, documentation, behaviour and paper) and the second showing how these variables were considered for three aspects: developer friendly, user friendly and future proof.
 
@@ -173,10 +168,6 @@ The following qualitative aspects together with their category, description and 
 | Evaluation of robustness  | No | Yes | Yes | 
 
 
-# Quantitative evaluation
-
-For this evaluation we will use real, simulated and half-simulated datasets. With real and simulated data we will look at overlap, stability, stochasticity, robustness, runtime, scalability and memory requirements of all the methods. With real and half-simulated data we will have discrete targets that will be used to check TPR, FPR, FDR, sensitivity and specificity and precision and recall.
-
 # Reproducibility
 [Docker container](https://hub.docker.com/r/dktanwar/dmr_docker)
 
@@ -221,10 +212,6 @@ Evaluation of tools to identify differentially methylated regions
 2. **Stefan Milosavljevic**
 3. **Hana Parizkova**
 4. **Izaskun Mallona**
-<<<<<<< HEAD
-5. **Kentaro Shimizu**
-=======
 5. **Rie Shimizu-Inatsugi**
->>>>>>> origin/master
 6. **Isabelle Mansuy**
 7. **Mark Robinson**
