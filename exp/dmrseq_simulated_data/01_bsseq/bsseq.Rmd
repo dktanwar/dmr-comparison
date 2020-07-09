@@ -44,8 +44,10 @@ pheno.nc <- read.table("./input/anno_neg_control.txt.gz", header = T, sep = "\t"
 
 files.nc <- list.files("./input", pattern = "NC_rep", full.names = T)
 bs.nc <- read.bismark(
-  files = files.nc, sampleNames = pheno.nc$names, strandCollapse = F,
-  mc.cores = detectCores() - 1
+  files = files.nc, 
+  colData = pheno.nc, 
+  strandCollapse = F,
+  nThread = detectCores() - 1
 )
 
 pData(bs.nc) <- pheno.nc
@@ -161,6 +163,8 @@ datatable(
 
 # SessionInfo
 
+<details>
 ```{r}
 devtools::session_info()
 ```
+</details>

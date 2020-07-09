@@ -23,14 +23,14 @@ output:
 ---
 
 # Packages required
-```{r, message=F, warning=F}
+```{r 20181125-generate-input-datasets-1, message=F, warning=F}
 library(data.table)
 ```
 
 # Read data in R
 
 ## Negative control
-```{r}
+```{r 20181125-generate-input-datasets-2}
 # Files from 6 replicates
 files.nc <- list.files(path = "./input", pattern = "NC", full.names = T)
 
@@ -44,7 +44,7 @@ names(read.nc) <- sapply(files.nc, function(x) strsplit(x, "\\.|/")[[1]][4])
 
 
 ## Simulated data
-```{r}
+```{r 20181125-generate-input-datasets-3}
 # Files from 6 replicates
 files.sim <- list.files(path = "./input", pattern = "sim", full.names = T)
 
@@ -63,7 +63,7 @@ Different software needs input to be in different formats. In the next section, 
 # Creating various formats of input data
 
 ## Bismark `cov`
-```{r}
+```{r 20181125-generate-input-datasets-4}
 bismark.nc <- lapply(read.nc, function(x){
   a <- x
   a$percent <- (a$M/a$cov) * 100
@@ -83,7 +83,7 @@ bismark.sim <- lapply(read.sim, function(x){
 ```
 
 ### Save data
-```{r}
+```{r 20181125-generate-input-datasets-5}
 system("mkdir -p ./output/bismark")
 for(i in 1:length(read.nc)){
   fwrite(x = bismark.nc[[i]], file = paste0("./output/bismark/", names(read.nc)[i], ".cov"), 
@@ -96,7 +96,7 @@ for(i in 1:length(read.nc)){
 
 
 ## Methpipe inputs
-```{r}
+```{r 20181125-generate-input-datasets-6}
 methpipe.nc <- lapply(read.nc, function(x){
   a <- x
   a$strand <- "*"
@@ -116,7 +116,7 @@ methpipe.sim <- lapply(read.sim, function(x){
 ```
 
 ### Save data
-```{r}
+```{r 20181125-generate-input-datasets-7}
 system("mkdir -p ./output/methpipe")
 for(i in 1:length(read.nc)){
   fwrite(x = methpipe.nc[[i]], file = paste0("./output/methpipe/", names(read.nc)[i], ".cov"), 
@@ -130,7 +130,7 @@ for(i in 1:length(read.nc)){
 
 
 ## CGmapTools inputs
-```{r}
+```{r 20181125-generate-input-datasets-8}
 cgmap.nc <- lapply(read.nc, function(x){
   a <- x
   a$nuc <- "C"
@@ -152,7 +152,7 @@ cgmap.sim <- lapply(read.sim, function(x){
 ```
 
 ### Save data
-```{r}
+```{r 20181125-generate-input-datasets-9}
 system("mkdir -p ./output/cgmaptools")
 for(i in 1:length(read.nc)){
   fwrite(x = cgmap.nc[[i]], file = paste0("./output/cgmaptools/", names(read.nc)[i], ".cov"), 
@@ -165,7 +165,7 @@ for(i in 1:length(read.nc)){
 
 
 ## DMRcaller inputs
-```{r}
+```{r 20181125-generate-input-datasets-10}
 dmrcaller.nc <- lapply(read.nc, function(x){
   a <- x
   a$strand <- "+"
@@ -187,7 +187,7 @@ dmrcaller.sim <- lapply(read.sim, function(x){
 ```
 
 ### Save data
-```{r}
+```{r 20181125-generate-input-datasets-11}
 system("mkdir -p ./output/dmrcaller")
 for(i in 1:length(read.nc)){
   fwrite(x = dmrcaller.nc[[i]], file = paste0("./output/dmrcaller/", names(read.nc)[i], ".cov"), 
@@ -204,7 +204,7 @@ Also, we are making one table with coverage and methylation values.
 # One table for Coverage and Methylation
 
 ## Negative control
-```{r, warning=F}
+```{r 20181125-generate-input-datasets-12, warning=F}
 # Make one dataframe fromlist of files
 tab.nc <- Reduce(function(x, y) {
   merge(x, y, by = c("chr", "pos"))
@@ -224,7 +224,7 @@ fwrite(x = tab.nc.cov, file = "./output/neg_control.cov", quote = F, sep = "\t",
 
 
 ## Simulated data
-```{r, warning=F}
+```{r 20181125-generate-input-datasets-13, warning=F}
 # Make one dataframe fromlist of files
 tab.sim <- Reduce(function(x, y) {
   merge(x, y, by = c("chr", "pos"))
@@ -244,13 +244,16 @@ fwrite(x = tab.sim.cov, file = "./output/simulated_data.cov", quote = F, sep = "
 
 
 # Compress all text outputs
-```{r}
+```{r 20181125-generate-input-datasets-14}
 system("pigz -11 -p 16 ./output/*")
 system("pigz -11 -p 16 ./output/*/*")
 ```
 
 
 # SessionInfo
-```{r}
+
+<details>
+```{r 20181125-generate-input-datasets-15}
 devtools::session_info()
 ```
+</details>
