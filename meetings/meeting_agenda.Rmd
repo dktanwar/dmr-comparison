@@ -1,0 +1,32 @@
+---
+title: "Meeting agenda"
+date: 9 July, 2020
+output: pdf_document
+urlcolor: blue
+---
+
+# Agenda (Thank you, Stefan!)
+
+1. Welcome and why we're meeting (kick-off, getting to know each other and agree on the project).
+
+2. A quick introduction about the project.
+
+3. Introducing everyone and their supposed **role in the project**.
+
+4. Overview of what is already done: [Report from Mark's course](https://dktanwar.github.io/sta426-project-dmr-comparison/report/project_report.html)
+
+5. Current ideas on how to develop the project and how it will be managed (leading and assisting): **file attached**
+
+6. Questions?
+
+# Minutes of the meeting
+
+**Attendees:** 
+
+- We can target Genome Biology for this project
+- We plan to integrate data from different species: human, rat, mouse, plants
+- The idea to have a continuous benchmark is good. There might be a lot of work at beginning, but later it would be easy.
+- We could have an R package which could run all the different analysis (wrapper around all tools, which can accept all forms of input)
+- We may try to have our own simulations as well
+- This benchmark will help researchers to choose the best method for their data
+- Here, we will only benchmark methods available for WGBS data
