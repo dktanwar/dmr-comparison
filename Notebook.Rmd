@@ -213,5 +213,4 @@ Evaluation of tools to identify differentially methylated regions
 3. **Hana Parizkova**
 4. **Izaskun Mallona**
 5. **Rie Shimizu-Inatsugi**
-6. **Isabelle Mansuy**
-7. **Mark Robinson**
+6. **Mark Robinson**
